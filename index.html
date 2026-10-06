@@ -396,7 +396,7 @@ details.dd[open]>summary{margin-bottom:14px}
   var $=function(id){return document.getElementById(id)};
   var say=function(t){$("status").textContent=t};
   function load(){try{var x=localStorage.getItem(KEY);if(x)return JSON.parse(x);}catch(e){}return mem;}
-  function save(){mem=JSON.parse(JSON.stringify(S));try{localStorage.setItem(KEY,JSON.stringify(S));}catch(e){}}
+  function save(){if(REMOTE){queueOrg();return;}mem=JSON.parse(JSON.stringify(S));try{localStorage.setItem(KEY,JSON.stringify(S));}catch(e){}}
   function byId(st,id){return st.players.filter(function(p){return p.id===id})[0]}
   function deckById(st,id){return st.decks.filter(function(d){return d.id===id})[0]}
   function sorted(st){return st.players.slice().sort(function(a,b){return b.rating-a.rating||b.w-a.w||a.name.localeCompare(b.name)})}
@@ -444,7 +444,7 @@ details.dd[open]>summary{margin-bottom:14px}
   function autoSprites(n){var o=[];String(n).split(/[^A-Za-z]+/).forEach(function(t){var k=t.toUpperCase();if(k.length>2&&PKI[k]!=null&&o.indexOf(k)<0&&o.length<2)o.push(k)});return o}
   var DEMO={"Ember Aggro":["CHARIZARD"],"Tidal Control":["BLASTOISE"],"Verdant Ramp":["VENUSAUR"],"Storm Combo":["ZAPDOS"],"Shade Tempo":["GENGAR"]};
   var DL="SAMPLE DECKLIST (demo only)\n\nPokémon: 14\n4 Charmander\n3 Charmeleon\n3 Charizard ex\n2 Pidgey\n2 Pidgeot ex\n\nTrainer: 34\n4 Professor's Research\n4 Boss's Orders\n4 Ultra Ball\n4 Rare Candy\n18 more trainer cards\n\nEnergy: 12\n10 Fire Energy\n2 Jet Energy";
-  function ensureSprites(st){st.season=st.season||{n:1,start:Date.now()};st.players.forEach(function(p){if(p.pub===undefined){p.pub=p.id>=6&&p.id<=13&&p.id%2===0;if(p.pub&&!p.list)p.list=DL}});st.players.forEach(function(p){if(!p.rc){p.rc=[];st.log.forEach(function(g){if(p.rc.length>=5)return;var W=g.w===p.name,L=g.l===p.name,dn=W?g.wd:L?g.ld:"";if(!dn)return;var d=byName(st.decks,dn);if(d)p.rc.push({d:d.id,r:W?"W":"L",o:W?g.l:g.w});});}});st.decks.forEach(function(d){if(!d.s){var a=DEMO[d.name]||autoSprites(d.name);if(a.length)d.s=a}})}
+  function ensureSprites(st){st.season=st.season||{n:1,start:Date.now()};st.players.forEach(function(p){if(p.pub===undefined){p.pub=!REMOTE&&p.id>=6&&p.id<=13&&p.id%2===0;if(p.pub&&!p.list)p.list=DL}});st.players.forEach(function(p){if(!p.rc){p.rc=[];st.log.forEach(function(g){if(p.rc.length>=5)return;var W=g.w===p.name,L=g.l===p.name,dn=W?g.wd:L?g.ld:"";if(!dn)return;var d=byName(st.decks,dn);if(d)p.rc.push({d:d.id,r:W?"W":"L",o:W?g.l:g.w});});}});st.decks.forEach(function(d){if(!d.s){var a=DEMO[d.name]||autoSprites(d.name);if(a.length)d.s=a}})}
   function sprite(d,all){
     var s=document.createElement("span"); s.className="spr"; s.title=d.name;
     if(d.img){var im=document.createElement("img");im.alt=d.name;im.src=d.img;s.appendChild(im);return s;}
@@ -487,7 +487,7 @@ details.dd[open]>summary{margin-bottom:14px}
     fr.onerror=function(){cb(null)}; fr.readAsDataURL(file);
   }
 
-  var S=load()||seed(), flashIds={}; S.mu=S.mu||{}; ensureSprites(S); ensureV4(S);
+  var S=blankState(), flashIds={}; S.mu=S.mu||{}; ensureSprites(S); ensureV4(S);
 
   function movement(p,rank){
     if(!(p.id in S.snap)) return {t:"new",c:""};
@@ -617,7 +617,7 @@ details.dd[open]>summary{margin-bottom:14px}
   }
   function syncDeck(pSel,dSel){
     var p=byId(S,+$(pSel).value), t=p?topDecks(p)[0]:null;
-    $(dSel).value=t?t.id:S.decks[0].id;
+    $(dSel).value=t?t.id:(S.decks[0]?S.decks[0].id:"");
   }
   function fillSelects(){
     var ids=["pa","pb","da","db"], keep={};
@@ -628,8 +628,8 @@ details.dd[open]>summary{margin-bottom:14px}
       var sel=$(id); sel.innerHTML="";
       arr.forEach(function(x){var o=document.createElement("option");o.value=x.id;o.textContent=x.name;sel.appendChild(o)});
     }
-    $("pa").value=keep.pa&&byId(S,+keep.pa)?keep.pa:S.players[0].id;
-    $("pb").value=keep.pb&&byId(S,+keep.pb)?keep.pb:(S.players[1]||S.players[0]).id;
+    $("pa").value=keep.pa&&byId(S,+keep.pa)?keep.pa:(S.players[0]?S.players[0].id:"");
+    $("pb").value=keep.pb&&byId(S,+keep.pb)?keep.pb:((S.players[1]||S.players[0])?(S.players[1]||S.players[0]).id:"");
     ["da","db"].forEach(function(id,k){
       if(keep[id]&&deckById(S,+keep[id])) $(id).value=keep[id]; else syncDeck(k?"pb":"pa",id);
     });
@@ -737,21 +737,157 @@ details.dd[open]>summary{margin-bottom:14px}
   $("proBtn").addEventListener("click",function(){S.pro=!S.pro;save();render();});
 
   // ---- accounts + tournament ----
-  var AK="league-accounts-v1", AM=null, mode="in";
-  function aload(){try{var x=localStorage.getItem(AK);if(x)return JSON.parse(x);}catch(e){}return AM||{users:[],cur:null};}
-  var A=aload();
-  function asave(){AM=JSON.parse(JSON.stringify(A));try{localStorage.setItem(AK,JSON.stringify(A));}catch(e){}}
-  function sha(s){
-    try{return crypto.subtle.digest("SHA-256",new TextEncoder().encode("tg:"+s)).then(function(b){
-      return Array.prototype.map.call(new Uint8Array(b),function(x){return("0"+x.toString(16)).slice(-2)}).join("");});}
-    catch(e){return Promise.resolve("p:"+s);}
+  // ---- shared league database (Supabase) ----
+  var SB_URL="https://solkaumnuhctnerjjprd.supabase.co", SB_KEY="sb_publishable_1bVR12vV8A83tNcKAtGgfQ_XTGWEObO";
+  var REMOTE=false, SK="tg-session", SES=null, CUR=null, PROFS=[], accPid={}, regBase=[], remVer=0, lastSig="", mode="in";
+  var saveT=null, saving=false, dirty=false;
+  function blankState(){return {players:[],decks:[],log:[],week:1,snap:{},nextId:1,mu:{}}}
+  function sget(){try{return JSON.parse(localStorage.getItem(SK))}catch(e){return null}}
+  function sset(s){SES=s;try{if(s)localStorage.setItem(SK,JSON.stringify(s));else localStorage.removeItem(SK);}catch(e){}}
+  function mkSes(j){return{access_token:j.access_token,refresh_token:j.refresh_token,expires_at:j.expires_at||Math.floor(Date.now()/1000)+(j.expires_in||3600),uid:(j.user&&j.user.id)||(SES&&SES.uid)||""}}
+  function sbx(path,o){
+    o=o||{};var h={"apikey":SB_KEY,"Content-Type":"application/json"};
+    if(o.anon!==true&&SES&&SES.access_token)h.Authorization="Bearer "+SES.access_token;
+    if(o.prefer)h.Prefer=o.prefer;
+    return fetch(SB_URL+path,{method:o.method||"GET",headers:h,body:o.body!==undefined?JSON.stringify(o.body):undefined}).then(function(r){
+      return r.text().then(function(t){
+        var j=null;try{j=t?JSON.parse(t):null}catch(e){}
+        if(!r.ok){var e=new Error((j&&(j.msg||j.message||j.error_description||j.error))||("Request failed ("+r.status+")"));e.status=r.status;throw e;}
+        return j;
+      });
+    });
   }
-  function me(){return A.users.filter(function(u){return u.u===A.cur})[0]}
-  function myP(){
-    var u=me(); if(!u) return null;
-    var p=byId(S,u.pid);
-    if(!p){p=byName(S.players,u.u);if(!p){p={id:S.nextId++,name:u.u,rating:START,w:0,l:0,dk:{}};S.players.push(p);}u.pid=p.id;asave();save();}
+  function refreshSes(){
+    if(!SES||!SES.refresh_token)return Promise.resolve();
+    return sbx("/auth/v1/token?grant_type=refresh_token",{method:"POST",anon:true,body:{refresh_token:SES.refresh_token}}).then(function(j){sset(mkSes(j))},function(e){if(e.status>=400&&e.status<500){sset(null);CUR=null;}});
+  }
+  function api(path,o){
+    var need=SES&&SES.expires_at&&SES.expires_at*1000-Date.now()<60000;
+    return (need?refreshSes():Promise.resolve()).then(function(){return sbx(path,o)}).catch(function(e){
+      if(e.status===401&&SES&&!(o&&o.retried)){return refreshSes().then(function(){o=o||{};o.retried=true;return sbx(path,o)})}
+      throw e;
+    });
+  }
+  function loadRemote(){
+    return Promise.all([
+      api("/rest/v1/league_state?id=eq.1&select=data,version"),
+      api("/rest/v1/profiles?select=id,username,role,player_id"),
+      api("/rest/v1/registrations?select=user_id"),
+      api("/rest/v1/decklists?select=user_id,list,is_public")
+    ]);
+  }
+  function applyRemote(r){
+    var row=r[0]&&r[0][0]; if(!row)throw new Error("League data not found");
+    var st=row.data||{}, keep=S&&S.pro, b=blankState(), k;
+    for(k in b)if(st[k]==null)st[k]=b[k];
+    remVer=row.version; PROFS=r[1]||[]; accPid={}; var byUid={};
+    PROFS.forEach(function(f){accPid[f.player_id]=f;byUid[f.id]=f;});
+    PROFS.forEach(function(f){if(!byId(st,f.player_id))st.players.push({id:f.player_id,name:f.username,rating:START,w:0,l:0,dk:{}});});
+    var t=st.t=st.t||{day:6,time:"18:00",reg:[]};
+    var rp=(r[2]||[]).map(function(x){return byUid[x.user_id]&&byUid[x.user_id].player_id}).filter(Boolean);
+    regBase=rp.slice();
+    t.reg=(t.reg||[]).filter(function(id){return !accPid[id]}).concat(rp);
+    var dl={};(r[3]||[]).forEach(function(x){dl[x.user_id]=x});
+    PROFS.forEach(function(f){var p=byId(st,f.player_id),d=dl[f.id];if(!p)return;if(d){p.list=d.list||"";p.pub=!!d.is_public}else{delete p.list;p.pub=false}});
+    REMOTE=true; S=st; if(keep)S.pro=keep; ensureSprites(S); ensureV4(S);
+    lastSig=JSON.stringify([r[1],r[2],r[3]]);
+    var f=SES&&SES.uid?byUid[SES.uid]:null;
+    CUR=f?{u:f.username,k:f.username.toLowerCase(),role:f.role==="org"?"org":"pl",pid:f.player_id,uid:f.id}:null;
+    rebuildAds();
+  }
+  function rebuildAds(){var ab=$("adCfg");if(ab){ab.innerHTML="";delete ab.dataset.b;}buildAdCfg();}
+  function banner(t){var b=$("sbn");if(!b)return;b.textContent=t||"";b.hidden=!t;}
+  function rerender(){
+    chrome();render();
+    if(!$("vTour").hidden)renderTour();
+    if(!$("vDash").hidden)renderDash();
+    if(!$("vDeck").hidden)renderDeck();
+    if(!$("vPro").hidden)renderHub();
+    if(!$("vAcct").hidden)renderAcct();
+  }
+  function isOrg(){return !!CUR&&CUR.role==="org"}
+  function cleanPayload(){
+    var p=JSON.parse(JSON.stringify(S));delete p.pro;
+    if(p.t&&p.t.reg)p.t.reg=p.t.reg.filter(function(id){return !accPid[id]});
+    p.players.forEach(function(x){if(accPid[x.id]){delete x.list;delete x.pub}});
     return p;
+  }
+  function queueOrg(){if(!isOrg())return;dirty=true;clearTimeout(saveT);saveT=setTimeout(doOrg,500);}
+  function doOrg(){
+    if(!isOrg())return;
+    if(saving){clearTimeout(saveT);saveT=setTimeout(doOrg,300);return}
+    if(!dirty)return; dirty=false; saving=true;
+    var want=S.t.reg.filter(function(id){return accPid[id]});
+    var add=want.filter(function(id){return regBase.indexOf(id)<0}), del=regBase.filter(function(id){return want.indexOf(id)<0}), jobs=[];
+    if(add.length)jobs.push(api("/rest/v1/registrations?on_conflict=user_id",{method:"POST",prefer:"resolution=ignore-duplicates,return=minimal",body:add.map(function(id){return{user_id:accPid[id].id}})}));
+    if(del.length)jobs.push(api("/rest/v1/registrations?user_id=in.("+del.map(function(id){return accPid[id].id}).join(",")+")",{method:"DELETE",prefer:"return=minimal"}));
+    Promise.all(jobs).then(function(){
+      regBase=want.slice();
+      return api("/rest/v1/league_state?id=eq.1&version=eq."+remVer+"&select=version",{method:"PATCH",prefer:"return=representation",body:{data:cleanPayload()}});
+    }).then(function(rows){
+      if(!rows||!rows.length){
+        return loadRemote().then(function(r){applyRemote(r);rerender();banner("The league was changed from another device, so this page reloaded. Please redo your last change.");});
+      }
+      remVer=rows[0].version; banner("");
+    }).catch(function(e){
+      dirty=true; banner("Couldn't save to the league database ("+e.message+"). Retrying…");
+      clearTimeout(saveT); saveT=setTimeout(doOrg,5000);
+    }).then(function(){saving=false});
+  }
+  function regMine(want){
+    var u=me(); if(!u)return;
+    var req=want?api("/rest/v1/registrations?on_conflict=user_id",{method:"POST",prefer:"resolution=ignore-duplicates,return=minimal",body:{user_id:u.uid}})
+                :api("/rest/v1/registrations?user_id=eq."+u.uid,{method:"DELETE",prefer:"return=minimal"});
+    req.then(function(){var k=regBase.indexOf(u.pid);if(want&&k<0)regBase.push(u.pid);if(!want&&k>=0)regBase.splice(k,1);})
+    .catch(function(){
+      var t=S.t,k=t.reg.indexOf(u.pid);
+      if(want&&k>=0)t.reg.splice(k,1); if(!want&&k<0)t.reg.push(u.pid);
+      $("tMsg").textContent="Couldn't update your registration. Check your connection and try again.";
+      renderTour(); if(!$("vDash").hidden)renderDash();
+    });
+  }
+  function poll(){
+    if(!REMOTE||document.hidden||saving||dirty)return;
+    var a=document.activeElement; if(a&&/^(INPUT|TEXTAREA|SELECT)$/.test(a.tagName))return;
+    loadRemote().then(function(r){
+      var row=r[0]&&r[0][0]; if(!row)return;
+      if(row.version===remVer&&JSON.stringify([r[1],r[2],r[3]])===lastSig)return;
+      if(saving||dirty)return;
+      applyRemote(r); rerender();
+    }).catch(function(){});
+  }
+  setInterval(poll,30000);
+  document.addEventListener("visibilitychange",function(){if(!document.hidden)poll()});
+  function boot(){
+    var mn=document.querySelector("main"), bn=document.createElement("p");
+    bn.id="sbn"; bn.className="foot"; bn.setAttribute("role","status"); bn.style.textAlign="center"; bn.hidden=true; mn.insertBefore(bn,mn.firstChild);
+    banner("Loading the league…");
+    SES=sget();
+    var pre=(SES&&SES.expires_at&&SES.expires_at*1000-Date.now()<60000)?refreshSes():Promise.resolve();
+    pre.then(loadRemote).then(function(r){
+      applyRemote(r); $("reset").hidden=true; $("tAll").hidden=true; banner(""); rerender();
+    }).catch(function(){
+      REMOTE=false; CUR=null; S=load()||seed(); S.mu=S.mu||{}; ensureSprites(S); ensureV4(S);
+      banner("Can't reach the league database, so this is demo data saved only on this device. Reload to try again.");
+      rerender(); rebuildAds();
+    });
+  }
+  function me(){return CUR}
+  function myP(){var u=me();return u?(byId(S,u.pid)||null):null}
+  function signOut(){
+    sbx("/auth/v1/logout",{method:"POST"}).catch(function(){});
+    sset(null); CUR=null; chrome(); view("Rank");
+    loadRemote().then(function(r){applyRemote(r);rerender();}).catch(function(){rerender();});
+  }
+  function friendly(e){
+    var t=String((e&&e.message)||e);
+    if(/invalid login/i.test(t))return "Email or password is wrong.";
+    if(/already registered|already been registered/i.test(t))return "That email already has an account. Log in instead.";
+    if(/not confirmed/i.test(t))return "Confirm your email first (check your inbox), then log in.";
+    if(/rate limit|too many/i.test(t))return "Too many attempts. Wait a few minutes and try again.";
+    if(/database error/i.test(t))return "That player name may already be taken. Try another one.";
+    if(/failed to fetch|networkerror|load failed/i.test(t))return "Can't reach the server. Check your connection and try again.";
+    return t;
   }
   function chrome(){var u=me();$("tAcct").textContent=u?u.u:"Sign in";$("tDash").hidden=!u;$("tDash").textContent=u&&u.role==="org"?"Organizer":"My dashboard";if(!u&&!$("vDash").hidden)view("Rank");renderAds();}
   function view(v){
@@ -766,38 +902,54 @@ details.dd[open]>summary{margin-bottom:14px}
   function renderAcct(){
     var u=me(), b=$("acctBody");
     if(u){
-      var p=myP(), reg=S.t&&S.t.reg.indexOf(p.id)>=0;
+      var p=myP()||{rating:START,w:0,l:0}, reg=!!(S.t&&p.id&&S.t.reg.indexOf(p.id)>=0);
       b.innerHTML='<p>Signed in as <b></b>.</p><p class="foot" id="aInfo"></p><div class="actions"><button id="so" type="button" class="ghost">Sign out</button></div>';
       b.querySelector("b").textContent=u.u+(u.role==="org"?" (organizer)":" (player)");
       $("aInfo").textContent="League pts "+p.rating+" · record "+p.w+"–"+p.l+" · "+(reg?"registered for this week's tournament":"not registered for this week's tournament");
-      $("so").onclick=function(){A.cur=null;asave();render();renderAcct();};
+      $("so").onclick=signOut;
       return;
     }
-    b.innerHTML='<div class="grid"><div><label for="au">Player name</label><input id="au" maxlength="24" autocomplete="username"></div><div><label for="ap">Password (6+ characters)</label><input id="ap" type="password" autocomplete="current-password"></div></div><div id="rl" style="margin-top:12px" hidden><div class="grid"><div><label for="ar">Account type</label><select id="ar"><option value="pl">Player</option><option value="org">Organizer</option></select></div><div id="ocw" hidden><label for="ac">Organizer code</label><input id="ac" type="password" autocomplete="off"></div></div><p class="foot" id="ocn"></p></div><div class="actions"><button id="ago" type="button"></button><button id="asw" type="button" class="ghost"></button></div><p class="status" id="amsg" role="status" aria-live="polite"></p>';
-    function lab(){$("ago").textContent=mode==="in"?"Log in":"Create account";$("asw").textContent=mode==="in"?"New here? Create an account":"Have an account? Log in";$("rl").hidden=mode==="in";var o=$("ar").value==="org";$("ocw").hidden=!o;$("ocn").textContent=o?(A.oc?"Enter the organizer code the first organizer chose.":"You're the first organizer here: choose a code. Co-organizers will need it. This check lives in your browser only for now; real protection comes with the database build."):"";}
-    lab(); $("ar").onchange=lab;
+    if(!REMOTE){b.innerHTML='<p class="foot"></p>';b.firstChild.textContent="Accounts are unavailable because the league database can't be reached. Reload the page to try again.";return;}
+    b.innerHTML='<div class="grid"><div id="unw"><label for="au">Player name</label><input id="au" maxlength="24" autocomplete="nickname"></div><div><label for="ae">Email</label><input id="ae" type="email" autocomplete="email"></div><div><label for="ap">Password (6+ characters)</label><input id="ap" type="password"></div></div><div class="actions"><button id="ago" type="button"></button><button id="asw" type="button" class="ghost"></button></div><p class="foot" id="ahint"></p><p class="status" id="amsg" role="status" aria-live="polite"></p>';
+    function lab(){
+      var up=mode==="up";
+      $("ago").textContent=up?"Create account":"Log in";
+      $("asw").textContent=up?"Have an account? Log in":"New here? Create an account";
+      $("unw").hidden=!up;
+      $("ap").autocomplete=up?"new-password":"current-password";
+      $("ahint").textContent=up?"Your player name is shown publicly on the rankings. Your email is never shown.":"";
+    }
+    lab();
     $("asw").onclick=function(){mode=mode==="in"?"up":"in";lab();$("amsg").textContent="";};
-    function go(){
-      var n=clean($("au").value), pw=$("ap").value, m=$("amsg");
-      if(!n||pw.length<6){m.textContent="Enter a name and a password of at least 6 characters.";return;}
-      Promise.all([sha(n.toLowerCase()+pw),sha("oc:"+$("ac").value)]).then(function(hh){var h=hh[0],oh=hh[1];
-        var ex=A.users.filter(function(x){return x.k===n.toLowerCase()})[0];
-        if(mode==="in"){
-          if(!ex||ex.h!==h){m.textContent="Name or password is wrong.";return;}
-          A.cur=ex.u;
-        }else{
-          if(ex){m.textContent="That name already has an account. Log in instead.";return;}
-          var role=$("ar").value==="org"?"org":"pl";
-          if(role==="org"){if(!A.oc){if($("ac").value.length<4){m.textContent="Choose an organizer code of at least 4 characters.";return;}A.oc=oh;}else if(A.oc!==oh){m.textContent="That organizer code isn't right.";return;}}
-          var p=byName(S.players,n);
-          if(!p){p={id:S.nextId++,name:n,rating:START,w:0,l:0,dk:{}};S.players.push(p);save();}
-          A.users.push({u:n,k:n.toLowerCase(),h:h,pid:p.id,role:role}); A.cur=n;
-        }
-        asave(); render(); renderAcct(); view("Dash");
+    function finish(j){
+      sset(mkSes(j));
+      return loadRemote().then(function(r){
+        applyRemote(r);
+        if(!CUR){sset(null);throw new Error("Your player profile wasn't found. Contact the organizer.");}
+        mode="in"; rerender(); view("Dash");
       });
     }
+    function go(){
+      var e=$("ae").value.trim(), pw=$("ap").value, m=$("amsg"), n=clean($("au").value), btn=$("ago");
+      if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e)||pw.length<6){m.textContent="Enter a valid email and a password of at least 6 characters.";return;}
+      if(mode==="up"&&n.length<2){m.textContent="Choose a player name of at least 2 characters.";return;}
+      btn.disabled=true; m.textContent=mode==="in"?"Logging in…":"Creating your account…";
+      var run;
+      if(mode==="in"){
+        run=sbx("/auth/v1/token?grant_type=password",{method:"POST",anon:true,body:{email:e,password:pw}}).then(finish);
+      }else{
+        run=sbx("/rest/v1/rpc/username_available",{method:"POST",anon:true,body:{n:n}}).then(function(ok){
+          if(ok!==true)throw new Error("That player name is taken. Choose another.");
+          return sbx("/auth/v1/signup",{method:"POST",anon:true,body:{email:e,password:pw,data:{username:n}}});
+        }).then(function(j){
+          if(j&&j.access_token)return finish(j);
+          mode="in"; lab(); $("amsg").textContent="Account created. Check your email to confirm it, then log in.";
+        });
+      }
+      run.catch(function(err){m.textContent=friendly(err);}).then(function(){btn.disabled=false;});
+    }
     $("ago").onclick=go;
-    $("ap").addEventListener("keydown",function(e){if(e.key==="Enter")go()});
+    $("ap").addEventListener("keydown",function(ev){if(ev.key==="Enter")go()});
   }
 
   function nextOcc(){
@@ -857,6 +1009,7 @@ details.dd[open]>summary{margin-bottom:14px}
     var t=S.t, i=t.reg.indexOf(p.id);
     if(i>=0){t.reg.splice(i,1);$("tMsg").textContent="You've withdrawn from this week's tournament.";}
     else{t.reg.push(p.id);$("tMsg").textContent="You're registered. See you there!";}
+    if(REMOTE)regMine(i<0);
     save(); renderTour();
   });
   $("tDay").addEventListener("change",function(){S.t.day=+this.value;save();renderTour();});
@@ -1001,8 +1154,12 @@ details.dd[open]>summary{margin-bottom:14px}
   [$("myList"),$("myPub")].forEach(function(e){e.addEventListener("input",function(){listDirty=true});e.addEventListener("change",function(){listDirty=true})});
   $("saveList").addEventListener("click",function(){
     var p=myP(); if(!p) return;
-    p.list=$("myList").value.slice(0,4000); p.pub=$("myPub").checked; listDirty=false; save();
-    $("listMsg").textContent=p.pub?"Saved. Your decklist is public.":"Saved. Your decklist is private.";
+    p.list=$("myList").value.slice(0,4000); p.pub=$("myPub").checked; listDirty=false;
+    var ok=function(){$("listMsg").textContent=p.pub?"Saved. Your decklist is public.":"Saved. Your decklist is private.";};
+    if(!REMOTE){save();ok();return;}
+    var u=me();
+    api("/rest/v1/decklists?on_conflict=user_id",{method:"POST",prefer:"resolution=merge-duplicates,return=minimal",body:{user_id:u.uid,list:p.list||"",is_public:!!p.pub,updated_at:new Date().toISOString()}})
+      .then(ok,function(){$("listMsg").textContent="Couldn't save your decklist. Check your connection and try again.";});
   });
 
 
@@ -1392,7 +1549,7 @@ details.dd[open]>summary{margin-bottom:14px}
     });
   }
 
-  save(); render(); buildAdCfg(); renderAds(); trayUpd();
+  render(); buildAdCfg(); renderAds(); trayUpd(); boot();
 })();
 </script>
 <script>(function(){var r=document.documentElement,b=document.getElementById("themeBtn");function sync(){b.setAttribute("aria-checked",r.getAttribute("data-theme")==="dark"?"true":"false");}sync();b.addEventListener("click",function(){var n=r.getAttribute("data-theme")==="dark"?"light":"dark";r.setAttribute("data-theme",n);try{localStorage.setItem("tg-theme",n);}catch(e){}sync();});})();</script>
