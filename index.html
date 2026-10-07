@@ -423,11 +423,11 @@ details.dd[open]>summary{margin-bottom:14px}
     </section>
     <section class="panel" id="cImp" hidden><h2>Card database</h2>
       <p class="sub" id="cDbInfo" style="margin:0 0 14px;font-size:1rem"></p>
-      <label for="cKey">pokemontcg.io API key (only if you already have one)</label><input id="cKey" type="password" autocomplete="off" spellcheck="false" placeholder="Paste your key here. It is never saved.">
-      <div class="actions"><button id="cImpGo" type="button">Import English cards</button><button id="cImpStop" type="button" class="ghost" hidden>Stop</button></div>
+      <label for="cScope">What to import</label><select id="cScope"><option value="recent">Standard and Expanded cards (faster)</option><option value="all">All English cards (slower)</option></select>
+      <div class="actions"><button id="cImpGo" type="button">Import cards</button><button id="cImpFull" type="button" class="ghost">Refresh everything</button><button id="cImpStop" type="button" class="ghost" hidden>Stop</button></div>
       <div class="cbar" id="cBar" hidden><i id="cBarIn"></i></div>
       <p class="status" id="cImpMsg" role="status" aria-live="polite"></p>
-      <p class="foot">Copies about 20,000 English cards into your own database. It takes a few minutes, so keep this tab open. No key is needed. Without one it runs slower to stay within pokemontcg.io\u2019s limits. It is safe to run again, for example after a new set is released. Card pictures load from the pokemontcg.io image server and are not stored.</p>
+      <p class="foot">Cards come from TCGdex, a free card database that needs no account or key. The first import fetches cards one by one and can take 10 to 20 minutes, newest sets first. Keep this tab open. After that, <b>Update cards</b> only fetches new or changed sets and takes seconds. Use <b>Refresh everything</b> after a Standard rotation. Card pictures load from TCGdex and are not stored.</p>
     </section>
   </div>
   <div id="vTools" hidden>
@@ -1624,63 +1624,87 @@ details.dd[open]>summary{margin-bottom:14px}
   $("cSort").addEventListener("change",function(){CQ.sort=$("cSort").value;cardsReset()});
   $("cStd").addEventListener("change",function(){CQ.std=$("cStd").checked;fillSetOptions();cardsReset()});
 
-  // ---- organizer: import English cards from pokemontcg.io into the database ----
-  var imp={run:false,stop:false}, IMPK="tg-import-page";
+  // ---- organizer: import English cards from TCGdex (free, no key) into the database ----
+  var imp={run:false,stop:false}, TDX="https://api.tcgdex.net/v2/en";
   function impInfo(){
-    var n=CQ.dbN,p=+localStorage.getItem(IMPK)||0;
-    $("cDbInfo").textContent=n?n.toLocaleString()+" cards are in your card database.":"No cards are in your card database yet.";
-    $("cImpGo").textContent=imp.run?"Importing…":(p>1?"Resume import":"Import English cards");
+    $("cDbInfo").textContent=CQ.dbN?CQ.dbN.toLocaleString()+" cards are in your card database.":"No cards are in your card database yet.";
+    $("cImpGo").textContent=imp.run?"Working…":(CQ.dbN?"Update cards":"Import cards");
   }
   function wait(ms){return new Promise(function(r){setTimeout(r,ms)})}
-  function mapCard(c){
-    if(!c||!c.id||!c.name||!c.set)return null;var L=c.legalities||{};
-    return{id:c.id,name:c.name,supertype:c.supertype||null,subtypes:c.subtypes||[],types:c.types||[],hp:parseInt(c.hp,10)||null,number:c.number||null,rarity:c.rarity||null,set_id:c.set.id,set_name:c.set.name||c.set.id,set_series:c.set.series||null,set_release:String(c.set.releaseDate||"").replace(/\//g,"-")||null,ptcgo:c.set.ptcgoCode||null,regulation:c.regulationMark||null,std:L.standard==="Legal",exp:L.expanded==="Legal",img_s:(c.images&&c.images.small)||null,img_l:(c.images&&c.images.large)||null};
-  }
-  var IMPSEL="id,name,supertype,subtypes,types,hp,number,rarity,regulationMark,legalities,set.id,set.name,set.series,set.ptcgoCode,set.releaseDate,images.small,images.large";
-  function importCards(){
-    if(imp.run||!isOrg())return;
-    var key=$("cKey").value.trim(),page=+localStorage.getItem(IMPK)||1,done=0,total=0,m=$("cImpMsg"),bar=$("cBarIn"),fast=!!window.TG_FAST,gap=key?250:2300;
-    imp.run=true;imp.stop=false;$("cImpGo").disabled=true;$("cImpStop").hidden=false;$("cBar").hidden=false;bar.style.width="0";m.textContent=key?"Starting…":"Starting. Without a key it runs slower to stay within pokemontcg.io's limits (about 8 minutes).";impInfo();
-    function finish(t,ok){
-      imp.run=false;$("cImpGo").disabled=false;$("cImpStop").hidden=true;m.textContent=t;if(ok){localStorage.removeItem(IMPK);bar.style.width="100%"}
-      CQ.init=false;CQ.all=null;cardsInit();impInfo();
-    }
-    function fetchPage(tries){
-      return fetch("https://api.pokemontcg.io/v2/cards?page="+page+"&pageSize=100&select="+IMPSEL,{headers:key?{"X-Api-Key":key}:{}}).then(function(r){
-        if(r.status===429){var e=new Error("rate");e.rate=true;throw e}
-        if(!r.ok)throw new Error("pokemontcg.io answered "+r.status);return r.json();
-      }).catch(function(e){
-        if(tries<5&&!imp.stop){
-          var ms=e.rate?20000*(tries+1):2000*(tries+1);
-          m.textContent=e.rate?"pokemontcg.io asked us to slow down. Waiting "+Math.round(ms/1000)+" seconds…":"Retrying page "+page+"…";
-          return wait(fast?30:ms).then(function(){return fetchPage(tries+1)});
-        }
-        throw e.rate?new Error("pokemontcg.io says too many requests (429)."):e;
-      });
-    }
-    function step(){
-      if(imp.stop){try{localStorage.setItem(IMPK,String(page))}catch(e){}return finish("Stopped at page "+page+". Press Resume import to continue.",false)}
-      return fetchPage(0).then(function(j){
-        var d=j.data||[];total=j.totalCount||total;
-        if(!d.length)return finish("Done. Your card database is up to date.",true);
-        var rows=d.map(mapCard).filter(Boolean);
-        return api("/rest/v1/cards?on_conflict=id",{method:"POST",prefer:"resolution=merge-duplicates,return=minimal",body:rows}).then(function(){
-          done+=d.length;page++;try{localStorage.setItem(IMPK,String(page))}catch(e){}
-          if(total)bar.style.width=Math.min(100,Math.round(100*(page-1)*100/total))+"%";
-          m.textContent="Imported "+Math.min((page-1)*100,total||(page-1)*100).toLocaleString()+(total?" of "+total.toLocaleString():"")+" cards…";
-          if(total&&(page-1)*100>=total)return finish("Done. Your card database is up to date.",true);
-          return wait(fast?10:gap).then(step);
-        });
-      });
-    }
-    step().catch(function(e){
-      var msg=/Failed to fetch|NetworkError|Load failed/i.test(e.message)?"Couldn't reach pokemontcg.io from your browser (it may be down or blocking browser access).":e.message;
-      try{localStorage.setItem(IMPK,String(page))}catch(x){}
-      finish("Paused: "+msg+" Press Resume import to continue where it stopped.",false);
+  function getJSON(url,tries){
+    tries=tries||0;
+    return fetch(url).then(function(r){
+      if(r.status===429){var e=new Error("rate");e.rate=true;throw e}
+      if(!r.ok){var e2=new Error("TCGdex answered "+r.status);e2.status=r.status;throw e2}
+      return r.json();
+    }).catch(function(e){
+      if(imp.stop||e.status===404)throw e;
+      if(tries<4)return wait(window.TG_FAST?20:(e.rate?15000:1500)*(tries+1)).then(function(){return getJSON(url,tries+1)});
+      throw e;
     });
   }
-  $("cImpGo").addEventListener("click",importCards);
-  $("cImpStop").addEventListener("click",function(){imp.stop=true;$("cImpMsg").textContent="Stopping after this page…"});
+  function pool(items,n,fn){
+    var res=new Array(items.length),i=0;
+    function worker(){if(imp.stop||i>=items.length)return Promise.resolve();var k=i++;return fn(items[k],k).then(function(v){res[k]=v}).then(worker)}
+    var w=[];for(var j=0;j<n;j++)w.push(worker());return Promise.all(w).then(function(){return res});
+  }
+  function mapTd(c,S){
+    if(!c||!c.id||!c.name)return null;
+    var cat=c.category==="Pokemon"?"Pokémon":(c.category||null),L=c.legal||{},A=S.abbreviation||{};
+    return{id:c.id,name:c.name,supertype:cat,subtypes:[c.stage,c.suffix,c.trainerType,c.energyType].filter(Boolean),types:c.types||[],hp:parseInt(c.hp,10)||null,number:String(c.localId||""),rarity:c.rarity||null,set_id:S.id,set_name:S.name||S.id,set_series:(S.serie&&S.serie.name)||null,set_release:S.releaseDate||null,ptcgo:A.official||A.normal||null,regulation:c.regulationMark||null,std:!!L.standard,exp:!!L.expanded,img_s:c.image?c.image+"/low.webp":null,img_l:c.image?c.image+"/high.webp":null};
+  }
+  function importCards(full){
+    if(imp.run||!isOrg())return;
+    var scope=$("cScope").value,m=$("cImpMsg"),bar=$("cBarIn"),saved=0,skipped=0,planned=0,done=0,label="";
+    imp.run=true;imp.stop=false;$("cImpGo").disabled=true;$("cImpFull").disabled=true;$("cImpStop").hidden=false;$("cBar").hidden=false;bar.style.width="0";
+    m.textContent="Looking up the list of sets…";impInfo();
+    function progress(){bar.style.width=Math.min(100,Math.round(100*done/Math.max(1,planned)))+"%";if(done%10===0||done===planned)m.textContent="Imported "+done.toLocaleString()+" of "+planned.toLocaleString()+" cards · "+label}
+    function end(t){
+      imp.run=false;$("cImpGo").disabled=false;$("cImpFull").disabled=false;$("cImpStop").hidden=true;
+      api("/rest/v1/cards?select=id&limit=1",{raw:true,prefer:"count=exact"}).then(function(r){CQ.dbN=rangeTotal(r)||0}).catch(function(){}).then(function(){
+        m.textContent=typeof t==="function"?t(CQ.dbN):t;CQ.init=false;CQ.all=null;cardsInit();impInfo();
+      });
+    }
+    function doSet(S){
+      label=S.name||S.id;
+      return pool(S.cards.map(function(c){return c.id}),6,function(id){
+        return getJSON(TDX+"/cards/"+encodeURIComponent(id)).then(function(c){done++;progress();return mapTd(c,S)}).catch(function(){skipped++;done++;progress();return null});
+      }).then(function(rows){
+        rows=rows.filter(Boolean);var ch=[];for(var i=0;i<rows.length;i+=100)ch.push(rows.slice(i,i+100));
+        return ch.reduce(function(p,x){return p.then(function(){return api("/rest/v1/cards?on_conflict=id",{method:"POST",prefer:"resolution=merge-duplicates,return=minimal",body:x}).then(function(){saved+=x.length})})},Promise.resolve());
+      });
+    }
+    getJSON(TDX+"/sets").then(function(list){
+      if(!Array.isArray(list)||!list.length)throw new Error("TCGdex returned no sets.");
+      var n=0;
+      return pool(list,6,function(s){return getJSON(TDX+"/sets/"+encodeURIComponent(s.id)).then(function(d){n++;if(n%10===0)m.textContent="Reading the sets… "+n+" of "+list.length;return d}).catch(function(){return null})});
+    }).then(function(sets){
+      sets=sets.filter(function(s){return s&&s.cards&&s.cards.length});
+      if(!sets.length)throw new Error("Couldn't read any sets from TCGdex.");
+      if(scope==="recent")sets=sets.filter(function(s){return s.legal&&(s.legal.standard||s.legal.expanded)});
+      sets.sort(function(a,b){return String(b.releaseDate||"").localeCompare(String(a.releaseDate||""))});
+      return(full?Promise.resolve([]):api("/rest/v1/card_sets?select=set_id,cards,std&limit=1000").catch(function(){return[]})).then(function(have){
+        var h={};have.forEach(function(x){h[x.set_id]=x});
+        return full?sets:sets.filter(function(s){var x=h[s.id];return!x||x.cards<s.cards.length||!!x.std!==!!(s.legal&&s.legal.standard)});
+      });
+    }).then(function(todo){
+      planned=todo.reduce(function(a,s){return a+s.cards.length},0);
+      if(!todo.length)return end(function(n){return"Everything is already up to date. Your database has "+n.toLocaleString()+" cards."});
+      m.textContent="Importing "+planned.toLocaleString()+" cards from "+todo.length+" set"+(todo.length===1?"":"s")+"…";
+      return todo.reduce(function(p,S){return p.then(function(){if(!imp.stop)return doSet(S)})},Promise.resolve()).then(function(){
+        if(imp.stop)return end(function(n){return"Stopped. "+saved.toLocaleString()+" cards saved this time ("+n.toLocaleString()+" in total). Press Update cards to continue."});
+        if(!saved)return end("Nothing was saved, so your database is unchanged. TCGdex did not return card details. Wait a few minutes and try again.");
+        if(skipped)return end(function(n){return"Finished, but "+skipped.toLocaleString()+" cards couldn't be fetched. Your database has "+n.toLocaleString()+" cards. Press Update cards again to retry the missing ones."});
+        end(function(n){return"Done. Your card database now has "+n.toLocaleString()+" cards."});
+      });
+    }).catch(function(e){
+      var msg=/Failed to fetch|NetworkError|Load failed/i.test(e.message)?"Couldn't reach TCGdex from your browser (it may be down, or your connection dropped).":(e.rate?"TCGdex says too many requests (429).":e.message);
+      end("Paused: "+msg+" Press Update cards to continue where it left off.");
+    });
+  }
+  $("cImpGo").addEventListener("click",function(){importCards(false)});
+  $("cImpFull").addEventListener("click",function(){if(window.confirm("Refresh every card in the chosen scope? This takes longer than a normal update."))importCards(true)});
+  $("cImpStop").addEventListener("click",function(){imp.stop=true;$("cImpMsg").textContent="Stopping…"});
   function C2(n,k){var r=1;for(var i=1;i<=k;i++)r=r*(n-k+i)/i;return r}
   function renderTools(){
     var n=Math.max(2,Math.min(1024,+$("swN").value||2)),r=+$("swR").value||Math.max(roundsFor(n),Math.ceil(Math.log(n)/Math.LN2)),T=$("swT");
