@@ -415,11 +415,11 @@ details.dd[open]>summary{margin-bottom:14px}
     </section>
     <section class="panel" id="cImp" hidden><h2>Card database</h2>
       <p class="sub" id="cDbInfo" style="margin:0 0 14px;font-size:1rem"></p>
-      <label for="cKey">pokemontcg.io API key (optional, makes the import faster)</label><input id="cKey" type="password" autocomplete="off" spellcheck="false" placeholder="Paste your key here. It is never saved.">
+      <label for="cKey">pokemontcg.io API key (only if you already have one)</label><input id="cKey" type="password" autocomplete="off" spellcheck="false" placeholder="Paste your key here. It is never saved.">
       <div class="actions"><button id="cImpGo" type="button">Import English cards</button><button id="cImpStop" type="button" class="ghost" hidden>Stop</button></div>
       <div class="cbar" id="cBar" hidden><i id="cBarIn"></i></div>
       <p class="status" id="cImpMsg" role="status" aria-live="polite"></p>
-      <p class="foot">Copies about 20,000 English cards into your own database. It takes a few minutes, so keep this tab open. It is safe to run again, for example after a new set is released. Card pictures load from the pokemontcg.io image server and are not stored.</p>
+      <p class="foot">Copies about 20,000 English cards into your own database. It takes a few minutes, so keep this tab open. No key is needed. Without one it runs slower to stay within pokemontcg.io\u2019s limits. It is safe to run again, for example after a new set is released. Card pictures load from the pokemontcg.io image server and are not stored.</p>
     </section>
   </div>
   <div id="vTools" hidden>
@@ -1603,16 +1603,24 @@ details.dd[open]>summary{margin-bottom:14px}
   var IMPSEL="id,name,supertype,subtypes,types,hp,number,rarity,regulationMark,legalities,set.id,set.name,set.series,set.ptcgoCode,set.releaseDate,images.small,images.large";
   function importCards(){
     if(imp.run||!isOrg())return;
-    var key=$("cKey").value.trim(),page=+localStorage.getItem(IMPK)||1,done=0,total=0,m=$("cImpMsg"),bar=$("cBarIn");
-    imp.run=true;imp.stop=false;$("cImpGo").disabled=true;$("cImpStop").hidden=false;$("cBar").hidden=false;bar.style.width="0";m.textContent="Starting…";impInfo();
+    var key=$("cKey").value.trim(),page=+localStorage.getItem(IMPK)||1,done=0,total=0,m=$("cImpMsg"),bar=$("cBarIn"),fast=!!window.TG_FAST,gap=key?250:2300;
+    imp.run=true;imp.stop=false;$("cImpGo").disabled=true;$("cImpStop").hidden=false;$("cBar").hidden=false;bar.style.width="0";m.textContent=key?"Starting…":"Starting. Without a key it runs slower to stay within pokemontcg.io's limits (about 8 minutes).";impInfo();
     function finish(t,ok){
       imp.run=false;$("cImpGo").disabled=false;$("cImpStop").hidden=true;m.textContent=t;if(ok){localStorage.removeItem(IMPK);bar.style.width="100%"}
       CQ.init=false;CQ.all=null;cardsInit();impInfo();
     }
     function fetchPage(tries){
       return fetch("https://api.pokemontcg.io/v2/cards?page="+page+"&pageSize=100&select="+IMPSEL,{headers:key?{"X-Api-Key":key}:{}}).then(function(r){
+        if(r.status===429){var e=new Error("rate");e.rate=true;throw e}
         if(!r.ok)throw new Error("pokemontcg.io answered "+r.status);return r.json();
-      }).catch(function(e){if(tries<3&&!imp.stop)return wait(2000*(tries+1)).then(function(){return fetchPage(tries+1)});throw e});
+      }).catch(function(e){
+        if(tries<5&&!imp.stop){
+          var ms=e.rate?20000*(tries+1):2000*(tries+1);
+          m.textContent=e.rate?"pokemontcg.io asked us to slow down. Waiting "+Math.round(ms/1000)+" seconds…":"Retrying page "+page+"…";
+          return wait(fast?30:ms).then(function(){return fetchPage(tries+1)});
+        }
+        throw e.rate?new Error("pokemontcg.io says too many requests (429)."):e;
+      });
     }
     function step(){
       if(imp.stop){try{localStorage.setItem(IMPK,String(page))}catch(e){}return finish("Stopped at page "+page+". Press Resume import to continue.",false)}
@@ -1625,7 +1633,7 @@ details.dd[open]>summary{margin-bottom:14px}
           if(total)bar.style.width=Math.min(100,Math.round(100*(page-1)*100/total))+"%";
           m.textContent="Imported "+Math.min((page-1)*100,total||(page-1)*100).toLocaleString()+(total?" of "+total.toLocaleString():"")+" cards…";
           if(total&&(page-1)*100>=total)return finish("Done. Your card database is up to date.",true);
-          return step();
+          return wait(fast?10:gap).then(step);
         });
       });
     }
