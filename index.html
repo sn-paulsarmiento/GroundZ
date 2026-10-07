@@ -250,6 +250,14 @@ details.dd[open]>summary{margin-bottom:14px}
 .cdet button.cx{background:rgba(255,255,255,.14);border-color:transparent;color:#fff;margin-top:4px}
 .cbar{height:8px;border-radius:999px;background:var(--line);overflow:hidden;margin:14px 0 0}
 .cbar i{display:block;height:100%;width:0;background:var(--accent);border-radius:999px;transition:width .3s}
+.pager{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;align-items:center;margin:16px 0 4px}
+.pager button{min-width:40px;padding:8px 12px;background:var(--raise);color:var(--ink);border:1px solid var(--line);font-size:.9rem}
+.pager button[aria-current=page]{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.pager button:disabled{opacity:.4;cursor:default}
+.pager .gap{color:var(--muted);padding:0 2px}
+#cList{min-height:320px}
+.cwrap .ctile{display:block;width:100%}
+@media(max-width:600px){.cgrid{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.cbrowser{padding:16px}}
 </style>
 <script>(function(){var t=null;try{t=localStorage.getItem("tg-theme");}catch(e){}if(t!=="light"&&t!=="dark"){t=window.matchMedia&&matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light";}document.documentElement.setAttribute("data-theme",t);})();</script>
 </head>
@@ -409,9 +417,9 @@ details.dd[open]>summary{margin-bottom:14px}
       <div class="cseg" id="cSeg" role="group" aria-label="Card category"><button type="button" data-t="" aria-pressed="true">All</button><button type="button" data-t="Pokémon" aria-pressed="false">Pokémon</button><button type="button" data-t="Trainer" aria-pressed="false">Trainer</button><button type="button" data-t="Energy" aria-pressed="false">Energy</button></div>
       <div class="cfilters"><select id="cSet" aria-label="Set"><option value="">All sets</option></select><select id="cType" aria-label="Energy type"><option value="">Any type</option></select><select id="cSort" aria-label="Sort cards"><option value="new">Newest first</option><option value="az">A to Z</option></select><label class="ctog" id="cStdW"><input type="checkbox" id="cStd" checked> Standard legal</label></div>
       <p class="foot" id="cHint" style="margin:8px 0 0" hidden></p>
+      <nav class="pager" id="cPagerTop" aria-label="Card pages, top" hidden></nav>
       <div class="cgrid" id="cList"></div>
-      <div id="cSentinel" aria-hidden="true" style="height:1px"></div>
-      <button type="button" class="ghost cmore" id="cMore" hidden>Show more cards</button>
+      <nav class="pager" id="cPagerBot" aria-label="Card pages, bottom" hidden></nav>
     </section>
     <section class="panel" id="cImp" hidden><h2>Card database</h2>
       <p class="sub" id="cDbInfo" style="margin:0 0 14px;font-size:1rem"></p>
@@ -1485,8 +1493,8 @@ details.dd[open]>summary{margin-bottom:14px}
     w.appendChild(b);w.appendChild(stepper(c));return w}
 
   // ---- card browser (your Supabase card database, with the built-in list as backup) ----
-  var CPAGE=36, CTYPES=["Grass","Fire","Water","Lightning","Psychic","Fighting","Darkness","Metal","Dragon","Colorless","Fairy"];
-  var CQ={q:"",t:"",set:"",type:"",std:true,sort:"new",total:0,rows:[],mode:"",seq:0,busy:false,init:false,sets:[],dbN:0,painted:0,all:null,local:null,tm:null};
+  var CPAGE=24, CTYPES=["Grass","Fire","Water","Lightning","Psychic","Fighting","Darkness","Metal","Dragon","Colorless","Fairy"];
+  var CQ={q:"",t:"",set:"",type:"",std:true,sort:"new",total:0,page:1,rows:[],mode:"",seq:0,busy:false,init:false,sets:[],dbN:0,all:null,local:null,tm:null};
   function qWords(q){return String(q||"").toLowerCase().replace(/[^a-z0-9\u00e0-\u00ff'\- ]/g," ").split(/\s+/).filter(Boolean).slice(0,6)}
   function cardLine(r){var a=[];if(r.subtypes&&r.subtypes.length)a.push(r.subtypes.join(" · "));if(r.types&&r.types.length)a.push(r.types.join("/"));if(r.hp)a.push(r.hp+" HP");return a.join(" · ")}
   function cardFromRow(r){return{id:r.id,n:r.name,s:r.ptcgo||String(r.set_id||"").toUpperCase(),sn:r.set_name,no:r.number||"",t:r.supertype||"",m:r.regulation||"",x:cardLine(r),img:r.img_s,imgL:r.img_l,types:r.types||[],rarity:r.rarity,std:!!r.std,exp:!!r.exp}}
@@ -1530,63 +1538,91 @@ details.dd[open]>summary{margin-bottom:14px}
     var p=REMOTE?api("/rest/v1/cards?select=id&limit=1",{raw:true,prefer:"count=exact"}).then(function(r){CQ.dbN=rangeTotal(r)||0}).catch(function(){CQ.dbN=0}):Promise.resolve();
     p.then(function(){CQ.mode=CQ.dbN>0?"db":"builtin";$("cStdW").hidden=CQ.mode!=="db";if(CQ.mode!=="db")CQ.std=false;else CQ.std=$("cStd").checked;return CQ.mode==="db"?loadSets():localSets()}).then(function(){
       setHint(CQ.mode==="db"?"":(isOrg()?"Showing the built-in Standard card list. Import the full English card database below.":"Showing the built-in Standard card list."));
-      fillSetOptions();impInfo();cardsSearch(true);
+      fillSetOptions();impInfo();cardsReset();
     });
   }
   function skel(n){var f=document.createDocumentFragment();for(var i=0;i<n;i++){var w=el("div",null,"cwrap cskel"),c=el("div",null,"cimg");c.setAttribute("aria-hidden","true");w.appendChild(c);f.appendChild(w)}return f}
-  function cardsSearch(reset){
-    var my=++CQ.seq;
-    if(reset){CQ.rows=[];CQ.total=0;CQ.local=null;CQ.painted=0;$("cList").innerHTML="";$("cMore").hidden=true}
+  function cardsReset(){CQ.local=null;CQ.total=0;cardsSearch(1)}
+  function cardsSearch(page){
+    var my=++CQ.seq,L=$("cList");
+    page=page||1;CQ.page=page;CQ.busy=true;
+    L.innerHTML="";L.appendChild(skel(CPAGE));
     if(CQ.mode==="builtin"){
-      var R=CQ.local||(CQ.local=localSearch()),n=CQ.rows.length,add=R.slice(n,n+CPAGE);
-      CQ.total=R.length;CQ.rows=CQ.rows.concat(add);paintCards(add);return;
+      var R=CQ.local||(CQ.local=localSearch());CQ.total=R.length;CQ.busy=false;
+      paintCards(R.slice((page-1)*CPAGE,page*CPAGE));return;
     }
-    CQ.busy=true;var off=CQ.rows.length;
-    $("cList").appendChild(skel(off?4:12));
-    api("/rest/v1/cards?"+cardQuery(off),{raw:true,prefer:off?"":"count=exact"}).then(function(res){
+    api("/rest/v1/cards?"+cardQuery((page-1)*CPAGE),{raw:true,prefer:"count=exact"}).then(function(res){
       if(my!==CQ.seq)return;CQ.busy=false;
-      var rows=(res.j||[]).map(cardFromRow);CQ.rows=CQ.rows.concat(rows);
-      if(!off){var t=rangeTotal(res);CQ.total=t==null?rows.length:t}
+      var rows=(res.j||[]).map(cardFromRow),t=rangeTotal(res);
+      CQ.total=t==null?rows.length:t;
+      var n=Math.max(1,Math.ceil(CQ.total/CPAGE));
+      if(page>n&&CQ.total){cardsSearch(n);return}
       paintCards(rows);
     }).catch(function(){
       if(my!==CQ.seq)return;CQ.busy=false;
       CQ.mode="builtin";CQ.std=false;$("cStdW").hidden=true;CQ.sets=[];localSets().then(function(){
-        setHint("Couldn't reach the card database, so this is the built-in Standard card list.");fillSetOptions();cardsSearch(true)});
+        setHint("Couldn't reach the card database, so this is the built-in Standard card list.");fillSetOptions();cardsReset()});
     });
   }
-  function paintCards(add){
-    var L=$("cList");[].forEach.call(L.querySelectorAll(".cskel"),function(x){x.remove()});
-    add.forEach(function(c){if(CQ.painted&&CQ.painted%24===0){var ad=el("div",null,"ad adrow");ad.dataset.slot="mid";ad.hidden=true;L.appendChild(ad)}CQ.painted++;L.appendChild(cardTile(c))});
-    var cnt=$("cCount");
-    if(CQ.total)cnt.textContent=CQ.rows.length<CQ.total?"Showing "+CQ.rows.length.toLocaleString()+" of "+CQ.total.toLocaleString()+" cards":CQ.total.toLocaleString()+" card"+(CQ.total===1?"":"s");
-    else cnt.textContent="";
-    var e=L.querySelector(".cempty");if(e)e.remove();
-    if(!CQ.total&&!CQ.busy){
+  function pageList(cur,n){
+    var s={1:1},i;s[n]=1;for(i=cur-1;i<=cur+1;i++)if(i>1&&i<n)s[i]=1;
+    var a=Object.keys(s).map(Number).sort(function(x,y){return x-y}),o=[],last=0;
+    a.forEach(function(p){if(last&&p-last>1)o.push(0);o.push(p);last=p});return o;
+  }
+  function goPage(p,scroll){
+    var n=Math.ceil(CQ.total/CPAGE);
+    if(CQ.busy||p<1||p>n||p===CQ.page)return;
+    cardsSearch(p);
+    if(scroll)window.scrollTo({top:Math.max(0,$("cQ").getBoundingClientRect().top+window.pageYOffset-90),behavior:"auto"});
+  }
+  function paintPager(el,scroll){
+    var n=Math.ceil(CQ.total/CPAGE),cur=CQ.page;el.innerHTML="";
+    if(n<2){el.hidden=true;return}
+    el.hidden=false;
+    function btn(label,p,o){
+      var b=document.createElement("button");b.type="button";b.textContent=label;b.dataset.p=p;
+      if(o&&o.aria)b.setAttribute("aria-label",o.aria);
+      if(o&&o.disabled)b.disabled=true;
+      if(o&&o.current){b.setAttribute("aria-current","page");b.setAttribute("aria-label","Page "+p+", current page")}
+      else if(!o||!o.aria)b.setAttribute("aria-label","Go to page "+p);
+      b.addEventListener("click",function(){goPage(p,scroll)});el.appendChild(b);
+    }
+    btn("‹",cur-1,{aria:"Previous page",disabled:cur<=1});
+    pageList(cur,n).forEach(function(p){
+      if(!p){var g=document.createElement("span");g.className="gap";g.textContent="…";g.setAttribute("aria-hidden","true");el.appendChild(g)}
+      else btn(String(p),p,{current:p===cur});
+    });
+    btn("›",cur+1,{aria:"Next page",disabled:cur>=n});
+  }
+  function paintCards(rows){
+    var L=$("cList");L.innerHTML="";CQ.rows=rows;
+    rows.forEach(function(c,i){
+      if(i===12){var ad=el("div",null,"ad adrow");ad.dataset.slot="mid";ad.hidden=true;L.appendChild(ad)}
+      L.appendChild(cardTile(c));
+    });
+    var cnt=$("cCount"),n=Math.ceil(CQ.total/CPAGE);
+    if(CQ.total){
+      var from=(CQ.page-1)*CPAGE+1,to=from+rows.length-1;
+      cnt.textContent=n>1?"Page "+CQ.page+" of "+n.toLocaleString()+" · cards "+from.toLocaleString()+"–"+to.toLocaleString()+" of "+CQ.total.toLocaleString():CQ.total.toLocaleString()+" card"+(CQ.total===1?"":"s");
+    }else cnt.textContent="";
+    if(!CQ.total){
       var p=el("p",CQ.mode==="db"&&CQ.std?"No Standard-legal cards match. Try turning off Standard legal, or fewer words.":"No cards match. Try fewer words or clear the filters.","cempty foot");p.style.gridColumn="1/-1";L.appendChild(p);
     }
-    $("cMore").hidden=!(CQ.rows.length<CQ.total);
-    renderAds();trayUpd();watchCards();
-  }
-  var cio=null;
-  function watchCards(){
-    if(!("IntersectionObserver" in window))return;
-    var s=$("cSentinel");
-    if(!cio)cio=new IntersectionObserver(function(en){if(en[0].isIntersecting&&!CQ.busy&&CQ.rows.length<CQ.total&&!$("vCards").hidden)cardsSearch(false)},{rootMargin:"400px"});
-    cio.unobserve(s);cio.observe(s);
+    paintPager($("cPagerTop"),false);paintPager($("cPagerBot"),true);
+    renderAds();trayUpd();
   }
   function renderCards(){
     var org=isOrg();$("cImp").hidden=!org;
     cardsInit();trayUpd();
   }
-  $("cQ").addEventListener("input",function(){clearTimeout(CQ.tm);CQ.tm=setTimeout(function(){CQ.q=$("cQ").value;cardsSearch(true)},250)});
+  $("cQ").addEventListener("input",function(){clearTimeout(CQ.tm);CQ.tm=setTimeout(function(){CQ.q=$("cQ").value;cardsReset()},250)});
   [].forEach.call($("cSeg").querySelectorAll("button"),function(b){b.addEventListener("click",function(){
     CQ.t=b.dataset.t;[].forEach.call($("cSeg").querySelectorAll("button"),function(x){x.setAttribute("aria-pressed",x===b?"true":"false")});
-    if(CQ.t==="Energy"||CQ.t==="Trainer"){CQ.type="";$("cType").value=""}$("cType").disabled=CQ.t==="Energy"||CQ.t==="Trainer";cardsSearch(true)})});
-  $("cSet").addEventListener("change",function(){CQ.set=$("cSet").value;cardsSearch(true)});
-  $("cType").addEventListener("change",function(){CQ.type=$("cType").value;cardsSearch(true)});
-  $("cSort").addEventListener("change",function(){CQ.sort=$("cSort").value;cardsSearch(true)});
-  $("cStd").addEventListener("change",function(){CQ.std=$("cStd").checked;fillSetOptions();cardsSearch(true)});
-  $("cMore").addEventListener("click",function(){if(!CQ.busy)cardsSearch(false)});
+    if(CQ.t==="Energy"||CQ.t==="Trainer"){CQ.type="";$("cType").value=""}$("cType").disabled=CQ.t==="Energy"||CQ.t==="Trainer";cardsReset()})});
+  $("cSet").addEventListener("change",function(){CQ.set=$("cSet").value;cardsReset()});
+  $("cType").addEventListener("change",function(){CQ.type=$("cType").value;cardsReset()});
+  $("cSort").addEventListener("change",function(){CQ.sort=$("cSort").value;cardsReset()});
+  $("cStd").addEventListener("change",function(){CQ.std=$("cStd").checked;fillSetOptions();cardsReset()});
 
   // ---- organizer: import English cards from pokemontcg.io into the database ----
   var imp={run:false,stop:false}, IMPK="tg-import-page";
