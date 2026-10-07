@@ -771,10 +771,15 @@ details.dd[open]>summary{margin-bottom:14px}
   function loadRemote(){
     return Promise.all([
       api("/rest/v1/league_state?id=eq.1&select=data,version"),
-      api("/rest/v1/profiles?select=id,username,role,player_id"),
+      api("/rest/v1/profiles?select=id,username,display_name,role,player_id"),
       api("/rest/v1/registrations?select=user_id"),
       api("/rest/v1/decklists?select=user_id,list,is_public")
     ]);
+  }
+  function renameInDoc(st,a,b){
+    (st.log||[]).forEach(function(g){if(g.w===a)g.w=b;if(g.l===a)g.l=b});
+    (st.players||[]).forEach(function(p){(p.rc||[]).forEach(function(x){if(x.o===a)x.o=b})});
+    var H=st.hof; if(H){(H.champs||[]).forEach(function(x){if(x.who===a)x.who=b});(H.seasons||[]).forEach(function(x){(x.top||[]).forEach(function(t){if(t[0]===a)t[0]=b})})}
   }
   function applyRemote(r){
     var row=r[0]&&r[0][0]; if(!row)throw new Error("League data not found");
@@ -782,7 +787,12 @@ details.dd[open]>summary{margin-bottom:14px}
     for(k in b)if(st[k]==null)st[k]=b[k];
     remVer=row.version; PROFS=r[1]||[]; accPid={}; var byUid={};
     PROFS.forEach(function(f){accPid[f.player_id]=f;byUid[f.id]=f;});
-    PROFS.forEach(function(f){if(!byId(st,f.player_id))st.players.push({id:f.player_id,name:f.username,rating:START,w:0,l:0,dk:{}});});
+    var renamed=false;
+    PROFS.forEach(function(f){
+      var p=byId(st,f.player_id);
+      if(!p){st.players.push({id:f.player_id,name:f.display_name,rating:START,w:0,l:0,dk:{}});}
+      else if(p.name!==f.display_name){renameInDoc(st,p.name,f.display_name);p.name=f.display_name;renamed=true;}
+    });
     var t=st.t=st.t||{day:6,time:"18:00",reg:[]};
     var rp=(r[2]||[]).map(function(x){return byUid[x.user_id]&&byUid[x.user_id].player_id}).filter(Boolean);
     regBase=rp.slice();
@@ -792,8 +802,9 @@ details.dd[open]>summary{margin-bottom:14px}
     REMOTE=true; S=st; if(keep)S.pro=keep; ensureSprites(S); ensureV4(S);
     lastSig=JSON.stringify([r[1],r[2],r[3]]);
     var f=SES&&SES.uid?byUid[SES.uid]:null;
-    CUR=f?{u:f.username,k:f.username.toLowerCase(),role:f.role==="org"?"org":"pl",pid:f.player_id,uid:f.id}:null;
+    CUR=f?{u:f.display_name,un:f.username,k:f.username.toLowerCase(),role:f.role==="org"?"org":"pl",pid:f.player_id,uid:f.id}:null;
     rebuildAds();
+    if(renamed&&isOrg())queueOrg();
   }
   function rebuildAds(){var ab=$("adCfg");if(ab){ab.innerHTML="";delete ab.dataset.b;}buildAdCfg();}
   function banner(t){var b=$("sbn");if(!b)return;b.textContent=t||"";b.hidden=!t;}
@@ -903,21 +914,37 @@ details.dd[open]>summary{margin-bottom:14px}
     var u=me(), b=$("acctBody");
     if(u){
       var p=myP()||{rating:START,w:0,l:0}, reg=!!(S.t&&p.id&&S.t.reg.indexOf(p.id)>=0);
-      b.innerHTML='<p>Signed in as <b></b>.</p><p class="foot" id="aInfo"></p><div class="actions"><button id="so" type="button" class="ghost">Sign out</button></div>';
+      b.innerHTML='<p>Signed in as <b></b> <span class="foot" id="aUn"></span></p><p class="foot" id="aInfo"></p>'
+        +'<div class="grid" style="margin-top:12px"><div><label for="adn">Display name</label><input id="adn" maxlength="24"></div></div>'
+        +'<div class="actions"><button id="adSave" type="button">Save display name</button><button id="so" type="button" class="ghost">Sign out</button></div>'
+        +'<p class="status" id="adMsg" role="status" aria-live="polite"></p>'
+        +'<p class="foot">Your username is permanent. Your display name is what everyone sees on the rankings, and you can change it any time.</p>';
       b.querySelector("b").textContent=u.u+(u.role==="org"?" (organizer)":" (player)");
+      $("aUn").textContent="@"+(u.un||"");
+      $("adn").value=u.u;
       $("aInfo").textContent="League pts "+p.rating+" · record "+p.w+"–"+p.l+" · "+(reg?"registered for this week's tournament":"not registered for this week's tournament");
       $("so").onclick=signOut;
+      $("adSave").onclick=function(){
+        var n=clean($("adn").value), m=$("adMsg");
+        if(n.length<2){m.textContent="Display name must be at least 2 characters.";return;}
+        if(n===u.u){m.textContent="That is already your display name.";return;}
+        $("adSave").disabled=true; m.textContent="Saving…";
+        api("/rest/v1/rpc/set_display_name",{method:"POST",body:{n:n}}).then(loadRemote).then(function(r){
+          applyRemote(r); rerender();
+          var mm=$("adMsg"); if(mm)mm.textContent="Display name updated.";
+        }).catch(function(e){m.textContent=friendly(e);}).then(function(){var bt=$("adSave");if(bt)bt.disabled=false;});
+      };
       return;
     }
     if(!REMOTE){b.innerHTML='<p class="foot"></p>';b.firstChild.textContent="Accounts are unavailable because the league database can't be reached. Reload the page to try again.";return;}
-    b.innerHTML='<div class="grid"><div id="unw"><label for="au">Player name</label><input id="au" maxlength="24" autocomplete="nickname"></div><div><label for="ae">Email</label><input id="ae" type="email" autocomplete="email"></div><div><label for="ap">Password (6+ characters)</label><input id="ap" type="password"></div></div><div class="actions"><button id="ago" type="button"></button><button id="asw" type="button" class="ghost"></button></div><p class="foot" id="ahint"></p><p class="status" id="amsg" role="status" aria-live="polite"></p>';
+    b.innerHTML='<div class="grid"><div id="unw"><label for="auu">Username</label><input id="auu" maxlength="20" autocomplete="username" autocapitalize="off" spellcheck="false"></div><div id="dnw"><label for="au">Display name</label><input id="au" maxlength="24" autocomplete="nickname"></div><div><label for="ae">Email</label><input id="ae" type="email" autocomplete="email"></div><div><label for="ap">Password (6+ characters)</label><input id="ap" type="password"></div></div><div class="actions"><button id="ago" type="button"></button><button id="asw" type="button" class="ghost"></button></div><p class="foot" id="ahint"></p><p class="status" id="amsg" role="status" aria-live="polite"></p>';
     function lab(){
       var up=mode==="up";
       $("ago").textContent=up?"Create account":"Log in";
       $("asw").textContent=up?"Have an account? Log in":"New here? Create an account";
-      $("unw").hidden=!up;
+      $("unw").hidden=!up; $("dnw").hidden=!up;
       $("ap").autocomplete=up?"new-password":"current-password";
-      $("ahint").textContent=up?"Your player name is shown publicly on the rankings. Your email is never shown.":"";
+      $("ahint").textContent=up?"Your username is your permanent @handle (letters, numbers, underscores). Your display name is shown on the rankings and you can change it later; leave it blank to use your username. Your email is never shown.":"";
     }
     lab();
     $("asw").onclick=function(){mode=mode==="in"?"up":"in";lab();$("amsg").textContent="";};
@@ -930,17 +957,21 @@ details.dd[open]>summary{margin-bottom:14px}
       });
     }
     function go(){
-      var e=$("ae").value.trim(), pw=$("ap").value, m=$("amsg"), n=clean($("au").value), btn=$("ago");
+      var e=$("ae").value.trim(), pw=$("ap").value, m=$("amsg"), un=$("auu").value.trim(), dn=clean($("au").value)||un, btn=$("ago");
       if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e)||pw.length<6){m.textContent="Enter a valid email and a password of at least 6 characters.";return;}
-      if(mode==="up"&&n.length<2){m.textContent="Choose a player name of at least 2 characters.";return;}
+      if(mode==="up"&&!/^[A-Za-z0-9_]{3,20}$/.test(un)){m.textContent="Username must be 3 to 20 characters: letters, numbers or underscores.";return;}
+      if(mode==="up"&&dn.length<2){m.textContent="Display name must be at least 2 characters.";return;}
       btn.disabled=true; m.textContent=mode==="in"?"Logging in…":"Creating your account…";
       var run;
       if(mode==="in"){
         run=sbx("/auth/v1/token?grant_type=password",{method:"POST",anon:true,body:{email:e,password:pw}}).then(finish);
       }else{
-        run=sbx("/rest/v1/rpc/username_available",{method:"POST",anon:true,body:{n:n}}).then(function(ok){
-          if(ok!==true)throw new Error("That player name is taken. Choose another.");
-          return sbx("/auth/v1/signup",{method:"POST",anon:true,body:{email:e,password:pw,data:{username:n}}});
+        run=sbx("/rest/v1/rpc/username_available",{method:"POST",anon:true,body:{n:un}}).then(function(ok){
+          if(ok!==true)throw new Error("That username is taken. Choose another.");
+          return sbx("/rest/v1/rpc/display_name_available",{method:"POST",anon:true,body:{n:dn}});
+        }).then(function(ok){
+          if(ok!==true)throw new Error("That display name is taken. Choose another.");
+          return sbx("/auth/v1/signup",{method:"POST",anon:true,body:{email:e,password:pw,data:{username:un,display_name:dn}}});
         }).then(function(j){
           if(j&&j.access_token)return finish(j);
           mode="in"; lab(); $("amsg").textContent="Account created. Check your email to confirm it, then log in.";
@@ -1259,7 +1290,7 @@ details.dd[open]>summary{margin-bottom:14px}
 
   // ---- Pro hub: Patreon, meta trends, decklist vault, hall of fame ----
   var ACH=[["s5","5-win streak","Win 5 matches in a row"],["b1","Giant slayer","Beat the #1 seed"],["gs","Big upset","Earn a +2 upset bonus"],["w10","Veteran","Reach 10 match wins"],["ch","Tournament champion","Win a weekly Swiss tournament"]];
-  function isPro(){var u=me();return !!S.pro||(!!u&&(u.role==="org"||S.patreon.patrons.some(function(x){return x.toLowerCase()===u.k})))}
+  function isPro(){var u=me();return !!S.pro||(!!u&&(u.role==="org"||S.patreon.patrons.some(function(x){return x.toLowerCase()===u.k||x.toLowerCase()===u.u.toLowerCase()})))}
   function ensureV4(st){
     st.hof=st.hof||{seasons:[],champs:[]}; st.patreon=st.patreon||{url:"",patrons:[]};
     if(!st.wk){st.wk={};st.log.forEach(function(g){var k=g.wk;st.wk[k]=st.wk[k]||{};[[g.wd,g.t?.5:1],[g.ld,g.t?.5:0]].forEach(function(x){var d=x[0]&&byName(st.decks,x[0]);if(!d)return;var o=st.wk[k][d.id]=st.wk[k][d.id]||[0,0];o[0]++;o[1]+=x[1]})})}
