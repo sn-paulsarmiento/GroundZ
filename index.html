@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Training Grounds</title>
+<title>GroundZ</title>
 <style>
 :root{
   --bg:#f5f5f7; --panel:#ffffff; --raise:#fbfbfd; --ink:#1d1d1f; --muted:#6e6e73; --line:rgba(0,0,0,.08);
@@ -183,9 +183,9 @@ details.dd>summary::-webkit-details-marker{display:none}
 details.dd>summary::after{content:"▾";transition:transform .2s}
 details.dd[open]>summary::after{transform:rotate(180deg)}
 details.dd[open]>summary{margin-bottom:14px}
-#tPro{font-weight:600}
-#tPro:not([aria-current=page]){color:#b9801c}
-#tPro::after{content:"";display:inline-block;width:5px;height:5px;margin-left:6px;vertical-align:middle;border-radius:50%;background:#e0a526;box-shadow:0 0 6px rgba(224,165,38,.75)}
+.tabs #tPro{font-weight:700;color:#3a2600;margin-left:4px;background:linear-gradient(135deg,#ffe48f,#f2b632 60%,#d9921c);box-shadow:inset 0 0 0 1px rgba(150,95,0,.35)}
+.tabs #tPro:hover{color:#3a2600;filter:brightness(1.06)}
+.tabs #tPro[aria-current=page]{color:#2a1b00;background:linear-gradient(135deg,#ffd75e,#e9a21c);box-shadow:0 1px 3px rgba(0,0,0,.25),inset 0 0 0 1px rgba(150,95,0,.5)}
 .cgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:14px;margin-top:14px;padding:0;list-style:none}
 .ctile{background:none;border:0;padding:0;text-align:left;color:inherit;font:inherit;cursor:pointer}
 .cimg{position:relative;aspect-ratio:63/88;border-radius:4.6%;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,.35);transition:transform .15s}
@@ -396,27 +396,84 @@ button.danger-fill{background:var(--down);border-color:var(--down);color:#fff}
 .rbad{color:var(--down);font-size:.86rem;margin:6px 0 0}
 .tile.sm b{font-size:1.15rem;line-height:1.35;letter-spacing:-.01em}
 .swf{display:grid;grid-template-columns:1fr 1.4fr;gap:14px}
+/* home: announcements take the right third, above the meta */
+.layout.home{grid-template-columns:minmax(0,1fr) 320px;grid-template-areas:"rank news" "rank meta";grid-template-rows:auto 1fr}
+.home .news-p{grid-area:news}.home .rank-p{grid-area:rank}.home .meta-p{grid-area:meta}
+@media(max-width:860px){.layout.home{grid-template-columns:1fr;grid-template-areas:"news" "rank" "meta";grid-template-rows:auto}}
+.news-p{padding:20px 22px}
+.news-p h2{font-size:1.1rem;margin:0 0 4px}
+.news-p .nw{padding:8px 0 0}
+.news-p .nw p{display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.nwt{display:block;margin-top:6px;font-weight:600;letter-spacing:-.01em;line-height:1.3}
+.nwh time{margin-left:auto}
+button.more{background:none;border:0;color:var(--accent);padding:10px 0 0;font-size:.9rem;font-weight:600}
+.qbox.wide{width:min(560px,100%);max-height:86vh;overflow:auto}
+.qbox.wide .news .nw:first-child{padding-top:4px}
+.qbox input{margin:8px 0 2px}
+/* player page */
+.ptop{display:flex;justify-content:space-between;align-items:center;gap:12px;margin:0 0 16px}
+.ptop button{flex:none}
+button.gear{flex:none;width:42px;height:42px;padding:0;display:grid;place-items:center;border-radius:50%;background:var(--raise);border:1px solid var(--line);color:var(--ink)}
+button.gear svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.layout.plr{grid-template-columns:minmax(0,1fr) 300px}
+.pside .panel{margin-bottom:20px}.pside .panel:last-child{margin-bottom:0}
+.pside .rcs{grid-template-columns:repeat(auto-fill,minmax(110px,1fr))}
+@media(max-width:980px){.layout.plr{grid-template-columns:1fr}}
+.layout.plr{margin-bottom:20px}
+.rcs>p{grid-column:1/-1}
+/* decklists: hover preview, phone list/grid, full screen */
+.dtext li{cursor:pointer;border-radius:6px}
+.dtext li:hover span,.dtext li:focus-visible span{color:var(--accent)}
+.cpv{position:fixed;z-index:80;width:220px;pointer-events:none;filter:drop-shadow(0 10px 24px rgba(0,0,0,.35))}
+.cpv[hidden]{display:none}
+.dg-zoom{cursor:zoom-in}
+.dvs,.dgtip{display:none}
+@media(max-width:760px){
+  .dvs{display:inline-flex}
+  .dgtip{display:block;margin:6px 0 0}
+  .dsplit[data-v=list] .dside{display:none}
+  .dsplit[data-v=grid] .dtext{display:none}
+  .dside .dgrid{grid-template-columns:repeat(6,minmax(0,1fr));gap:4px}
+  .dside .dgh{display:none}
+  .dside .dgc .cimg{border-radius:3px}
+  .dside .dgc .cph{padding:2px;border-width:1px}.dside .dgc .cph b,.dside .dgc .cph span{font-size:.45rem}
+  .dside .dgq{left:2px;bottom:2px;padding:0 4px;font-size:.6rem}
+}
+.dfull{position:fixed;inset:0;z-index:48;background:var(--bg);overflow:auto;padding:env(safe-area-inset-top,0px) 12px calc(24px + env(safe-area-inset-bottom,0px))}
+.dfull-top{position:sticky;top:0;z-index:3;display:flex;justify-content:space-between;align-items:center;gap:10px;padding:12px 4px;background:var(--bg);max-width:1080px;margin:0 auto}
+.dfull-top button{flex:none;padding:7px 16px;font-size:.88rem}
+.dfull .dgrid{grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:10px;max-width:1080px;margin:0 auto}
+.dfull .dgc{cursor:zoom-in}
+@media(max-width:760px){.dfull .dgrid{grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}}
+/* match results: what each player reported */
+.rboth{display:flex;flex-wrap:wrap;gap:6px 16px;margin-top:8px}
+.rs{display:inline-flex;align-items:center;gap:6px;font-size:.86rem}
+.rs b{font-weight:600;color:var(--ink)}
+.rchip{font:600 .72rem/1.6 var(--font);padding:1px 9px;border-radius:999px;background:var(--line);color:var(--muted)}
+.rchip.rw{background:color-mix(in srgb,var(--up) 18%,transparent);color:var(--up)}
+.rchip.rl{background:color-mix(in srgb,var(--down) 16%,transparent);color:var(--down)}
+.rchip.rt{background:color-mix(in srgb,var(--accent) 16%,transparent);color:var(--accent)}
+.rchip.dim{opacity:.7}
+.rst{font-size:.82rem;color:var(--muted);margin:6px 0 0}
+.rbtns button[aria-pressed=true]{background:var(--accent);color:var(--accent-ink)}
 @media(max-width:560px){.swf{grid-template-columns:1fr}}
 </style>
 <script>(function(){var t=null;try{t=localStorage.getItem("tg-theme");}catch(e){}if(t!=="light"&&t!=="dark"){t=window.matchMedia&&matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light";}document.documentElement.setAttribute("data-theme",t);})();</script>
 </head>
 <body>
-<header class="topbar"><div class="topbar-in"><span class="brand">Training Grounds</span><nav class="tabs" aria-label="Sections"><button id="tRank" type="button" aria-current="page">Rankings</button><button id="tTour" type="button">Tournament</button><button id="tCards" type="button">Cards</button><button id="tTools" type="button">Tools</button><button id="tPro" type="button">Pro</button><button id="tDash" type="button" hidden>Dashboard</button><button id="tAcct" type="button">Sign in</button></nav><button id="themeBtn" class="theme" type="button" role="switch" aria-checked="false" aria-label="Dark mode"><span class="knob"><svg class="sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg><svg class="moon" viewBox="0 0 24 24"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg></span></button></div></header>
+<header class="topbar"><div class="topbar-in"><span class="brand">GroundZ</span><nav class="tabs" aria-label="Sections"><button id="tRank" type="button" aria-current="page">Rankings</button><button id="tTour" type="button">Tournament</button><button id="tCards" type="button">Cards</button><button id="tTools" type="button">Tools</button><button id="tPro" type="button">Pro</button><button id="tDash" type="button" hidden>Dashboard</button><button id="tAcct" type="button">Sign in</button></nav><button id="themeBtn" class="theme" type="button" role="switch" aria-checked="false" aria-label="Dark mode"><span class="knob"><svg class="sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg><svg class="moon" viewBox="0 0 24 24"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg></span></button></div></header>
 <main>
-  <div class="hero"><h1>Training Grounds</h1><p class="sub" id="weekLine"></p><div class="season"><div class="sline" id="sLine"></div><div class="sbar"><i id="sFill"></i></div><p class="foot" id="sNote" style="margin:6px 0 0"></p></div></div>
+  <div class="hero"><h1>GroundZ</h1><p class="sub" id="weekLine"></p><div class="season"><div class="sline" id="sLine"></div><div class="sbar"><i id="sFill"></i></div><p class="foot" id="sNote" style="margin:6px 0 0"></p></div></div>
   <div class="ad" data-slot="top" hidden></div>
   <div id="vRank">
-  <section class="panel" aria-labelledby="newsH"><div class="newsh"><h2 id="newsH">Updates &amp; notices</h2><button id="newsMore" type="button" class="ghost" hidden></button></div><ul class="news" id="news"></ul></section>
-
-
-
-  <div class="layout">
-  <section class="panel" aria-labelledby="board">
+  <div class="layout home">
+  <section class="panel news-p" aria-labelledby="newsH"><h2 id="newsH">Updates &amp; Announcements</h2><ul class="news" id="news"></ul><button id="newsMore" type="button" class="more" hidden>Read more ›</button></section>
+  <section class="panel rank-p" aria-labelledby="board">
     <h2 id="board">Power rankings</h2>
     <ol id="list"></ol>
     <p class="foot">Arrows compare each player's rank with the last closed week. Ratings use Elo: everyone starts at 1000 and each result moves both players by the same amount. Beating a stronger, higher-rated opponent earns many more points (and costs them more); beating a weaker one earns few. Swiss events still score 3 for a win, 1 for a tie. Sprites beside a name are that player's most-used decks.</p>
   </section>
-  <aside class="panel" aria-labelledby="meta">
+  <aside class="panel meta-p" aria-labelledby="meta">
     <h2 id="meta">Meta breakdown</h2>
     <ul class="meta" id="metaList"></ul>
     <p class="foot">Share of all decks played in reported matches, with each deck's win rate.</p>
@@ -465,12 +522,12 @@ button.danger-fill{background:var(--down);border-color:var(--down);color:#fff}
       <section class="panel"><h2>Organizer dashboard</h2><div class="tiles" id="oTiles"></div></section>
       <section class="panel"><h2>Run tournament</h2><div id="oSw"></div></section>
       <section class="panel"><h2>This week's tournament</h2><p class="tbig" id="oWhen"></p><p class="sub" id="oCount" style="margin:0 0 8px"></p><ul class="log" id="oReg"></ul><div class="row-add" style="margin-top:14px"><select id="oAddSel" aria-label="Player to register" style="flex:1"></select><button id="oAddBtn" type="button">Register player</button></div><p class="status" id="oAddMsg" role="status" aria-live="polite"></p><p class="foot">Pick anyone in the system, with or without an account, to add them to this week's tournament.</p></section>
-    <section class="panel" aria-labelledby="nH"><h2 id="nH">Post a notice</h2><div class="grid"><div><label for="nTi">Title</label><input id="nTi" maxlength="80" placeholder="e.g. No tournament this Saturday"></div><div><label for="nK">Type</label><select id="nK"><option value="n">Notice</option><option value="i">Important (pinned to the top)</option><option value="m">Maintenance</option></select></div></div><div style="margin-top:12px"><label for="nBody">Message (optional)</label><textarea id="nBody" maxlength="600" style="min-height:90px"></textarea></div><div class="actions"><button id="nPost" type="button">Post notice</button></div><p class="status" id="nMsg" role="status" aria-live="polite"></p><ul class="log" id="nList"></ul><p class="foot">Notices show for everyone under Updates &amp; notices on the Rankings page, alongside automatic site updates.</p></section>
+    <section class="panel" aria-labelledby="nH"><h2 id="nH">Post a notice</h2><div class="grid"><div><label for="nTi">Title</label><input id="nTi" maxlength="80" placeholder="e.g. No tournament this Saturday"></div><div><label for="nK">Type</label><select id="nK"><option value="n">Notice</option><option value="i">Important (pinned to the top)</option><option value="m">Maintenance</option></select></div></div><div style="margin-top:12px"><label for="nBody">Message (optional)</label><textarea id="nBody" maxlength="600" style="min-height:90px"></textarea></div><div class="actions"><button id="nPost" type="button">Post notice</button></div><p class="status" id="nMsg" role="status" aria-live="polite"></p><ul class="log" id="nList"></ul><p class="foot">Notices show for everyone under Updates &amp; Announcements on the Rankings page, alongside automatic site updates.</p></section>
     <section class="panel" aria-labelledby="tO">
       <h2 id="tO">Organizer</h2>
       <div class="grid">
         <div><label for="tDay">Day</label><select id="tDay"><option value="0">Sunday</option><option value="1">Monday</option><option value="2">Tuesday</option><option value="3">Wednesday</option><option value="4">Thursday</option><option value="5">Friday</option><option value="6">Saturday</option></select></div>
-        <div><label for="tTime">Start time</label><input id="tTime" type="time"></div>
+        <div><label for="tTime">Start time (UAE, GMT+4)</label><input id="tTime" type="time"></div>
       </div>
       <div class="actions"><button id="tAll" type="button" class="ghost">Register everyone (preview)</button><button id="tClr" type="button" class="ghost">Clear registrations</button></div>
     </section>
@@ -534,7 +591,7 @@ button.danger-fill{background:var(--down);border-color:var(--down);color:#fff}
       <section class="panel"><h2>My recent decks</h2><div class="rcs" id="pRecent"></div><p class="foot">Your last 5 decks, newest first.</p></section>
       <section class="panel"><h2>My decks</h2><ul class="meta" id="pDecks"></ul></section>
       <section class="panel"><h2>My decklist</h2><label for="myList">Paste your list</label><textarea id="myList" maxlength="4000"></textarea><label class="chk"><input type="checkbox" id="myPub"> Allow public viewing</label><div class="actions"><button id="saveList" type="button">Save decklist</button></div><p class="status" id="listMsg" role="status" aria-live="polite"></p><p class="foot">Public lists open when anyone taps your name or deck icons in the power rankings.</p></section>
-      <section class="panel"><h2>My recent matches</h2><ul class="log" id="pLog"></ul><p class="foot">In Swiss rounds you report your own result and your opponent confirms it. If a report is missing or the two don't match, the organizer decides.</p></section>
+      <section class="panel"><h2>My recent matches</h2><ul class="log" id="pLog"></ul><p class="foot">In Swiss rounds you report your own result and your opponent confirms it. You can fix a misclick until the next round is paired, but your opponent has to confirm the change. If reports are missing or don't match, the organizer decides.</p></section>
     </div>
   </div>
 
@@ -547,11 +604,15 @@ button.danger-fill{background:var(--down);border-color:var(--down);color:#fff}
   </div>
 <div id="vPro" hidden><div id="hubBody"></div></div>
 <div id="vDeck" hidden>
-    <section class="panel"><div class="actions" style="margin:0 0 16px"><button id="dBack" type="button" class="ghost" style="flex:none">← Back to rankings</button></div><div class="prof"><div class="profid"><span id="dkAv"></span><div><h2 id="dkName"></h2><p class="foot" id="dkSub"></p></div></div><div id="dkBadge"></div></div><div class="tiles" id="dkTiles"></div></section>
+    <section class="panel"><div class="ptop"><button id="dBack" type="button" class="ghost">← Back to rankings</button><button id="dkSet" type="button" class="gear" aria-label="Profile settings" title="Profile settings" hidden><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></button></div><div class="prof"><div class="profid"><span id="dkAv"></span><div><h2 id="dkName"></h2><p class="foot" id="dkSub"></p></div></div><div id="dkBadge"></div></div><div class="tiles" id="dkTiles"></div></section>
     <section class="panel"><h2>GroundZ tournament data</h2><div id="dkTour"></div></section>
+    <div class="layout plr">
     <section class="panel"><h2 id="dkDH">My Decks</h2><div id="dkList"></div></section>
+    <aside class="pside">
     <section class="panel"><h2>Recent decks</h2><div class="rcs" id="dkRecent"></div><p class="foot">The last 5 decks this player used, newest first.</p></section>
     <section class="panel"><h2>Decks played</h2><ul class="meta" id="dkDecks"></ul></section>
+    </aside>
+    </div>
   </div>
 <div id="vCards" hidden><div class="clay" id="cLay"><div class="cmain">
     <section class="panel cbrowser">
@@ -1138,19 +1199,20 @@ button.danger-fill{background:var(--down);border-color:var(--down);color:#fff}
   }
   function chrome(){var u=me();$("tAcct").textContent=u?u.u:"Sign in";$("tDash").hidden=!u;$("tDash").textContent=u&&u.role==="org"?"Organizer":"My dashboard";if(!u&&!$("vDash").hidden)view("Rank");renderAds();}
   function view(v){
-    ["Rank","Tour","Dash","Acct","Deck","Pro","Cards","Tools"].forEach(function(k){$("v"+k).hidden=k!==v;var tb=$("t"+k);if(tb)tb.setAttribute("aria-current",(k===v||(v==="Deck"&&k==="Rank"))?"page":"false");});
+    var ownPg=v==="Deck"&&!!CUR&&deckPid===CUR.pid;pvHide();
+    ["Rank","Tour","Dash","Acct","Deck","Pro","Cards","Tools"].forEach(function(k){$("v"+k).hidden=k!==v;var tb=$("t"+k);if(tb)tb.setAttribute("aria-current",(k===v||(v==="Deck"&&k===(ownPg?"Acct":"Rank")))?"page":"false");});
     if(v==="Tour") renderTour(); if(v==="Dash") renderDash(); if(v==="Acct") renderAcct(); if(v==="Deck") renderDeck(); if(v==="Pro") renderHub(); if(v==="Cards") renderCards(); if(v==="Tools") renderTools(); var ty=$("cTray"); if(ty) ty.hidden=v!=="Cards"||BUILD; renderAds();
   }
   $("tRank").addEventListener("click",function(){view("Rank")});
   $("tTour").addEventListener("click",function(){view("Tour")});$("tCards").addEventListener("click",function(){view("Cards")});$("tTools").addEventListener("click",function(){view("Tools")});
-  $("tAcct").addEventListener("click",function(){view("Acct")});
+  $("tAcct").addEventListener("click",function(){if(me()&&myP())openMine();else view("Acct")});
   $("tDash").addEventListener("click",function(){view("Dash")});
 
   function renderAcct(){
-    var u=me(), b=$("acctBody");
+    var u=me(), b=$("acctBody");$("aH").textContent=u?"Profile settings":"Account";
     if(u){
       var p=myP()||{rating:START,w:0,l:0}, reg=!!(S.t&&p.id&&S.t.reg.indexOf(p.id)>=0);
-      b.innerHTML='<p>Signed in as <b></b> <span class="foot" id="aUn"></span></p><p class="foot" id="aInfo"></p><div class="acard"><div id="aBadge"></div><button id="aProf" type="button" class="ghost" style="flex:none">View my profile</button></div>'
+      b.innerHTML='<div class="actions" style="margin:0 0 14px"><button id="aProf" type="button" class="ghost" style="flex:none">← Back to my profile</button></div><p>Signed in as <b></b> <span class="foot" id="aUn"></span></p><p class="foot" id="aInfo"></p>'
         +'<div class="avrow"><span id="avPrev"></span><div><label for="avFile">Profile picture</label><input id="avFile" type="file" accept="image/*"><div class="actions" style="margin-top:8px"><button id="avRm" type="button" class="ghost" style="flex:none">Remove picture</button></div></div></div><p class="status" id="avMsg" role="status" aria-live="polite"></p>'
         +'<div class="grid" style="margin-top:12px"><div><label for="adn">Display name</label><input id="adn" maxlength="24"></div></div>'
         +'<div class="actions"><button id="adSave" type="button">Save display name</button><button id="so" type="button" class="ghost">Sign out</button></div>'
@@ -1161,7 +1223,7 @@ button.danger-fill{background:var(--down);border-color:var(--down);color:#fff}
       $("adn").value=u.u;
       $("aInfo").textContent="League pts "+p.rating+" · record "+p.w+"–"+p.l+" · "+(reg?"registered for this week's tournament":"not registered for this week's tournament");
       $("so").onclick=signOut;
-      $("aBadge").appendChild(trainerCard(p,84));$("aProf").hidden=!myP();$("aProf").onclick=openMine;
+      $("aProf").hidden=!myP();$("aProf").onclick=openMine;
       $("avPrev").appendChild(avatar(myP()||{name:u.u}));$("avRm").hidden=!AV[u.pid];
       function setAv(data){
         var m=$("avMsg");m.textContent=data?"Saving your picture…":"Removing your picture…";
@@ -1238,19 +1300,26 @@ button.danger-fill{background:var(--down);border-color:var(--down);color:#fff}
     $("ap").addEventListener("keydown",function(ev){if(ev.key==="Enter")go()});
   }
 
+  // tournament times are UAE time (GMT+4, no daylight saving) for everyone, whatever their device's time zone
+  var UAE=4*36e5;
   function nextOcc(){
-    var t=S.t, d=new Date(), tp=String(t.time).split(":");
-    var o=new Date(d.getFullYear(),d.getMonth(),d.getDate(),+tp[0]||0,+tp[1]||0);
-    o.setDate(o.getDate()+(t.day-o.getDay()+7)%7);
-    if(o<d) o.setDate(o.getDate()+7);
-    return o;
+    var t=S.t, tp=String(t.time).split(":"), now=Date.now(), u=new Date(now+UAE);
+    var o=Date.UTC(u.getUTCFullYear(),u.getUTCMonth(),u.getUTCDate(),+tp[0]||0,+tp[1]||0)-UAE;
+    o+=((t.day-u.getUTCDay()+7)%7)*864e5;
+    if(o<now) o+=7*864e5;
+    return new Date(o);
+  }
+  function whenS(d){
+    var s;try{s=d.toLocaleString(undefined,{timeZone:"Asia/Dubai",weekday:"long",month:"short",day:"numeric",hour:"numeric",minute:"2-digit"})}
+    catch(e){var u=new Date(d.getTime()+UAE),W=["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];s=W[u.getUTCDay()]+" "+u.getUTCDate()+"/"+(u.getUTCMonth()+1)+", "+u.getUTCHours()+":"+pad(u.getUTCMinutes())}
+    return s+" · GMT+4 (UAE)";
   }
   function order(n){var o=[1];while(o.length<n){var m=o.length*2+1;o=o.reduce(function(a,x){a.push(x,m-x);return a},[]);}return o}
   function renderTour(){
     var t=S.t=S.t||{day:6,time:"18:00",reg:[]};
     t.reg=t.reg.filter(function(id){return byId(S,id)});
     var u=me(), p=u?myP():null, n=t.reg.length, isReg=!!p&&t.reg.indexOf(p.id)>=0;
-    $("tWhen").textContent=nextOcc().toLocaleString(undefined,{weekday:"long",month:"short",day:"numeric",hour:"numeric",minute:"2-digit"});
+    $("tWhen").textContent=whenS(nextOcc());
     $("tCount").textContent=n+" player"+(n===1?"":"s")+" registered · free entry";
     var rb=$("tReg"); rb.textContent=!u?"Sign in to register":isReg?"Withdraw":"Register for free"; rb.className=isReg?"ghost":"";
     $("tDay").value=t.day; $("tTime").value=t.time;
@@ -1316,7 +1385,7 @@ button.danger-fill{background:var(--down);border-color:var(--down);color:#fff}
     var u=me(); if(!u){view("Rank");return;}
     var org=u.role==="org"; $("dOrg").hidden=!org; $("dPl").hidden=org;
     var t=S.t=S.t||{day:6,time:"18:00",reg:[]}; t.reg=t.reg.filter(function(id){return byId(S,id)});
-    var when=nextOcc().toLocaleString(undefined,{weekday:"long",month:"short",day:"numeric",hour:"numeric",minute:"2-digit"});
+    var when=whenS(nextOcc());
     var n=t.reg.length, L=t.reg.map(function(id){return byId(S,id)}).sort(function(a,b){return b.rating-a.rating||a.name.localeCompare(b.name)});
     if(org){
       var games=S.players.reduce(function(a,p){return a+p.w},0), tp=S.decks.slice().sort(function(a,b){return b.p-a.p})[0], tot=S.decks.reduce(function(a,d){return a+d.p},0);
@@ -1457,18 +1526,66 @@ button.danger-fill{background:var(--down);border-color:var(--down);color:#fff}
     document.addEventListener("keydown",key,true);no.focus();
   }
 
+  function askName(cur,onOk){
+    var prev=document.activeElement,o=el("div",null,"qmodal"),b=el("div",null,"qbox"),h=el("h3","Name this deck"),inp=el("input"),err=el("p",null,"rbad");
+    o.setAttribute("role","dialog");o.setAttribute("aria-modal","true");o.setAttribute("aria-labelledby","qNmH");h.id="qNmH";
+    inp.maxLength=24;inp.placeholder="e.g. Charizard ex";inp.value=cur||"";inp.setAttribute("aria-labelledby","qNmH");
+    b.appendChild(h);b.appendChild(el("p","Saving with the name of a deck you already have replaces that deck.","foot"));b.appendChild(inp);b.appendChild(err);
+    var a=el("div",null,"actions"),no=el("button","Cancel","ghost"),ok=el("button","Save deck");no.type=ok.type="button";a.appendChild(no);a.appendChild(ok);b.appendChild(a);o.appendChild(b);
+    function close(){o.remove();document.removeEventListener("keydown",key,true);if(prev&&prev.isConnected)prev.focus()}
+    function go(){var n=clean(inp.value);if(!n){err.textContent="Give the deck a name.";inp.focus();return}close();onOk(n)}
+    function key(e){if(e.key==="Escape"){e.preventDefault();close()}else if(e.key==="Enter"&&document.activeElement===inp){e.preventDefault();go()}}
+    no.onclick=close;ok.onclick=go;o.onclick=function(e){if(e.target===o)close()};document.addEventListener("keydown",key,true);document.body.appendChild(o);inp.focus();inp.select();
+  }
+
   // ---- saved decklist layout: names and counts on the left, card grid on the right ----
-  function deckSplit(text,x){
+  function deckSplit(text,x,title){
     var cs=listCards(text,x),wrap=el("div"),eb=el("div",null,"est"),w=el("div",null,"dsplit"),L=el("div",null,"dtext"),R=el("div",null,"dside"),tot=0;
+    if(!cs.length){wrap.appendChild(el("pre",text,"dl"));return wrap}
+    w.dataset.v=DVIEW==="grid"?"grid":"list";
     GR.forEach(function(G){
       var A=cs.filter(function(c){return gk(c)===G[1]});if(!A.length)return;
       var q=A.reduce(function(a,c){return a+c.q},0);tot+=q;L.appendChild(el("h4",G[0]+" · "+q));
-      var ul=el("ul");A.forEach(function(c){var li=el("li");li.appendChild(el("b",String(c.q)));li.appendChild(el("span",c.n));if(c.s)li.appendChild(el("small",c.s+" "+c.no));ul.appendChild(li)});L.appendChild(ul);
+      var ul=el("ul");A.forEach(function(c){var li=el("li");li.tabIndex=0;li.setAttribute("role","button");li.setAttribute("aria-label",c.q+" "+c.n+", show card");
+        li.appendChild(el("b",String(c.q)));li.appendChild(el("span",c.n));if(c.s)li.appendChild(el("small",c.s+" "+c.no));
+        li.addEventListener("mouseenter",function(e){pvShow(c,e)});li.addEventListener("mousemove",pvMove);li.addEventListener("mouseleave",pvHide);
+        li.addEventListener("click",function(){pvHide();bigCard(c)});li.addEventListener("keydown",function(e){if(e.key==="Enter"||e.key===" "){e.preventDefault();bigCard(c)}});
+        ul.appendChild(li)});L.appendChild(ul);
     });
-    if(!cs.length){wrap.appendChild(el("pre",text,"dl"));return wrap}
     L.appendChild(el("p","Total · "+tot+" card"+(tot===1?"":"s")+(tot!==60?" (a legal deck has 60)":""),"dtot"));
-    R.appendChild(deckGrid(cs));w.appendChild(L);w.appendChild(R);
-    wrap.appendChild(eb);estCost(cs,eb);wrap.appendChild(w);return wrap;
+    var g=deckGrid(cs);g.classList.add("dg-zoom");g.tabIndex=0;g.setAttribute("role","button");g.setAttribute("aria-label","Open the deck grid full screen");
+    g.addEventListener("click",function(){fullDeck(cs,title)});g.addEventListener("keydown",function(e){if(e.key==="Enter"||e.key===" "){e.preventDefault();fullDeck(cs,title)}});
+    R.appendChild(g);R.appendChild(el("p","Tap the grid to open it full screen, then tap a card to zoom in.","foot dgtip"));w.appendChild(L);w.appendChild(R);
+    var sg=el("div",null,"vseg dvs");sg.setAttribute("role","group");sg.setAttribute("aria-label","Decklist view");
+    [["list","List"],["grid","Grid"]].forEach(function(o){var b=el("button",o[1]);b.type="button";b.dataset.v=o[0];b.setAttribute("aria-pressed",w.dataset.v===o[0]?"true":"false");
+      b.onclick=function(){DVIEW=o[0];try{localStorage.setItem("tg-dview",DVIEW)}catch(e){}w.dataset.v=o[0];[].forEach.call(sg.children,function(y){y.setAttribute("aria-pressed",y.dataset.v===o[0]?"true":"false")})};sg.appendChild(b)});
+    wrap.appendChild(eb);estCost(cs,eb);wrap.appendChild(sg);wrap.appendChild(w);return wrap;
+  }
+  // card preview when hovering a card name (mouse only); tap or Enter opens it large
+  var PV=null;
+  function pvShow(c,e){
+    if(!(window.matchMedia&&matchMedia("(hover:hover) and (pointer:fine)").matches))return;
+    if(!PV){PV=el("div",null,"cpv");PV.setAttribute("aria-hidden","true");document.body.appendChild(PV)}
+    PV.innerHTML="";PV.appendChild(cardFace({n:c.n,s:c.s,no:c.no,sn:c.s,img:c.img}));PV.hidden=false;pvMove(e);
+  }
+  function pvMove(e){if(!PV||PV.hidden||!e)return;var w=220,h=307,x=e.clientX+18,y=e.clientY-h/2;if(x+w>window.innerWidth-8)x=e.clientX-w-18;y=Math.max(8,Math.min(window.innerHeight-h-8,y));PV.style.left=x+"px";PV.style.top=y+"px"}
+  function pvHide(){if(PV)PV.hidden=true}
+  function bigImg(c){var i=c.img||"";return/\/low\.webp$/.test(i)?i.replace(/\/low\.webp$/,"/high.webp"):i}
+  function bigCard(c){
+    var o=el("div",null,"cbig"),f=el("div",null,"cdet"),x=el("button","Close","cx");
+    o.setAttribute("role","dialog");o.setAttribute("aria-modal","true");o.setAttribute("aria-label",c.n);
+    f.appendChild(cardFace({n:c.n,s:c.s,no:c.no,sn:c.s,img:c.img,imgL:bigImg(c)},true));f.appendChild(el("h3",(c.q?c.q+"× ":"")+c.n));if(c.s)f.appendChild(el("p",c.s+" "+c.no));
+    x.type="button";x.dataset.close="1";f.appendChild(x);o.appendChild(f);
+    o.addEventListener("click",function(e){if(e.target===o||e.target.dataset.close)o.remove()});document.body.appendChild(o);x.focus();
+  }
+  function fullDeck(cs,title){
+    var o=el("div",null,"dfull"),top=el("div",null,"dfull-top"),x=el("button","Close","ghost"),n=cs.reduce(function(a,c){return a+c.q},0),prev=document.activeElement;
+    o.setAttribute("role","dialog");o.setAttribute("aria-modal","true");o.setAttribute("aria-label",(title||"Decklist")+", full screen");
+    x.type="button";top.appendChild(el("b",(title||"Decklist")+" · "+n+" cards"));top.appendChild(x);o.appendChild(top);
+    o.appendChild(deckGrid(cs,false,bigCard));
+    function close(){o.remove();document.body.style.overflow="";document.removeEventListener("keydown",key,true);if(prev&&prev.isConnected)prev.focus()}
+    function key(e){if(e.key==="Escape"&&!document.querySelector(".cbig")){e.preventDefault();close()}}
+    x.onclick=close;document.addEventListener("keydown",key,true);document.body.style.overflow="hidden";document.body.appendChild(o);x.focus();
   }
 
   // ---- GroundZ tournament data (from Swiss events run on the site) ----
@@ -1493,7 +1610,7 @@ button.danger-fill{background:var(--down);border-color:var(--down);color:#fff}
   function renderDeck(){
     var p=byId(S,deckPid);if(!p){view("Rank");return}
     var r=ranks(S)[p.id],tt=p.w+p.l,own=!!CUR&&p.id===CUR.pid,acc=accPid[p.id];
-    $("dkName").textContent=p.name;$("dkAv").innerHTML="";$("dkAv").appendChild(avatar(p));
+    $("dkName").textContent=p.name;$("dkAv").innerHTML="";$("dkAv").appendChild(avatar(p));$("dkSet").hidden=!own;
     $("dkSub").textContent=[acc&&acc.username?"@"+acc.username:"",acc&&acc.role==="org"?"Organizer":"Player","#"+r+" of "+S.players.length].filter(Boolean).join(" · ");
     $("dkBadge").innerHTML="";$("dkBadge").appendChild(trainerCard(p,104));
     var T=$("dkTiles");T.innerHTML="";
@@ -1514,8 +1631,8 @@ button.danger-fill{background:var(--down);border-color:var(--down);color:#fff}
         var lv=L.v[L.v.length-1],d=el("details",null,"pdeck");if(k===0)d.open=true;
         var sm=el("summary"),pub=isPubDeck(p,L),cnt=listCards(lv.t,lv.x).reduce(function(a,c){return a+c.q},0);
         sm.appendChild(el("b",L.n));sm.appendChild(el("span",pub?"Public":"Private","vchip"+(pub?" on":"")));if(L.on)sm.appendChild(el("span","Tracking","vchip"));
-        sm.appendChild(el("span","v"+lv.n+" · "+cnt+" cards"+(lv.p?" · "+Math.round(100*lv.w/lv.p)+"% over "+lv.p:""),"pdm"));
-        d.appendChild(sm);d.appendChild(deckSplit(lv.t,lv.x));box.appendChild(d);
+        sm.appendChild(el("span",cnt+" cards"+(lv.p?" · "+Math.round(100*lv.w/lv.p)+"% over "+lv.p:""),"pdm"));
+        d.appendChild(sm);d.appendChild(deckSplit(lv.t,lv.x,L.n));box.appendChild(d);
       });
       if(V.length>VS.length)box.appendChild(el("p",(V.length-VS.length)+" more saved deck"+(V.length-VS.length===1?" is":"s are")+" hidden until Pro is on.","foot"));
       var ac=el("div",null,"actions"),mb=el("button","Manage My Decks","ghost");mb.type="button";mb.style.flex="none";mb.onclick=function(){view("Pro");window.scrollTo(0,0)};ac.appendChild(mb);box.appendChild(ac);
@@ -1523,30 +1640,42 @@ button.danger-fill{background:var(--down);border-color:var(--down);color:#fff}
     }else if(p.pub&&p.list){
       var d2=el("details",null,"pdeck");d2.open=true;var s2=el("summary");s2.appendChild(el("b","Public decklist"));
       var c2=listCards(p.list,null).reduce(function(a,c){return a+c.q},0);if(c2)s2.appendChild(el("span",c2+" cards","pdm"));
-      d2.appendChild(s2);d2.appendChild(deckSplit(p.list,null));box.appendChild(d2);
+      d2.appendChild(s2);d2.appendChild(deckSplit(p.list,null,p.name+"'s deck"));box.appendChild(d2);
     }
     else box.appendChild(el("p",p.pub?"This player hasn't shared a decklist yet.":"This player keeps their decks private.","foot"));
   }
   $("dBack").addEventListener("click",function(){view("Rank")});
+  $("dkSet").addEventListener("click",function(){view("Acct");window.scrollTo(0,0)});
 
   // ---- updates and notices ----
-  var APP_VER="2026.10.08";
+  var APP_VER="2026.10.08b";
   var CHANGES=[
+    {ts:Date.UTC(2026,9,8,12),ti:"GroundZ refresh: profiles, results and decklists",b:"Tap your name at the top to open your profile; the gear icon has your display name and picture. Match reports show what both players reported, and a misclick can be fixed until the next round as long as your opponent confirms it. Tournament times are in UAE time (GMT+4). Decklists have a list view with card previews and a full-screen grid on phones, the Swiss calculator shows Championship Points, and deck prices now total correctly."},
     {ts:Date.UTC(2026,9,8),ti:"Profiles, confirmed results and TOM-accurate Swiss",b:"Tap any player to see their profile, trainer badge, saved decks and GroundZ tournament data. In Swiss rounds you now report your own result and your opponent confirms it. Pairings and tiebreakers follow Play! Pokémon rules, and the Swiss calculator covers League Challenge, League Cup and Regional structures."}
   ];
-  var NEWSALL=false;
   function newsItems(){
     var A=(S.notices||[]).map(function(x){return{ts:x.ts,ti:x.ti,b:x.b,k:x.k||"n",id:x.id}});
     CHANGES.forEach(function(x){A.push({ts:x.ts,ti:x.ti,b:x.b,k:"u"})});
     return A.sort(function(a,b){return(b.k==="i")-(a.k==="i")||b.ts-a.ts});
   }
   var NK={n:"Notice",i:"Important",m:"Maintenance",u:"Site update"};
+  function newsLi(x){var li=el("li",null,"nw nw-"+x.k),hd=el("div",null,"nwh");hd.appendChild(el("span",NK[x.k]||"Notice","nwk"));hd.appendChild(el("time",dateS(x.ts)));li.appendChild(hd);li.appendChild(el("b",x.ti,"nwt"));if(x.b)li.appendChild(el("p",x.b));return li}
   function renderNews(){
-    var ul=$("news");if(!ul)return;ul.innerHTML="";var A=newsItems(),S3=NEWSALL?A:A.slice(0,1);
-    S3.forEach(function(x){var li=el("li",null,"nw nw-"+x.k),hd=el("div",null,"nwh");hd.appendChild(el("span",NK[x.k]||"Notice","nwk"));hd.appendChild(el("b",x.ti));hd.appendChild(el("time",dateS(x.ts)));li.appendChild(hd);if(x.b)li.appendChild(el("p",x.b));ul.appendChild(li)});
-    var mb=$("newsMore");mb.hidden=A.length<=1;mb.textContent=NEWSALL?"Show less":"Show all "+A.length;
+    var ul=$("news");if(!ul)return;ul.innerHTML="";var A=newsItems();
+    if(!A.length)ul.appendChild(el("li","No announcements yet.","nw foot"));
+    A.slice(0,1).forEach(function(x){ul.appendChild(newsLi(x))});
+    var mb=$("newsMore");mb.hidden=!A.length;mb.textContent="Read more ›";
   }
-  $("newsMore").addEventListener("click",function(){NEWSALL=!NEWSALL;renderNews()});
+  function openNews(){
+    var prev=document.activeElement,o=el("div",null,"qmodal"),b=el("div",null,"qbox wide"),h=el("h3","Updates & Announcements"),ul=el("ul",null,"news"),x=el("button","Close","ghost");
+    o.setAttribute("role","dialog");o.setAttribute("aria-modal","true");o.setAttribute("aria-label","Updates and announcements");
+    newsItems().forEach(function(n){ul.appendChild(newsLi(n))});x.type="button";
+    var a=el("div",null,"actions");a.appendChild(x);b.appendChild(h);b.appendChild(ul);b.appendChild(a);o.appendChild(b);
+    function close(){o.remove();document.removeEventListener("keydown",key,true);if(prev&&prev.isConnected)prev.focus()}
+    function key(e){if(e.key==="Escape"){e.preventDefault();close()}}
+    x.onclick=close;o.onclick=function(e){if(e.target===o)close()};document.addEventListener("keydown",key,true);document.body.appendChild(o);x.focus();
+  }
+  $("newsMore").addEventListener("click",openNews);
   function renderNoticeAdmin(){
     var ul=$("nList");if(!ul)return;ul.innerHTML="";var N=S.notices||[];
     if(!N.length)ul.appendChild(el("li","No notices posted yet. Site updates show automatically."));
@@ -1558,7 +1687,7 @@ button.danger-fill{background:var(--down);border-color:var(--down);color:#fff}
     var ti=$("nTi").value.trim().slice(0,80),b=$("nBody").value.trim().slice(0,600),m=$("nMsg");
     if(!ti){m.textContent="Add a title for the notice.";return}
     S.notices=S.notices||[];S.notices.unshift({id:Date.now(),ts:Date.now(),k:$("nK").value,ti:ti,b:b});if(S.notices.length>30)S.notices.length=30;
-    $("nTi").value="";$("nBody").value="";m.textContent="Posted. Everyone sees it under Updates & notices.";save();renderNews();renderNoticeAdmin();
+    $("nTi").value="";$("nBody").value="";m.textContent="Posted. Everyone sees it under Updates & Announcements.";save();renderNews();renderNoticeAdmin();
   });
   // new-version check: version.json sits next to index.html and changes with each deploy
   var verSeen=false;
@@ -1594,11 +1723,21 @@ button.danger-fill{background:var(--down);border-color:var(--down);color:#fff}
     cup:{n:"League Cup",d:"Swiss + top cut",rows:[[4,3,0],[9,4,2],[13,5,2],[21,5,3],[33,6,3],[65,7,3],[129,8,3],[227,9,3],[410,10,3]]},
     reg:{n:"Regional and above",d:"two-phase Swiss + top cut",rows:[[4,3,3,0,0,0],[9,4,4,0,0,2],[17,6,6,0,0,4],[33,7,7,0,0,6],[65,9,7,13,2,8],[129,10,8,16,2,8],[257,11,8,16,3,8],[513,12,8,16,4,8],[1025,13,8,16,5,8],[2049,14,8,16,6,8],[4097,15,9,19,6,8]]}
   };
+  // Championship Points by placement: [from, to, CP, minimum players (kicker)]. League Challenge and League Cup per the
+  // Play! Pokémon CP table; Regional shows the 9th to 128th place values announced for the 2026 season.
+  var CPT={
+    lc:[[1,1,15,0],[2,2,12,0],[3,4,10,0],[5,8,8,21],[9,16,6,48],[17,32,4,80]],
+    cup:[[1,1,50,0],[2,2,40,0],[3,4,32,0],[5,8,25,24],[9,16,20,48],[17,32,16,100],[33,64,13,200]],
+    reg:[[9,16,200,0],[17,32,160,0],[33,64,120,0],[65,128,80,0]]
+  };
+  function plS(a,b){function o(n){var t=n%100,s=t>10&&t<14?"th":({1:"st",2:"nd",3:"rd"}[n%10]||"th");return n+s}return a===b?o(a):o(a)+"–"+o(b)}
   function tomRow(n,v){var o=null;(TOMV[v]||TOMV.lc).rows.forEach(function(r){if(n>=r[0])o=r});return o}
   function roundsFor(n){var r=tomRow(n,"lc");return r?r[1]:0}
   function nmOf(id){var p=byId(S,id);return p?p.name:"Removed player"}
   function shuffle(a){for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1)),t=a[i];a[i]=a[j];a[j]=t}return a}
   function swUp(sw){
+    // results now stay editable until the round is closed; pairs recorded before this update already counted for Elo
+    if(sw&&!sw.e3){(sw.pairs||[]).forEach(function(pr){if(pr.r&&pr.b)pr.e=1});sw.e3=1}
     if(!sw||sw.v===2)return sw;
     // tournament started before this update: rebuild records from its points
     var cur={};(sw.pairs||[]).forEach(function(pr){if(!pr.b){cur[pr.a]=(cur[pr.a]||0)+3;return}if(pr.r==="T"){cur[pr.a]=(cur[pr.a]||0)+1;cur[pr.b]=(cur[pr.b]||0)+1}else if(pr.r){var W=pr.r==="A"?pr.a:pr.b;cur[W]=(cur[W]||0)+3}});
@@ -1667,22 +1806,27 @@ button.danger-fill{background:var(--down);border-color:var(--down);color:#fff}
   }
   function startSw(){
     var ids=S.t.reg.filter(function(id){return byId(S,id)});if(ids.length<4)return;
-    var sw=S.sw={v:2,id:"t"+Date.now().toString(36),ts:Date.now(),rd:0,tot:roundsFor(ids.length),pairs:[],hist:[],bye:{},ids:ids,rng:{},done:false};
+    var sw=S.sw={v:2,e3:1,id:"t"+Date.now().toString(36),ts:Date.now(),rd:0,tot:roundsFor(ids.length),pairs:[],hist:[],bye:{},ids:ids,rng:{},done:false};
     ids.forEach(function(id){sw.rng[id]=Math.random()});pairRound();save();render();
   }
   function topDeckId(id){var p=byId(S,id),t=p?topDecks(p)[0]:null;return t?t.id:0}
-  function setRes(i,r,quiet){
-    var sw=S.sw,pr=sw&&sw.pairs[i];if(!pr||pr.r||!pr.b)return;pr.r=r;
-    if(byId(S,pr.a)&&byId(S,pr.b)){
-      if(r==="T")play(S,pr.a,pr.b,topDeckId(pr.a),topDeckId(pr.b),true);
-      else{var W=r==="A"?pr.a:pr.b,L=r==="A"?pr.b:pr.a;play(S,W,L,topDeckId(W),topDeckId(L))}
-    }
+  // a result can be changed until the organizer pairs the next round; Elo points are added then
+  function setRes(i,r,quiet,by){
+    var sw=S.sw,pr=sw&&sw.pairs[i];if(!pr||!pr.b||pr.e)return;pr.r=r;pr.by=by||"o";
     if(!quiet){save();render()}
   }
-  function nextRound(){var sw=S.sw;if(!sw||sw.done||!sw.pairs.every(function(x){return x.r}))return;sw.hist.push(sw.pairs);sw.pairs=[];pairRound();save();render()}
+  function commitRound(sw){
+    (sw.pairs||[]).forEach(function(pr){
+      if(!pr.b||!pr.r||pr.e)return;pr.e=1;
+      if(!byId(S,pr.a)||!byId(S,pr.b))return;
+      if(pr.r==="T")play(S,pr.a,pr.b,topDeckId(pr.a),topDeckId(pr.b),true);
+      else{var W=pr.r==="A"?pr.a:pr.b,L=pr.r==="A"?pr.b:pr.a;play(S,W,L,topDeckId(W),topDeckId(L))}
+    });
+  }
+  function nextRound(){var sw=S.sw;if(!sw||sw.done||!sw.pairs.every(function(x){return x.r}))return;commitRound(sw);sw.hist.push(sw.pairs);sw.pairs=[];pairRound();save();render()}
   function finishSw(){
     var sw=S.sw;if(!sw||sw.done||!sw.pairs.every(function(x){return x.r}))return;
-    sw.hist.push(sw.pairs);sw.pairs=[];sw.done=true;
+    commitRound(sw);sw.hist.push(sw.pairs);sw.pairs=[];sw.done=true;
     var R=swStats(sw),ord=swOrder(sw,R);sw.ch=ord[0];if(byId(S,ord[0]))recChamp(ord[0]);recordTour(sw,ord,R);save();render();
   }
   function recordTour(sw,ord,R){
@@ -1706,7 +1850,7 @@ button.danger-fill{background:var(--down);border-color:var(--down);color:#fff}
   }
   function applyAgreed(){
     var sw=S.sw,n=0;if(!sw||sw.done||!isOrg())return 0;
-    sw.pairs.forEach(function(pr,i){if(pr.r||!pr.b)return;var c=claim(pr,sw.rd);if(c.agree){setRes(i,c.agree,true);pr.by="p";n++}});
+    sw.pairs.forEach(function(pr,i){if(!pr.b||pr.e||pr.by==="o")return;var c=claim(pr,sw.rd);if(c.agree&&c.agree!==pr.r){setRes(i,c.agree,true,"p");n++}});
     return n;
   }
   function swRerender(){
@@ -1729,19 +1873,39 @@ button.danger-fill{background:var(--down);border-color:var(--down);color:#fff}
     });
   }
   var RW={W:"won",L:"lost",T:"tied"};
-  function myMatch(li,pr,p,sw){
-    var opp=pr.a===p.id?pr.b:pr.a,c=claim(pr,sw.rd),mine=pr.a===p.id?c.ra:c.rb,theirs=pr.a===p.id?c.rb:c.ra,on=nmOf(opp);
+  var FLIP={W:"L",L:"W",T:"T"},RL={W:"Won",L:"Lost",T:"Tie"};
+  // what each side of a pairing reported (falls back to the recorded result), shown on both players' screens
+  function resRow(pr,c,meId){
+    var row=el("div",null,"rboth");
+    [["a",pr.a],["b",pr.b]].forEach(function(s){
+      var rep=s[0]==="a"?c.ra:c.rb,rec=pr.r?(pr.r==="T"?"T":((pr.r==="A")===(s[0]==="a")?"W":"L")):null,k=rep||rec;
+      var cell=el("span",null,"rs");cell.appendChild(el("b",meId===s[1]?"You":nmOf(s[1])));
+      cell.appendChild(el("span",k?RL[k]:"Not reported","rchip"+(k?" r"+k.toLowerCase():"")+(!rep&&rec?" dim":"")));row.appendChild(cell);
+    });
+    return row;
+  }
+  function myMatch(li,pr,p,sw,c){
+    var meA=pr.a===p.id,opp=meA?pr.b:pr.a,mine=meA?c.ra:c.rb,theirs=meA?c.rb:c.ra,on=nmOf(opp),recMine=pr.r?(pr.r==="T"?"T":((pr.r==="A")===meA?"W":"L")):null;
     var box=el("div",null,"rpt"),msg=el("p",null,"foot");msg.setAttribute("role","status");msg.setAttribute("aria-live","polite");
-    function btns(lbl){var a=el("div",null,"rbtns");if(lbl)a.appendChild(el("span",lbl,"rlbl"));[["W","I won"],["T","Tie"],["L","I lost"]].forEach(function(x){var b=el("button",x[1],"ghost rm");b.type="button";b.onclick=function(){sendRep(x[0],msg)};a.appendChild(b)});box.appendChild(a)}
+    function btns(lbl){var a=el("div",null,"rbtns");if(lbl)a.appendChild(el("span",lbl,"rlbl"));[["W","I won"],["T","Tie"],["L","I lost"]].forEach(function(x){var b=el("button",x[1],"ghost rm");b.type="button";b.setAttribute("aria-pressed",mine===x[0]?"true":"false");b.onclick=function(){if(mine===x[0])return;sendRep(x[0],msg)};a.appendChild(b)});box.appendChild(a)}
+    function changeBtn(note){var cb=el("button","Change my report","ghost rm");cb.type="button";cb.onclick=function(){cb.remove();btns("Change your report:");box.insertBefore(el("p",note,"foot"),msg)};box.appendChild(cb)}
     if(REPOK===false){box.appendChild(el("p","Player reporting needs a one-time database update, so the organizer records this result.","foot"));li.appendChild(box);return}
-    if(c.agree){box.appendChild(el("p","Confirmed: you both reported that "+(c.agree==="T"?"the match was a tie":(c.agree==="A"?nmOf(pr.a):nmOf(pr.b))+" won")+". It's recorded as soon as the organizer's page syncs.","rok"))}
-    else if(c.conflict){box.appendChild(el("p","Your reports don't match (you said you "+RW[mine]+", "+on+" said they "+RW[theirs]+"). The organizer will confirm the result.","rbad"));btns("Change your report:")}
-    else if(mine){var ch=el("p","You reported that you "+RW[mine]+". Waiting for "+on+" to confirm.","foot");box.appendChild(ch);var cb=el("button","Change","ghost rm");cb.type="button";cb.onclick=function(){cb.remove();btns()};box.appendChild(cb)}
+    if(pr.r&&pr.by==="o"){box.appendChild(el("p","The organizer recorded that you "+RW[recMine]+". If that's wrong, tell the organizer before the next round is paired.","rst"))}
+    else if(c.agree){
+      box.appendChild(el("p","✓ Confirmed by both of you: you "+RW[mine]+(pr.r===c.agree?".":". It's recorded as soon as the organizer's page syncs."),"rok"));
+      changeBtn("Misclicked? Pick the right result. "+on+" has to confirm the change before it counts.");
+    }
+    else if(c.conflict){
+      box.appendChild(el("p","Your reports don't match: you said you "+RW[mine]+", "+on+" said they "+RW[theirs]+"."+(pr.r?" The recorded result stays until you both agree or the organizer decides.":" Agree on the result, or the organizer decides."),"rbad"));
+      var a=el("div",null,"rbtns"),ok=el("button","Accept "+on+"'s result","rm");ok.type="button";ok.onclick=function(){sendRep(FLIP[theirs],msg)};a.appendChild(ok);box.appendChild(a);
+      btns("Or change yours:");
+    }
+    else if(mine){box.appendChild(el("p","You reported that you "+RW[mine]+". Waiting for "+on+" to confirm.","foot"));changeBtn("Pick the right result. "+on+" confirms it.")}
     else if(theirs){
-      box.appendChild(el("p",on+" reported that they "+RW[theirs]+".","foot"));
-      var a=el("div",null,"rbtns"),ok=el("button","Confirm","rm"),no=el("button","That's not right","ghost rm");ok.type=no.type="button";
-      ok.onclick=function(){sendRep({W:"L",L:"W",T:"T"}[theirs],msg)};no.onclick=function(){a.remove();btns("What happened?")};
-      a.appendChild(ok);a.appendChild(no);box.appendChild(a);
+      box.appendChild(el("p",on+" reported that they "+RW[theirs]+". Is that right?","foot"));
+      var a2=el("div",null,"rbtns"),ok2=el("button","Confirm","rm"),no2=el("button","That's not right","ghost rm");ok2.type=no2.type="button";
+      ok2.onclick=function(){sendRep(FLIP[theirs],msg)};no2.onclick=function(){a2.remove();btns("What happened?")};
+      a2.appendChild(ok2);a2.appendChild(no2);box.appendChild(a2);
     }else btns("Report your result:");
     if(REMOTE&&!accPid[opp])box.appendChild(el("p",on+" has no account, so the organizer confirms this match.","foot"));
     box.appendChild(msg);li.appendChild(box);
@@ -1765,14 +1929,14 @@ button.danger-fill{background:var(--down);border-color:var(--down);color:#fff}
         var mine=p&&(pr.a===p.id||pr.b===p.id);if(mine)li.className="mine";
         if(b){
           var c=claim(pr,sw.rd);
-          if(pr.r)li.appendChild(el("span"," · "+(pr.r==="T"?"Tie":(pr.r==="A"?nmOf(pr.a):nmOf(pr.b))+" won")+(pr.by==="p"?" · confirmed by both players":"")));
-          else if(org){
-            var info=[];if(c.ra)info.push(nmOf(pr.a)+" says they "+RW[c.ra]);if(c.rb)info.push(nmOf(pr.b)+" says they "+RW[c.rb]);
-            if(info.length)li.appendChild(el("p",info.join(" · ")+(c.conflict?" · reports don't match, you decide":""),c.conflict?"rbad":"foot"));
-            var bw=el("div",null,"rbtns");[["A",nmOf(pr.a)+" won"],["T","Tie"],["B",nmOf(pr.b)+" won"]].forEach(function(x){var bt=el("button",x[1],"ghost rm");bt.type="button";bt.onclick=function(){setRes(i,x[0])};bw.appendChild(bt)});li.appendChild(bw);
+          li.appendChild(resRow(pr,c,p?p.id:null));
+          if(org){
+            var stt=pr.r?(pr.by==="p"?"✓ Confirmed by both players":"Recorded by you")+(c.conflict?" · their reports now differ":""):(c.conflict?"Reports don't match, you decide":c.agree?"Both agree, recording…":(c.ra||c.rb)?"Waiting for the other player to confirm":"");
+            if(stt)li.appendChild(el("p",stt,c.conflict?"rbad":"rst"));
+            if(!pr.e){var bw=el("div",null,"rbtns");bw.appendChild(el("span",pr.r?"Override:":"Record result:","rlbl"));[["A",nmOf(pr.a)+" won"],["T","Tie"],["B",nmOf(pr.b)+" won"]].forEach(function(x){var bt=el("button",x[1],"ghost rm");bt.type="button";bt.setAttribute("aria-pressed",pr.r===x[0]?"true":"false");bt.onclick=function(){if(pr.r===x[0]&&pr.by==="o")return;setRes(i,x[0])};bw.appendChild(bt)});li.appendChild(bw);}
           }
-          else if(mine&&me())myMatch(li,pr,p,sw);
-          else li.appendChild(el("span",c.agree?" · both players agree, recording soon":(c.ra||c.rb)?" · result reported, awaiting confirmation":" · in progress"));
+          else if(mine&&me()&&!pr.e)myMatch(li,pr,p,sw,c);
+          else li.appendChild(el("p",pr.r?(pr.by==="p"?"✓ Confirmed by both players":"Recorded by the organizer"):c.agree?"Both players agree, recording soon":(c.ra||c.rb)?"Waiting for confirmation":"In progress","rst"));
         }
         ul.appendChild(li);
       });
@@ -1788,7 +1952,7 @@ button.danger-fill{background:var(--down);border-color:var(--down);color:#fff}
       if(p&&p.id===id)tr.style.fontWeight="600";tb.appendChild(tr);
     });
     wr.appendChild(tb);box.appendChild(wr);
-    box.appendChild(el("p","Placement follows Play! Pokémon rules: match points (win 3, tie 1, loss 0, a bye counts as a win), then Opponents' Win % (each opponent's wins divided by rounds they played, byes left out, never below 25%), then Opponents' Opponents' Win %, then head-to-head. Elo league points still move with every match.","foot"));
+    box.appendChild(el("p","Placement follows Play! Pokémon rules: match points (win 3, tie 1, loss 0, a bye counts as a win), then Opponents' Win % (each opponent's wins divided by rounds they played, byes left out, never below 25%), then Opponents' Opponents' Win %, then head-to-head. Results can be corrected until the organizer pairs the next round: a change needs both players to confirm it, or the organizer can override. Elo league points are added when the round closes.","foot"));
     if(org){
       var row=el("div",null,"actions");
       if(!sw.done){var all=sw.pairs.every(function(x){return x.r}),nb=el("button",sw.rd<sw.tot?"Pair round "+(sw.rd+1):"Finish tournament");nb.type="button";nb.disabled=!all;nb.onclick=sw.rd<sw.tot?nextRound:finishSw;row.appendChild(nb)}
@@ -1864,16 +2028,16 @@ button.danger-fill{background:var(--down);border-color:var(--down);color:#fff}
     w=sec("My Decks",true);var p=u?myP():null;
     if(!p) w.appendChild(el("p","Sign in to save your own decklists.","foot"));
     else{
-      var f=el("div");f.innerHTML='<label for="vName">List name</label><input id="vName" maxlength="24" placeholder="e.g. Charizard ex"><label for="vText" style="margin-top:12px">Decklist</label><textarea id="vText" maxlength="4000"></textarea><div class="actions"><button id="vSave" type="button">Save as new version</button><button id="vBuild" type="button" class="ghost">Build from Cards</button></div><p class="status" id="vMsg" role="status" aria-live="polite"></p>';
+      var f=el("div");f.innerHTML='<label for="vName">List name</label><input id="vName" maxlength="24" placeholder="e.g. Charizard ex"><label for="vText" style="margin-top:12px">Decklist</label><textarea id="vText" maxlength="4000"></textarea><div class="actions"><button id="vSave" type="button">Save deck</button><button id="vBuild" type="button" class="ghost">Build from Cards</button></div><p class="status" id="vMsg" role="status" aria-live="polite"></p>';
       w.appendChild(f);$("vName").value=ov;$("vText").value=ot;$("vBuild").onclick=function(){view("Cards");window.scrollTo(0,0);openDraft()};
       $("vSave").onclick=function(){
         var n=clean($("vName").value),t=$("vText").value.trim(),m=$("vMsg");
         if(!n||!t){m.textContent="Add a list name and paste a decklist.";return}
         var V=p.vault=p.vault||[],L=V.filter(function(x){return x.n.toLowerCase()===n.toLowerCase()})[0];
-        if(L&&L.v[L.v.length-1].t===t){m.textContent="That matches the latest version already.";return}
+        if(L&&L.v[L.v.length-1].t===t){m.textContent="No changes to save.";return}
         if(!L&&!pro&&V.length>=2){m.textContent="Free accounts can save 2 decklists. Unlock Pro for unlimited decklists.";return}
         if(!L){L={n:n,v:[],on:V.some(function(x){return x.on})?0:1};V.push(L)}
-        var wp=isPubDeck(p,L);L.v.push({n:L.v.length+1,ts:Date.now(),t:t,p:0,w:0});if(wp)setPublicList(p,t,true);$("vName").value="";$("vText").value="";save();renderHub();
+        var wp=isPubDeck(p,L),old=L.v[L.v.length-1];L.v=[{n:1,ts:Date.now(),t:t,p:old?old.p:0,w:old?old.w:0}];if(wp)setPublicList(p,t,true);$("vName").value="";$("vText").value="";save();renderHub();
       };
       var out=el("div"),ta=el("textarea"),oc=el("p",null,"foot"),cp=el("button","Copy","ghost");out.hidden=true;ta.readOnly=true;cp.type="button";
       cp.onclick=function(){ta.select();try{document.execCommand("copy");oc.textContent="Copied. In TCG Live use Decks, then Import."}catch(e){}};
@@ -1882,19 +2046,18 @@ button.danger-fill{background:var(--down);border-color:var(--down);color:#fff}
       (pro?VL:VL.slice(0,2)).forEach(function(L){
         var card=el("div",null,"vdeck"),hh=el("h3",L.n+(L.on?" · tracking matches":""));hh.appendChild(el("span",isPubDeck(p,L)?"Public":"Private","vchip"+(isPubDeck(p,L)?" on":"")));card.appendChild(hh);
         var lv=L.v[L.v.length-1];
-        card.appendChild(deckSplit(lv.t,lv.x));
-        card.appendChild(tbl(["Version","Saved","Games","Win rate"],L.v.slice().reverse().map(function(v){return["v"+v.n,dateS(v.ts),v.p,v.p?Math.round(100*v.w/v.p)+"%":"–"]})));
-        var ac=el("div",null,"actions"),sel=el("select");sel.style.cssText="width:auto;flex:none";sel.setAttribute("aria-label","Version of "+L.n);
-        L.v.slice().reverse().forEach(function(v){var o=el("option","v"+v.n);o.value=v.n;sel.appendChild(o)});ac.appendChild(sel);
+        card.appendChild(el("p","Saved "+dateS(lv.ts)+(lv.p?" · "+lv.p+" game"+(lv.p===1?"":"s")+" · "+Math.round(100*lv.w/lv.p)+"% win rate":""),"pdm"));
+        card.appendChild(deckSplit(lv.t,lv.x,L.n));
+        var ac=el("div",null,"actions");
         function btn(t,fn,g){var b=el("button",t,g?"ghost":"");b.type="button";b.style.flex="none";b.onclick=fn;ac.appendChild(b)}
-        btn("Export for TCG Live",function(){var v=L.v[+sel.value-1],g=ptcgl(v.t);out.hidden=false;ta.value=g.text;oc.textContent=L.n+" v"+v.n+": "+g.tot+" cards."+(g.bad?" "+g.bad+" line"+(g.bad===1?"":"s")+" lack a set code and number (like OBF 125), which TCG Live needs to import.":"");ta.select()});
-        btn("Edit latest",function(){$("vName").value=L.n;$("vText").value=L.v[L.v.length-1].t;$("vText").focus()},1);
+        btn("Export for TCG Live",function(){var v=L.v[L.v.length-1],g=ptcgl(v.t);out.hidden=false;ta.value=g.text;oc.textContent=L.n+": "+g.tot+" cards."+(g.bad?" "+g.bad+" line"+(g.bad===1?"":"s")+" lack a set code and number (like OBF 125), which TCG Live needs to import.":"");ta.select()});
+        btn("Edit",function(){$("vName").value=L.n;$("vText").value=L.v[L.v.length-1].t;$("vText").focus()},1);
         btn("Edit in builder",function(){loadDraft(L.n,L.v[L.v.length-1].t);view("Cards");window.scrollTo(0,0);openDraft()},1);
         if(!L.on) btn("Track matches with this list",function(){p.vault.forEach(function(x){x.on=0});L.on=1;save();renderHub()},1);
         var pubNow=isPubDeck(p,L);
         btn(pubNow?"Make private":"Show publicly",function(){var b=this;b.disabled=true;setPublicList(p,pubNow?(p.list||""):lv.t,!pubNow,function(ok){if(!ok){b.disabled=false;b.textContent="Couldn't save. Try again";return}renderHub()})},1);
         var del=el("button","Delete deck","ghost danger");del.type="button";del.style.flex="none";
-        del.onclick=function(){ask("Delete "+L.n+"?","Every saved version of this deck is removed. This can't be undone.",function(){
+        del.onclick=function(){ask("Delete "+L.n+"?","This deck is removed from My Decks. This can't be undone.",function(){
           var wasPub=isPubDeck(p,L),k=p.vault.indexOf(L);if(k<0)return;p.vault.splice(k,1);if(L.on&&p.vault[0])p.vault[0].on=1;save();if(wasPub)setPublicList(p,"",false);renderHub()})};
         ac.appendChild(del);
         card.appendChild(ac);w.appendChild(card);
@@ -1902,7 +2065,7 @@ button.danger-fill{background:var(--down);border-color:var(--down);color:#fff}
       w.appendChild(out);
       w.appendChild(el("p",pro?"Pro: unlimited saved decklists.":"Free: your first 2 saved decklists ("+Math.min(2,VL.length)+" of 2 used). Pro unlocks unlimited decklists."+(VL.length>2?" Lists beyond the first 2 stay saved but are hidden until Pro is on.":""),"foot"));
       w.appendChild(el("p","Show publicly puts that deck on your player page, where anyone who taps your name in the rankings can see it. One deck is public at a time; choosing another replaces it.","foot"));
-      w.appendChild(el("p","Saving changed text creates a new version. Each reported match counts toward the latest version of the list marked as tracking.","foot"));
+      w.appendChild(el("p","Saving a deck under a name you already use replaces that deck. Each reported match counts toward the deck marked as tracking.","foot"));
     }
     // hall of fame
     w=sec("Hall of fame");var H=S.hof;
@@ -2213,6 +2376,9 @@ button.danger-fill{background:var(--down);border-color:var(--down);color:#fff}
     if(!reg)tiles.push([rounds+cutR,"Total rounds"]);
     if(reg&&p2){tiles.push([p1,"Phase One rounds"]);tiles.push([thr+" pts","Phase Two threshold"]);tiles.push([p2,"Phase Two rounds"])}
     tiles.push([3*rounds,"Max match pts"]);tiles.push([Math.floor(n/2)+(n%2?" + bye":""),"Round 1 tables"]);
+    var CP=(CPT[v]||[]).filter(function(t){return t[0]<=n}),cpOn=CP.filter(function(t){return n>=t[3]});
+    if(v!=="reg"&&cpOn.length)tiles.push([cpOn[0][2]+" CP","Winner earns"]);
+    tiles.push([cpOn.length?"Top "+Math.min(n,cpOn[cpOn.length-1][1]):"–","Earn CP"]);
     tiles.forEach(function(x){T.appendChild(tile(String(x[0]),x[1]))});
     // expected records if every match were a coin flip (no ties); with two phases, only Phase One is modelled
     var r=reg&&p2?p1:rounds,rows=[],cum=0,adv=0;
@@ -2226,6 +2392,11 @@ button.danger-fill{background:var(--down);border-color:var(--down);color:#fff}
     B.appendChild(tbl(["Record (W–L)","Match pts","Players (expected)"].concat((reg&&p2)||top?["Outcome"]:[]),rows));
     if(reg&&p2)B.appendChild(el("p","About "+Math.round(adv)+" of "+n+" players reach "+thr+" match points and play Phase Two, then the Top "+top+" plays single elimination.","foot"));
     else if(top)B.appendChild(el("p","The Top "+top+" plays "+cutR+" single-elimination rounds after Swiss, seeded by final standings.","foot"));
+    B.appendChild(el("h3","Championship Points earned"));
+    if(CP.length){
+      B.appendChild(tbl(["Placement","Championship Points","At "+n+" players"],CP.map(function(t){var ok=n>=t[3];return[plS(t[0],Math.min(t[1],n)),t[2]+" CP",ok?"✓ Earned":"Needs "+t[3]+"+ players"]})));
+      B.appendChild(el("p",v==="reg"?"Regional values shown are 9th to 128th place for the 2026 season. Top 8 points and attendance minimums come from the official Play! Pokémon Championship Points table.":"A placement only earns points when the event reaches its minimum player count (the kicker). Values from the Play! Pokémon Championship Points table; check pokemon.com for mid-season changes.","foot"));
+    }else B.appendChild(el("p","No Championship Points at this size.","foot"));
     N.textContent="Structure from the Play! Pokémon Tournament Rules Handbook for the TCG: "+TOMV[v].n+" ("+TOMV[v].d+"). Match points: win 3, tie 1, loss 0, and a bye counts as a win. Ties in the standings are broken by Opponents' Win % (25% minimum), then Opponents' Opponents' Win %, then head-to-head. Expected player counts assume every match is a coin flip with no ties, so real events will differ. GroundZ's weekly tournament uses the League Challenge structure.";
   }
   ["swN","swF"].forEach(function(i){$(i).addEventListener("input",renderCalc);$(i).addEventListener("change",renderCalc)});
@@ -2265,9 +2436,9 @@ button.danger-fill{background:var(--down);border-color:var(--down);color:#fff}
   function byUse(R){return R.map(function(c){return{c:c,u:useOf(c)}}).filter(function(x){return x.u}).sort(function(a,b){return b.u.d-a.u.d||b.u.avg-a.u.avg||a.c.n.localeCompare(b.c.n)}).map(function(x){return x.c})}
 
   // ---- Card market value (TCGdex prices: TCGplayer USD + Cardmarket EUR) ----
-  var PRICE={},PFAIL=0;
-  try{var pc0=JSON.parse(localStorage.getItem("tg-prices")||"{}"),now0=Date.now();Object.keys(pc0).forEach(function(k){if(pc0[k]&&now0-pc0[k].ts<864e5)PRICE[k]=pc0[k]})}catch(e){}
-  function psave(){try{var ks=Object.keys(PRICE);if(ks.length>3000)ks.slice(0,ks.length-3000).forEach(function(k){delete PRICE[k]});localStorage.setItem("tg-prices",JSON.stringify(PRICE))}catch(e){}}
+  var PRICE={},PFAIL=0,EURUSD=1.08;
+  try{var pc0=JSON.parse(localStorage.getItem("tg-prices2")||"{}"),now0=Date.now();Object.keys(pc0).forEach(function(k){if(pc0[k]&&now0-pc0[k].ts<864e5)PRICE[k]=pc0[k]})}catch(e){}
+  function psave(){try{var ks=Object.keys(PRICE);if(ks.length>3000)ks.slice(0,ks.length-3000).forEach(function(k){delete PRICE[k]});localStorage.setItem("tg-prices2",JSON.stringify(PRICE))}catch(e){}}
   function priceKey(c){return c.builtin?"b:"+c.s+"|"+c.no:String(c.id||c.s+"|"+c.no)}
   function priceTxt(o){return o.usd!=null?"$"+o.usd.toFixed(2):o.eur!=null?"€"+o.eur.toFixed(2):""}
   function pickPrice(j){
@@ -2276,12 +2447,32 @@ button.danger-fill{background:var(--down);border-color:var(--down);color:#fff}
     if(m){var e=m.trend||m.avg||m["trend-holo"]||m["avg-holo"];if(e)o.eur=+e;o.up=o.up||m.updated||""}
     return o}
   function tdx(u){return fetch(TDX+u).then(function(r){if(!r.ok){var e=new Error(r.status);e.status=r.status;throw e}return r.json()})}
+  // second source when TCGdex has no TCGplayer price: pokemontcg.io (free, no key), by set code + number, then by exact name
+  function ptcgQs(c){var s=String(c.s||""),no=String(c.no||"").replace(/^0+(?=\d)/,""),nm=String(c.n||"").replace(/^Basic\s+/i,"").replace(/["\\]/g,"");
+    var a=[];if(s&&no&&/^[A-Z0-9-]{2,6}$/i.test(s))a.push("set.ptcgoCode:"+s+" number:"+no);if(nm)a.push('!name:"'+nm+'"');return a}
+  function ptcgOne(q){
+    return fetch("https://api.pokemontcg.io/v2/cards?q="+encodeURIComponent(q)+"&select=name,tcgplayer,cardmarket&orderBy=-set.releaseDate&pageSize=10").then(function(r){if(!r.ok){var e=new Error(r.status);e.status=r.status;throw e}return r.json()}).then(function(j){
+      var d=(j&&j.data)||[],o=null;
+      d.some(function(x){var P=x.tcgplayer&&x.tcgplayer.prices;if(!P)return false;return["normal","holofoil","reverseHolofoil"].concat(Object.keys(P)).some(function(k){var v=P[k];if(v&&(v.market||v.mid)){o={usd:+(v.market||v.mid),v:k,up:x.tcgplayer.updatedAt||""};return true}})});
+      if(!o)d.some(function(x){var m=x.cardmarket&&x.cardmarket.prices;if(m&&(m.trendPrice||m.averageSellPrice)){o={eur:+(m.trendPrice||m.averageSellPrice)};return true}});
+      return o});
+  }
+  function ptcgPrice(c){var Q=ptcgQs(c),i=0;function nx(){if(i>=Q.length)return Promise.resolve(null);return ptcgOne(Q[i++]).then(function(o){return o&&o.usd!=null?o:nx().then(function(o2){return o2||o})})}return nx()}
   function fetchPrice(c){
     var k=priceKey(c);if(PRICE[k])return Promise.resolve(PRICE[k]);
     if(PFAIL>=3)return Promise.reject(new Error("offline"));
-    var p=c.builtin?tdx("/cards?name=eq:"+encodeURIComponent(c.n)+"&localId=eq:"+encodeURIComponent(c.no)).then(function(a){return a&&a[0]?tdx("/cards/"+encodeURIComponent(a[0].id)):null})
+    var net=0,soft=false;
+    function bad(e){if(!e||!e.status)net++;else if(e.status===429||e.status>=500)soft=true;return null}
+    var p=c.builtin?(c.no?tdx("/cards?name=eq:"+encodeURIComponent(c.n)+"&localId=eq:"+encodeURIComponent(c.no)).then(function(a){return a&&a[0]?tdx("/cards/"+encodeURIComponent(a[0].id)):null}):Promise.resolve(null))
                    :tdx("/cards/"+encodeURIComponent(c.id));
-    return p.then(function(j){var o=pickPrice(j);PRICE[k]=o;psave();PFAIL=0;return o},function(e){if(e&&e.status===404){var o={ts:Date.now(),usd:null,eur:null};PRICE[k]=o;return o}PFAIL++;throw e});
+    return p.then(function(j){return j?pickPrice(j):null},bad).then(function(o){
+      o=o||{ts:Date.now(),usd:null,eur:null,v:"",up:""};
+      if(o.usd!=null)return o;
+      return ptcgPrice(c).then(function(x){if(x){if(x.usd!=null){o.usd=x.usd;o.v=x.v;o.up=x.up||o.up;o.src="ptcg"}else if(o.eur==null&&x.eur!=null)o.eur=x.eur}return o},function(e){bad(e);return o});
+    }).then(function(o){
+      if(net>=2&&o.usd==null&&o.eur==null){PFAIL++;throw new Error("offline")}
+      PFAIL=0;o.ts=Date.now();if(!soft||o.usd!=null){PRICE[k]=o;psave()}return o;
+    });
   }
   var ptok=0;
   function loadTilePrices(){
@@ -2299,25 +2490,27 @@ button.danger-fill{background:var(--down);border-color:var(--down);color:#fff}
       var m=l.match(/^(\d+)\s+(.+?)(?:\s+([A-Za-z0-9-]{2,6})\s+(\d+[a-z]?))?$/);if(!m||+m[1]>60)return;
       var c={n:m[2],s:m[3]||"",no:m[4]||"",t:cur,q:+m[1]},o=x[c.s+"|"+c.no];if(o){if(o.i)c.id=o.i;if(o.m)c.img=o.m}out.push(c)});
     return out}
-  function deckGrid(cards,edit){
+  function deckGrid(cards,edit,onCard){
     var g=el("div",null,"dgrid");
     GR.forEach(function(G){var L=cards.filter(function(c){return gk(c)===G[1]});if(!L.length)return;
       g.appendChild(el("div",G[0]+" · "+L.reduce(function(a,c){return a+c.q},0),"dgh"));
-      L.forEach(function(c){var w=el("div",null,"dgc");w.appendChild(cardFace({n:c.n,s:c.s,no:c.no,sn:c.s,img:c.img}));var q=el("span","×"+c.q,"dgq");w.appendChild(q);if(edit)w.appendChild(stepper(c));w.title=c.q+" "+c.n+(c.s?" "+c.s+" "+c.no:"");g.appendChild(w)})});
+      L.forEach(function(c){var w=el("div",null,"dgc");w.appendChild(cardFace({n:c.n,s:c.s,no:c.no,sn:c.s,img:c.img}));var q=el("span","×"+c.q,"dgq");w.appendChild(q);if(edit)w.appendChild(stepper(c));w.title=c.q+" "+c.n+(c.s?" "+c.s+" "+c.no:"");
+        if(onCard){w.tabIndex=0;w.setAttribute("role","button");w.setAttribute("aria-label",c.q+" "+c.n+", zoom in");w.addEventListener("click",function(){onCard(c)});w.addEventListener("keydown",function(e){if(e.key==="Enter"||e.key===" "){e.preventDefault();onCard(c)}})}
+        g.appendChild(w)})});
     return g}
   function costCard(x){return x.id?{id:x.id,n:x.n,s:x.s,no:x.no}:{builtin:1,n:x.n,s:x.s||"",no:x.no||""}}
   function estCost(cards,box){
     var tok=box._tok=(box._tok||0)+1;
     function paint(){
-      if(box._tok!==tok)return;var sum=0,miss=0,pend=0,tot=0;
-      cards.forEach(function(x){tot+=x.q;var o=PRICE[priceKey(costCard(x))];if(!o){if((x.id||x.no)&&PFAIL<3)pend+=x.q;else miss+=x.q}else if(o.usd!=null)sum+=o.usd*x.q;else miss+=x.q});
-      box.innerHTML="";box.appendChild(document.createTextNode("Estimated cost "));box.appendChild(el("b","$"+sum.toFixed(2)));
-      var t=[];if(pend)t.push("checking "+pend+" more card"+(pend===1?"":"s")+"…");if(miss)t.push(miss+" card"+(miss===1?"":"s")+" without a price");
+      if(box._tok!==tok)return;var sum=0,miss=0,pend=0,tot=0,conv=0;
+      cards.forEach(function(x){tot+=x.q;var o=PRICE[priceKey(costCard(x))];if(!o){if((x.id||x.no||x.n)&&PFAIL<3)pend+=x.q;else miss+=x.q}else if(o.usd!=null)sum+=o.usd*x.q;else if(o.eur!=null){sum+=o.eur*EURUSD*x.q;conv+=x.q}else miss+=x.q});
+      box.innerHTML="";box.appendChild(document.createTextNode("Total deck price "));box.appendChild(el("b","$"+sum.toFixed(2)));
+      var t=[];if(pend)t.push("checking "+pend+" more card"+(pend===1?"":"s")+"…");if(conv)t.push(conv+" priced from Cardmarket (€ converted)");if(miss)t.push(miss+" card"+(miss===1?"":"s")+" without a price");
       if(PFAIL>=3&&!sum)t=["prices couldn't load here (they load on groundz.win)"];
       box.appendChild(document.createTextNode(" · "+(t.length?t.join(" · "):"TCGplayer market prices")));
     }
     paint();
-    var seen={},need=cards.filter(function(x){var k=priceKey(costCard(x));if(seen[k]||PRICE[k]||!(x.id||x.no))return false;seen[k]=1;return true});
+    var seen={},need=cards.filter(function(x){var k=priceKey(costCard(x));if(seen[k]||PRICE[k]||!(x.id||x.no||x.n))return false;seen[k]=1;return true});
     var i=0;function next(){if(box._tok!==tok||i>=need.length||PFAIL>=3){paint();return Promise.resolve()}var x=need[i++];return fetchPrice(costCard(x)).catch(function(){}).then(paint).then(next)}
     for(var n=0;n<4;n++)next();
   }
@@ -2375,7 +2568,7 @@ button.danger-fill{background:var(--down);border-color:var(--down);color:#fff}
       if(h&&!/^\d/.test(l)){cur=/^t/i.test(h[1])?"Trainer":/^e/i.test(h[1])?"Energy":"Pokémon";return}
       var m=l.match(/^(\d+)\s+(.+?)(?:\s+([A-Za-z0-9-]{2,6})\s+(\d+[a-z]?))?$/);if(!m)return;
       cards.push({n:m[2],s:m[3]||"",no:m[4]||"",t:cur,q:+m[1]})});
-    S.draft={name:n||"",cards:cards,ts:Date.now()};save();repaintAll();var ni=$("dName2");if(ni)ni.value=n||"";
+    S.draft={name:n||"",cards:cards,ts:Date.now()};save();repaintAll();
   }
   function setBuild(on){
     BUILD=!!on;try{localStorage.setItem("tg-build",BUILD?"1":"0")}catch(e){}
@@ -2389,16 +2582,20 @@ button.danger-fill{background:var(--down);border-color:var(--down);color:#fff}
   function openDraft(){setBuild(true);if(window.matchMedia&&matchMedia("(max-width:900px)").matches)setMin(false)}
   function closeDraft(){setBuild(false);trayUpd()}
   function saveDraft(){
-    var d=D(),m=$("dMsg"),n=clean(d.name),u=me();
+    var d=D(),m=$("dMsg"),u=me();
     if(!d.cards.length){m.textContent="Add some cards first.";return}
-    if(!n){m.textContent="Give the list a name.";$("dName2").focus();return}
     if(!u){m.textContent="Sign in to save decks to My Decks. Your draft is kept on this device.";return}
+    if(!myP()){m.textContent="Your player profile wasn't found. Contact the organizer.";return}
+    askName(d.name||"",function(n){D().name=n;D().ts=Date.now();save();doSaveDraft()});
+  }
+  function doSaveDraft(){
+    var d=D(),m=$("dMsg"),n=clean(d.name);
     var p=myP(),pro=isPro(),V=p.vault=p.vault||[],t=draftText(d),L=V.filter(function(x){return x.n.toLowerCase()===n.toLowerCase()})[0];
-    if(L&&L.v[L.v.length-1].t===t){m.textContent="That matches the latest saved version already.";return}
+    if(L&&L.v[L.v.length-1].t===t){m.textContent="No changes to save.";return}
     if(!L&&!pro&&V.length>=2){m.textContent="Free accounts can save 2 decklists. Unlock Pro for unlimited decklists.";return}
     if(!L){L={n:n,v:[],on:V.some(function(x){return x.on})?0:1};V.push(L)}
     var wasPub=isPubDeck(p,L),x={};d.cards.forEach(function(c){if(c.s&&(c.id||c.img)){var o={};if(c.id)o.i=c.id;if(c.img)o.m=c.img;x[c.s+"|"+c.no]=o}});
-    L.v.push({n:L.v.length+1,ts:Date.now(),t:t,p:0,w:0,x:x});
+    var old=L.v[L.v.length-1];L.v=[{n:1,ts:Date.now(),t:t,p:old?old.p:0,w:old?old.w:0,x:x}];
     if(wasPub)setPublicList(p,t,true);
     S.draft={name:"",cards:[],ts:Date.now()};save();closeDraft();repaintAll();view("Pro");window.scrollTo(0,0);
   }
@@ -2416,19 +2613,15 @@ button.danger-fill{background:var(--down);border-color:var(--down);color:#fff}
   function buildPanel(){
     var pn=$("bPanel");if(pn.dataset.b)return;pn.dataset.b="1";
     pn.innerHTML='<div class="bhd"><button class="bgrab" id="bGrab" type="button" aria-controls="bBody"><b>Deck builder</b> <span id="bCnt"></span> <em id="bNote" aria-live="polite"></em></button><button id="bDone" class="ghost rm" type="button">Done</button></div>'
-      +'<div class="bbody" id="bBody"><label for="dName2">List name</label><input id="dName2" maxlength="24" placeholder="e.g. Charizard ex">'
+      +'<div class="bbody" id="bBody">'
       +'<p class="bsum" id="bSum"></p>'
       +'<label for="bQ">Add any card</label><div class="csearch"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg><input id="bQ" type="search" placeholder="Search, like Ultra Ball" autocomplete="off"></div>'
       +'<div class="bres" id="bRes" aria-live="polite"></div><div class="est" id="bEst"></div><div class="vseg" id="bView" role="group" aria-label="Draft view"><button type="button" data-v="list">List</button><button type="button" data-v="grid">Grid</button></div><div id="bList"></div>'
-      +'<h3>Basic energy</h3><div class="dbas" id="bEn"></div>'
       +'<p class="status" id="dMsg" role="status" aria-live="polite"></p>'
       +'<div class="actions"><button id="bSave" type="button">Save to My Decks</button><button id="bClr" type="button" class="ghost">Clear draft</button></div>'
       +'<p class="foot">Tap + on any card in the grid, or search here. Your draft saves as you go, so you can keep browsing and come back to it. Max 60 cards and 4 copies per name (basic energy is unlimited).</p></div>';
     $("bGrab").onclick=function(){if(window.matchMedia&&matchMedia("(max-width:900px)").matches)setMin(!BMIN)};
     $("bDone").onclick=closeDraft;
-    var ni=$("dName2");ni.value=D().name||"";ni.addEventListener("input",function(){D().name=ni.value;D().ts=Date.now();save()});
-    var be=$("bEn");["Grass","Fire","Water","Lightning","Psychic","Fighting","Darkness","Metal"].forEach(function(t,k){
-      var b=el("button","+ "+t,"ghost");b.type="button";b.onclick=function(){var c={n:"Basic "+t+" Energy",s:"SVE",no:String(k+1),t:"Energy"},e=dstep(c,1);repaintAll();added(c,e)};be.appendChild(b)});
     var tm,qs=0;$("bQ").addEventListener("input",function(){var v=this.value;clearTimeout(tm);tm=setTimeout(function(){var my=++qs,R=$("bRes");
       if(!qWords(v).length){R.innerHTML="";return}
       R.innerHTML="";R.appendChild(el("p","Searching…","foot"));
@@ -2440,14 +2633,13 @@ button.danger-fill{background:var(--down);border-color:var(--down);color:#fff}
     },250)});
     [].forEach.call($("bView").querySelectorAll("button"),function(b){b.onclick=function(){BGRID=b.dataset.v==="grid";try{localStorage.setItem("tg-bgrid",BGRID?"1":"0")}catch(e){}paintList()}});
     $("bSave").onclick=saveDraft;
-    $("bClr").onclick=function(){var b=$("bClr");if(!D().cards.length)return;if(b.dataset.ok){delete b.dataset.ok;b.textContent="Clear draft";S.draft={name:"",cards:[],ts:Date.now()};$("dName2").value="";save();repaintAll();return}b.dataset.ok="1";b.textContent="Tap again to clear";setTimeout(function(){delete b.dataset.ok;b.textContent="Clear draft"},3000)};
+    $("bClr").onclick=function(){var b=$("bClr");if(!D().cards.length)return;if(b.dataset.ok){delete b.dataset.ok;b.textContent="Clear draft";S.draft={name:"",cards:[],ts:Date.now()};save();repaintAll();return}b.dataset.ok="1";b.textContent="Tap again to clear";setTimeout(function(){delete b.dataset.ok;b.textContent="Clear draft"},3000)};
     setMin(BMIN);
   }
   function paintList(){
     var d=D(),B=$("bList");if(!B)return;
     var c3={p:0,t:0,e:0};d.cards.forEach(function(x){c3[gk(x)]+=x.q});
     $("bCnt").textContent=dtot()+"/60";$("bSum").textContent="Pokémon "+c3.p+" · Trainer "+c3.t+" · Energy "+c3.e;
-    var ni=$("dName2");if(document.activeElement!==ni)ni.value=d.name||"";
     var cb=$("cBuild");if(cb&&BUILD)cb.textContent="Building · "+dtot()+"/60";
     B.innerHTML="";[].forEach.call($("bView").querySelectorAll("button"),function(b){b.setAttribute("aria-pressed",(b.dataset.v==="grid")===BGRID?"true":"false")});
     $("bEst").hidden=!d.cards.length;if(d.cards.length)estCost(d.cards,$("bEst"));
