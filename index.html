@@ -321,6 +321,82 @@ button.danger{color:var(--down);border-color:var(--down)}
 
 .cwrap .ctile{display:block;width:100%}
 @media(max-width:600px){.cgrid{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.cbrowser{padding:16px}}
+li.row .rank.rk1,li.row .rank.rk2,li.row .rank.rk3{font-size:1.75rem;font-weight:800;-webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-fill-color:transparent;filter:drop-shadow(0 1px 0 rgba(0,0,0,.18))}
+li.row .rank.rk1{background-image:linear-gradient(180deg,#ffe892 8%,#e2ae1c 52%,#9c6c00 92%)}
+li.row .rank.rk2{background-image:linear-gradient(180deg,#eef1f5 6%,#a5aeba 52%,#5c6470 94%)}
+li.row .rank.rk3{background-image:linear-gradient(180deg,#ffd2a6 6%,#c97f3f 52%,#7a3f14 94%)}
+.prof{display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;margin-bottom:18px}
+.profid{display:flex;align-items:center;gap:14px;min-width:0}
+.profid h2{margin:0}.profid .foot{margin:3px 0 0}
+.profid .av{width:64px;height:64px;font-size:1.4rem}
+.tcard{display:flex;align-items:center;gap:12px;padding:8px 18px 8px 8px;border-radius:20px;background:linear-gradient(135deg,color-mix(in srgb,var(--c) 18%,var(--raise)),var(--raise) 70%);border:1px solid color-mix(in srgb,var(--c) 32%,var(--line))}
+.tctx{display:flex;flex-direction:column;gap:2px;min-width:0}
+.tck{font:600 .66rem/1.3 var(--font);letter-spacing:.09em;text-transform:uppercase;color:var(--muted)}
+.tctx b{font:700 1.2rem/1.2 var(--font);letter-spacing:-.01em;color:var(--c)}
+.tcs{font-size:.82rem;color:var(--muted);font-variant-numeric:tabular-nums}
+.acard{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin:14px 0 6px}
+.pdash{display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;margin-bottom:16px}
+.pdash .profid .av{width:52px;height:52px;font-size:1.2rem}
+details.pdeck{border:1px solid var(--line);border-radius:16px;padding:12px 16px;margin:0 0 12px;background:var(--raise)}
+details.pdeck>summary{cursor:pointer;display:flex;align-items:center;gap:8px;flex-wrap:wrap;list-style:none}
+details.pdeck>summary::-webkit-details-marker{display:none}
+details.pdeck>summary::after{content:"▾";margin-left:auto;color:var(--muted);transition:transform .2s}
+details.pdeck[open]>summary::after{transform:rotate(180deg)}
+details.pdeck[open]>summary{margin-bottom:12px}
+details.pdeck .vchip{margin-left:0}
+.pdm{font-size:.82rem;color:var(--muted)}
+.vdeck{margin-top:20px;padding-top:4px;border-top:1px solid var(--line)}
+.dsplit{display:grid;grid-template-columns:minmax(210px,290px) minmax(0,1fr);gap:22px;align-items:start;margin:8px 0 6px}
+.dtext h4{font:600 .8rem/1.3 var(--font);color:var(--muted);margin:14px 0 4px}
+.dtext h4:first-child{margin-top:0}
+.dtext ul{list-style:none;margin:0;padding:0}
+.dtext li{display:flex;gap:10px;align-items:baseline;padding:5px 0;border-bottom:1px solid var(--line);font-size:.9rem;line-height:1.3}
+.dtext li b{min-width:1.3em;text-align:right;font-variant-numeric:tabular-nums}
+.dtext li span{flex:1;min-width:0}
+.dtext li small{color:var(--muted);font-size:.7rem;white-space:nowrap}
+.dtot{font-weight:600;font-size:.88rem;margin:12px 0 0}
+.dside .dgrid{margin-top:0}
+@media(min-width:761px){.dtext{position:sticky;top:calc(env(safe-area-inset-top,0px) + 76px)}}
+@media(max-width:760px){.dsplit{grid-template-columns:1fr;gap:14px}}
+.qmodal{position:fixed;inset:0;z-index:90;background:rgba(0,0,0,.5);display:flex;align-items:center;justify-content:center;padding:20px;animation:qin .15s ease-out}
+.qbox{background:var(--panel);color:var(--ink);border-radius:20px;padding:22px;width:min(380px,100%);box-shadow:0 20px 60px rgba(0,0,0,.35)}
+.qbox h3{font:600 1.15rem/1.3 var(--font);margin:0 0 6px}
+.qbox .foot{margin:0}
+.qbox .actions button{flex:1 1 0}
+button.danger-fill{background:var(--down);border-color:var(--down);color:#fff}
+@keyframes qin{from{opacity:0}to{opacity:1}}
+.newsh{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:6px}
+.newsh h2{margin:0}
+.newsh button{padding:6px 14px;font-size:.84rem;flex:none}
+.news{list-style:none;margin:0;padding:0}
+.nw{padding:12px 0;border-bottom:1px solid var(--line)}
+.nw:last-child{border:0;padding-bottom:0}
+.nwh{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.nwh b{font-weight:600;letter-spacing:-.01em}
+.nwh time{margin-left:auto;font-size:.8rem;color:var(--muted);white-space:nowrap}
+.nwk{font:600 .64rem/1.6 var(--font);letter-spacing:.07em;text-transform:uppercase;padding:1px 8px;border-radius:999px;background:var(--line);color:var(--muted)}
+.nw-u .nwk{background:color-mix(in srgb,var(--accent) 16%,transparent);color:var(--accent)}
+.nw-i .nwk{background:color-mix(in srgb,var(--down) 16%,transparent);color:var(--down)}
+.nw-m .nwk{background:color-mix(in srgb,#e0a526 22%,transparent);color:#b9801c}
+.nw p{margin:6px 0 0;font-size:.92rem;color:var(--muted)}
+.upd{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(16px + env(safe-area-inset-bottom,0px));z-index:70;display:flex;align-items:center;gap:8px;padding:6px 6px 6px 18px;border-radius:999px;background:var(--ink);color:var(--bg);box-shadow:0 10px 30px rgba(0,0,0,.3);font-size:.9rem;width:max-content;max-width:calc(100% - 32px)}
+.upd[hidden]{display:none}
+.upd span{min-width:0}
+.upd button{padding:7px 14px;font-size:.85rem;flex:none}
+.upd button.ghost{color:var(--bg);border-color:transparent;padding:7px 10px}
+.pairs li{display:block}
+.tno{display:inline-block;min-width:4.8em;font-size:.76rem;font-weight:600;color:var(--muted);font-variant-numeric:tabular-nums}
+.pairs li.mine{background:color-mix(in srgb,var(--accent) 9%,transparent);border-radius:14px;padding:12px 14px;margin:6px 0;border-bottom:0}
+.pairs li.mine>span{color:var(--ink);font-weight:600}
+.rpt{margin-top:6px}.rpt .foot{margin:4px 0 0}
+.log .rbtns button.rm{margin:0}
+.rbtns{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin-top:8px}
+.rlbl{font-size:.86rem;color:var(--ink);margin-right:4px}
+.rok{color:var(--up);font-size:.9rem;margin:4px 0}
+.rbad{color:var(--down);font-size:.86rem;margin:6px 0 0}
+.tile.sm b{font-size:1.15rem;line-height:1.35;letter-spacing:-.01em}
+.swf{display:grid;grid-template-columns:1fr 1.4fr;gap:14px}
+@media(max-width:560px){.swf{grid-template-columns:1fr}}
 </style>
 <script>(function(){var t=null;try{t=localStorage.getItem("tg-theme");}catch(e){}if(t!=="light"&&t!=="dark"){t=window.matchMedia&&matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light";}document.documentElement.setAttribute("data-theme",t);})();</script>
 </head>
@@ -330,6 +406,7 @@ button.danger{color:var(--down);border-color:var(--down)}
   <div class="hero"><h1>Training Grounds</h1><p class="sub" id="weekLine"></p><div class="season"><div class="sline" id="sLine"></div><div class="sbar"><i id="sFill"></i></div><p class="foot" id="sNote" style="margin:6px 0 0"></p></div></div>
   <div class="ad" data-slot="top" hidden></div>
   <div id="vRank">
+  <section class="panel" aria-labelledby="newsH"><div class="newsh"><h2 id="newsH">Updates &amp; notices</h2><button id="newsMore" type="button" class="ghost" hidden></button></div><ul class="news" id="news"></ul></section>
 
 
 
@@ -388,6 +465,7 @@ button.danger{color:var(--down);border-color:var(--down)}
       <section class="panel"><h2>Organizer dashboard</h2><div class="tiles" id="oTiles"></div></section>
       <section class="panel"><h2>Run tournament</h2><div id="oSw"></div></section>
       <section class="panel"><h2>This week's tournament</h2><p class="tbig" id="oWhen"></p><p class="sub" id="oCount" style="margin:0 0 8px"></p><ul class="log" id="oReg"></ul><div class="row-add" style="margin-top:14px"><select id="oAddSel" aria-label="Player to register" style="flex:1"></select><button id="oAddBtn" type="button">Register player</button></div><p class="status" id="oAddMsg" role="status" aria-live="polite"></p><p class="foot">Pick anyone in the system, with or without an account, to add them to this week's tournament.</p></section>
+    <section class="panel" aria-labelledby="nH"><h2 id="nH">Post a notice</h2><div class="grid"><div><label for="nTi">Title</label><input id="nTi" maxlength="80" placeholder="e.g. No tournament this Saturday"></div><div><label for="nK">Type</label><select id="nK"><option value="n">Notice</option><option value="i">Important (pinned to the top)</option><option value="m">Maintenance</option></select></div></div><div style="margin-top:12px"><label for="nBody">Message (optional)</label><textarea id="nBody" maxlength="600" style="min-height:90px"></textarea></div><div class="actions"><button id="nPost" type="button">Post notice</button></div><p class="status" id="nMsg" role="status" aria-live="polite"></p><ul class="log" id="nList"></ul><p class="foot">Notices show for everyone under Updates &amp; notices on the Rankings page, alongside automatic site updates.</p></section>
     <section class="panel" aria-labelledby="tO">
       <h2 id="tO">Organizer</h2>
       <div class="grid">
@@ -450,12 +528,13 @@ button.danger{color:var(--down);border-color:var(--down)}
       <section class="panel"><h2>Latest results</h2><ul class="log" id="oLog"></ul></section>
     </div>
     <div id="dPl" hidden>
-      <section class="panel"><div class="phd"><span id="pBadge"></span><h2 id="pName"></h2></div><div class="tiles" id="pTiles"></div></section>
+      <section class="panel"><div class="pdash"><div class="profid"><span id="pAv"></span><div><h2 id="pName"></h2><button id="pProf" type="button" class="ghost rm" style="margin-top:6px">View my profile</button></div></div><div id="pBadge"></div></div><div class="tiles" id="pTiles"></div></section>
+      <section class="panel"><h2>GroundZ tournament data</h2><div id="pTour"></div></section>
       <section class="panel"><h2>My tournament</h2><p class="tbig" id="pWhen"></p><p class="sub" id="pStat" style="margin:0 0 12px"></p><div class="actions"><button id="pReg" type="button"></button></div><p class="status" id="pMsg" role="status" aria-live="polite"></p><div id="pPair"></div></section>
       <section class="panel"><h2>My recent decks</h2><div class="rcs" id="pRecent"></div><p class="foot">Your last 5 decks, newest first.</p></section>
       <section class="panel"><h2>My decks</h2><ul class="meta" id="pDecks"></ul></section>
       <section class="panel"><h2>My decklist</h2><label for="myList">Paste your list</label><textarea id="myList" maxlength="4000"></textarea><label class="chk"><input type="checkbox" id="myPub"> Allow public viewing</label><div class="actions"><button id="saveList" type="button">Save decklist</button></div><p class="status" id="listMsg" role="status" aria-live="polite"></p><p class="foot">Public lists open when anyone taps your name or deck icons in the power rankings.</p></section>
-      <section class="panel"><h2>My recent matches</h2><ul class="log" id="pLog"></ul><p class="foot">Results are entered by the organizer for now. Two-player confirmation through the Discord bot comes later.</p></section>
+      <section class="panel"><h2>My recent matches</h2><ul class="log" id="pLog"></ul><p class="foot">In Swiss rounds you report your own result and your opponent confirms it. If a report is missing or the two don't match, the organizer decides.</p></section>
     </div>
   </div>
 
@@ -468,10 +547,11 @@ button.danger{color:var(--down);border-color:var(--down)}
   </div>
 <div id="vPro" hidden><div id="hubBody"></div></div>
 <div id="vDeck" hidden>
-    <section class="panel"><div class="actions" style="margin:0 0 16px"><button id="dBack" type="button" class="ghost" style="flex:none">← Back to rankings</button></div><div class="phd"><span id="dkBadge"></span><h2 id="dkName"></h2></div><div class="tiles" id="dkTiles"></div></section>
+    <section class="panel"><div class="actions" style="margin:0 0 16px"><button id="dBack" type="button" class="ghost" style="flex:none">← Back to rankings</button></div><div class="prof"><div class="profid"><span id="dkAv"></span><div><h2 id="dkName"></h2><p class="foot" id="dkSub"></p></div></div><div id="dkBadge"></div></div><div class="tiles" id="dkTiles"></div></section>
+    <section class="panel"><h2>GroundZ tournament data</h2><div id="dkTour"></div></section>
+    <section class="panel"><h2 id="dkDH">My Decks</h2><div id="dkList"></div></section>
     <section class="panel"><h2>Recent decks</h2><div class="rcs" id="dkRecent"></div><p class="foot">The last 5 decks this player used, newest first.</p></section>
     <section class="panel"><h2>Decks played</h2><ul class="meta" id="dkDecks"></ul></section>
-    <section class="panel"><h2>Decklist</h2><div id="dkList"></div></section>
   </div>
 <div id="vCards" hidden><div class="clay" id="cLay"><div class="cmain">
     <section class="panel cbrowser">
@@ -495,11 +575,12 @@ button.danger{color:var(--down);border-color:var(--down)}
   </div><aside class="panel bpanel" id="bPanel" aria-label="Deck builder" hidden></aside></div>
   </div>
   <div id="vTools" hidden>
-    <details class="panel dd"><summary>Swiss calculator</summary><div class="grid"><div><label for="swN">Players</label><input id="swN" type="number" min="2" max="1024" value="16"></div><div><label for="swR">Rounds (blank = recommended)</label><input id="swR" type="number" min="1" max="12" placeholder="Auto"></div></div><div class="tiles" id="swT" style="margin-top:14px"></div><div id="swTab"></div><p class="foot">Win = 3 pts, tie = 1, loss = 0. Player counts are the expected spread if every match were a coin flip, so real events will differ.</p></details>
+    <details class="panel dd"><summary>Swiss calculator</summary><div class="swf"><div><label for="swN">Players</label><input id="swN" type="number" min="4" max="8192" value="16" inputmode="numeric"></div><div><label for="swF">Event structure (Play! Pokémon TCG)</label><select id="swF"><option value="lc">League Challenge · Swiss only</option><option value="cup">League Cup · Swiss + top cut</option><option value="reg">Regional and above · two-phase Swiss</option></select></div></div><div class="tiles" id="swT" style="margin-top:14px"></div><div id="swTab"></div><p class="foot" id="swNote"></p></details>
     <details class="panel dd"><summary>Match history</summary><div id="mhBody"></div></details>
   </div>
 <div class="ad" data-slot="bottom" hidden></div>
 <div class="ctray" id="cTray" hidden><button id="cTrayBtn" type="button"></button></div>
+<div class="upd" id="upd" role="status" hidden><span id="updTxt"></span><button id="updGo" type="button">Reload</button><button id="updX" type="button" class="ghost" aria-label="Dismiss">✕</button></div>
 <footer class="soc" id="soc" aria-label="Social links"></footer>
 </main>
 
@@ -620,7 +701,7 @@ button.danger{color:var(--down);border-color:var(--down)}
       var li=document.createElement("li");
       li.className="row"+(i<3?" r"+(i+1):"")+(flashIds[p.id]?" flash":"");
       li.dataset.id=p.id;
-      li.innerHTML=(i<3?'<span class="rank"><span class="medal m'+(i+1)+'" role="img" aria-label="Rank '+(i+1)+'">'+(i+1)+'</span></span>':'<span class="rank">'+(i+1)+'</span>')+'<span class="move '+m.c+'">'+m.t+'</span>'+
+      li.innerHTML=(i<3?'<span class="rank rk'+(i+1)+'" aria-label="Rank '+(i+1)+'">'+(i+1)+'</span>':'<span class="rank">'+(i+1)+'</span>')+'<span class="move '+m.c+'">'+m.t+'</span>'+
         '<span class="who"><span class="name"></span><span class="sprs"></span></span><span class="rec">'+p.w+'–'+p.l+(p.t?'–'+p.t:'')+
         (total?' ('+Math.round(100*p.w/total)+'%)':'')+'</span><span class="pc'+(isPro()?'':' lock')+'">'+(isPro()?(p.st?(p.st>0?"W"+p.st:"L"+(-p.st)):"–")+" · peak "+Math.max(p.pk||0,p.rating):"🔒 Pro")+'</span><span class="rating"><span class="tbw"></span><span class="rn">'+p.rating+'<small class="tier"></small></span></span>';
       li.querySelector(".name").textContent=p.name;li.querySelector(".who").insertBefore(avatar(p),li.querySelector(".name"));
@@ -666,7 +747,7 @@ button.danger{color:var(--down);border-color:var(--down)}
       li.appendChild(document.createTextNode((g.wd?" ("+g.wd+")":"")+(g.t?" tied ":" beat ")+g.l+(g.ld?" ("+g.ld+")":"")+", "+(g.d>0?"+":"")+g.d+" Elo"+(g.b?" (upset)":"")+", week "+g.wk));
       log.appendChild(li);
     });
-    renderPro(); renderSoc();
+    renderPro(); renderSoc(); renderNews();
     renderTiers(); renderSeason();
     fillSelects();
     chrome();
@@ -1019,7 +1100,7 @@ button.danger{color:var(--down);border-color:var(--down)}
       var row=r[0]&&r[0][0]; if(!row)return;
       if(row.version===remVer&&JSON.stringify([r[1],r[2],r[3],r[4],r[5]])===lastSig)return;
       if(saving||dirty||mineDirty||mineBusy)return;
-      applyRemote(r); rerender();
+      applyRemote(r); rerender(); repTick();
     }).catch(function(){});
   }
   setInterval(poll,30000);
@@ -1031,7 +1112,7 @@ button.danger{color:var(--down);border-color:var(--down)}
     SES=sget();
     var pre=(SES&&SES.expires_at&&SES.expires_at*1000-Date.now()<60000)?refreshSes():Promise.resolve();
     pre.then(loadRemote).then(function(r){
-      applyRemote(r); $("reset").hidden=true; $("tAll").hidden=true; banner(""); BOOTED=true; rerender();
+      applyRemote(r); $("reset").hidden=true; $("tAll").hidden=true; banner(""); BOOTED=true; rerender(); repTick();
     }).catch(function(){
       REMOTE=false; CUR=null; S=load()||seed(); S.mu=S.mu||{}; ensureSprites(S); ensureV4(S);
       banner("Can't reach the league database, so this is demo data saved only on this device. Reload to try again.");
@@ -1069,7 +1150,7 @@ button.danger{color:var(--down);border-color:var(--down)}
     var u=me(), b=$("acctBody");
     if(u){
       var p=myP()||{rating:START,w:0,l:0}, reg=!!(S.t&&p.id&&S.t.reg.indexOf(p.id)>=0);
-      b.innerHTML='<p>Signed in as <b></b> <span class="foot" id="aUn"></span></p><p class="foot" id="aInfo"></p>'
+      b.innerHTML='<p>Signed in as <b></b> <span class="foot" id="aUn"></span></p><p class="foot" id="aInfo"></p><div class="acard"><div id="aBadge"></div><button id="aProf" type="button" class="ghost" style="flex:none">View my profile</button></div>'
         +'<div class="avrow"><span id="avPrev"></span><div><label for="avFile">Profile picture</label><input id="avFile" type="file" accept="image/*"><div class="actions" style="margin-top:8px"><button id="avRm" type="button" class="ghost" style="flex:none">Remove picture</button></div></div></div><p class="status" id="avMsg" role="status" aria-live="polite"></p>'
         +'<div class="grid" style="margin-top:12px"><div><label for="adn">Display name</label><input id="adn" maxlength="24"></div></div>'
         +'<div class="actions"><button id="adSave" type="button">Save display name</button><button id="so" type="button" class="ghost">Sign out</button></div>'
@@ -1080,6 +1161,7 @@ button.danger{color:var(--down);border-color:var(--down)}
       $("adn").value=u.u;
       $("aInfo").textContent="League pts "+p.rating+" · record "+p.w+"–"+p.l+" · "+(reg?"registered for this week's tournament":"not registered for this week's tournament");
       $("so").onclick=signOut;
+      $("aBadge").appendChild(trainerCard(p,84));$("aProf").hidden=!myP();$("aProf").onclick=openMine;
       $("avPrev").appendChild(avatar(myP()||{name:u.u}));$("avRm").hidden=!AV[u.pid];
       function setAv(data){
         var m=$("avMsg");m.textContent=data?"Saving your picture…":"Removing your picture…";
@@ -1250,10 +1332,11 @@ button.danger{color:var(--down);border-color:var(--down)}
       av.forEach(function(p){var o=document.createElement("option");o.value=p.id;o.textContent=p.name+" · "+p.rating+(REMOTE&&!accPid[p.id]?" (no account)":"");sel.appendChild(o)});
       sel.disabled=!av.length;$("oAddBtn").disabled=!av.length;if(kv&&av.some(function(p){return String(p.id)===kv}))sel.value=kv;
       var G=$("oLog"); G.innerHTML=""; if(!S.log.length) G.appendChild(el("li","No results yet this session.")); S.log.slice(0,8).forEach(function(g){G.appendChild(logLi(g))});
+      renderNoticeAdmin();
       return;
     }
     var p=myP(), r=ranks(S)[p.id], tt=p.w+p.l, isReg=t.reg.indexOf(p.id)>=0;
-    $("pName").textContent="Welcome, "+p.name; $("pBadge").innerHTML=""; $("pBadge").appendChild(avatar(p)); $("pBadge").appendChild(badge(tierIdx(p.rating),starsOf(p.rating),84)); $("pBadge").style.cssText="display:flex;align-items:center;gap:12px"; renderRecent($("pRecent"),p);
+    $("pName").textContent="Welcome, "+p.name; $("pAv").innerHTML=""; $("pAv").appendChild(avatar(p)); $("pBadge").innerHTML=""; $("pBadge").appendChild(trainerCard(p,84)); tourPanel($("pTour"),p.id); renderRecent($("pRecent"),p);
     var P=$("pTiles"); P.innerHTML="";
     [["#"+r+" of "+S.players.length,"Rank"],[p.rating,"League pts"],[tierOf(p.rating)[1],"Tier"],[p.w+"–"+p.l,"Record"],[tt?Math.round(100*p.w/tt)+"%":"–","Win rate"],[p.st?(p.st>0?"W"+p.st:"L"+(-p.st)):"–","Streak"],[Math.max(p.pk||0,p.rating),"Peak Elo"],[movement(p,r).t.replace("new","New"),"Since last week"]].forEach(function(x){P.appendChild(tile(String(x[0]),x[1]))});
     $("pWhen").textContent=when;
@@ -1269,6 +1352,7 @@ button.danger{color:var(--down);border-color:var(--down)}
     mine.forEach(function(g){var won=g.w===p.name,li=document.createElement("li"),b=document.createElement("b");b.textContent=won?"Win":"Loss";li.appendChild(b);li.appendChild(document.createTextNode(" vs "+(won?g.l:g.w)+((won?g.ld:g.wd)?" ("+(won?g.ld:g.wd)+")":"")+", "+(g.t?"+1":won?"+"+g.d:"+0")+" pts, week "+g.wk));G.appendChild(li);});
   }
   $("pReg").addEventListener("click",function(){$("tReg").click();$("pMsg").textContent=$("tMsg").textContent;renderDash();});
+  $("pProf").addEventListener("click",openMine);
   ["tDay","tTime"].forEach(function(i){$(i).addEventListener("change",function(){if(!$("vDash").hidden)renderDash()})});
   ["tAll","tClr"].forEach(function(i){$(i).addEventListener("click",function(){if(!$("vDash").hidden)renderDash()})});
 
@@ -1278,40 +1362,53 @@ button.danger{color:var(--down);border-color:var(--down)}
   function starsOf(r){var i=tierIdx(r),lo=i===TIERS.length-1?0:TIERS[i][0],hi=i===0?lo+100:TIERS[i-1][0];return Math.max(1,Math.min(5,Math.floor((r-lo)/(hi-lo)*5)+1))}
   function mix(h,t,a){var o="#";for(var i=0;i<3;i++){var x=parseInt(h.substr(1+i*2,2),16),y=parseInt(t.substr(1+i*2,2),16);o+=("0"+Math.round(x*(1-a)+y*a).toString(16)).slice(-2)}return o}
   function sp(cx,cy,R,r,n){var o=[];for(var i=0;i<n*2;i++){var q=i%2?r:R,a=Math.PI*i/n-Math.PI/2;o.push((cx+q*Math.cos(a)).toFixed(1)+","+(cy+q*Math.sin(a)).toFixed(1))}return o.join(" ")}
-  // Dota-style rank medal: metal-rimmed gem, wings that grow with tier, spikes at the top tiers, stars for progress inside the tier
+  // Gym-style enamel medallions: each tier has its own pin shape, metal rim and emblem. Stars show progress within the tier.
+  function poly(n,R,rot,cx,cy){cx=cx==null?50:cx;cy=cy==null?46:cy;var o=[];for(var i=0;i<n;i++){var a=(rot+360*i/n)*Math.PI/180;o.push((cx+R*Math.cos(a)).toFixed(1)+" "+(cy+R*Math.sin(a)).toFixed(1))}return "M"+o.join("L")+"Z"}
+  function starP(n,R,r,cx,cy){cx=cx==null?50:cx;cy=cy==null?46:cy;var o=[];for(var i=0;i<2*n;i++){var q=i%2?r:R,a=Math.PI*i/n-Math.PI/2;o.push((cx+q*Math.cos(a)).toFixed(1)+" "+(cy+q*Math.sin(a)).toFixed(1))}return "M"+o.join("L")+"Z"}
+  var BSHAPE=[
+    poly(5,38,-90),                                                         // Rookie: pentagon
+    poly(6,38,-90),                                                         // Trainer: hexagon
+    "M43 8H57L84 39V53L57 84H43L16 53V39Z",                                 // Ace: cut diamond
+    "M50 8L83 18V45C83 65 69 78 50 87C31 78 17 65 17 45V18Z",               // Elite: shield
+    starP(8,40,31),                                                         // Master: eight-point star
+    "M17 14L33 23L50 8L67 23L83 14V45C83 65 69 78 50 87C31 78 17 65 17 45Z",// Champion: crowned crest
+    starP(12,42,34)                                                         // Legend: sunburst
+  ];
+  var BMETAL=[["#eef1f5","#a3aab4","#5d646e"],["#f7d2ad","#bf8350","#6b4021"],["#ffffff","#c6ccd5","#768090"],["#ffffff","#c6ccd5","#768090"],["#fff4bf","#e3b33a","#8a6200"],["#fff4bf","#e3b33a","#8a6200"],["#fffbe0","#f2c94c","#9a6a00"]];
+  var BID=0;
   function badge(ti,stars,px){
-    var t=TIERS[ti],lv=TIERS.length-1-ti,c=t[2],lo=mix(c,"#000000",.5),wc=mix(c,"#ffffff",.38);
-    var metal=["#8f959f","#b8905a","#c9ced6","#cfd4dc","#e8c75a","#f0c030","#ffd75e"][lv],cx=50,cy=44,g="";
-    var f=[0,2,2,3,3,4,5][lv];
-    if(f){
-      var w="";
-      for(var k=0;k<f;k++){
-        var ang=-42+k*(62/(f-1)),ls=(0.55+0.07*lv)*(1-0.08*k);
-        w+='<path d="M50 44C58 36 78 36 96 42C80 47 62 49 50 44Z" fill="'+wc+'" stroke="'+lo+'" stroke-width="1.2" transform="rotate('+ang.toFixed(1)+' 50 44) translate(50 44) scale('+ls.toFixed(3)+') translate(-50 -44)"/>';
-      }
-      g+='<g>'+w+'</g><g transform="translate(100 0) scale(-1 1)">'+w+'</g>';
-    }
-    if(lv>=5){
-      var an=lv===5?[-50,0,50]:[-72,-36,0,36,72];
-      an.forEach(function(a){
-        function pt(r,d){var q=(a+d)*Math.PI/180;return (cx+r*Math.sin(q)).toFixed(1)+","+(cy-r*Math.cos(q)).toFixed(1)}
-        g+='<polygon points="'+pt(24,-9)+" "+pt(36,0)+" "+pt(24,9)+'" fill="'+metal+'" stroke="'+lo+'" stroke-width="1"/>';
-      });
-    }
-    g+='<circle cx="50" cy="44" r="27" fill="'+metal+'" stroke="'+lo+'" stroke-width="1.2"/><circle cx="50" cy="44" r="23" fill="'+lo+'"/><circle cx="50" cy="44" r="20.5" fill="'+c+'"/>';
-    g+='<path d="M30.4 38A20.5 20.5 0 0 1 69.6 38Q50 30 30.4 38Z" fill="#fff" opacity=".28"/>';
-    var em="";
-    if(lv<=2){for(var i=0;i<lv+1;i++){var y=44+(i-lv/2)*7;em+='<path d="M41 '+(y+3)+'L50 '+(y-4)+'L59 '+(y+3)+'" fill="none" stroke="#fff" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/>';}}
-    else if(lv===3) em='<polygon points="50,30 62,44 50,58 38,44" fill="#fff" stroke="'+lo+'" stroke-width="1"/>';
-    else if(lv===4) em='<polygon points="50,29 63,44 50,59 37,44" fill="#fff" stroke="'+lo+'" stroke-width="1"/><polygon points="50,37 56,44 50,51 44,44" fill="'+c+'"/>';
-    else if(lv===5) em='<polygon points="'+sp(50,44,15,6.5,5)+'" fill="#fff" stroke="'+lo+'" stroke-width="1" stroke-linejoin="round"/>';
-    else em='<polygon points="'+sp(50,44,16,7,8)+'" fill="#fff" stroke="'+lo+'" stroke-width="1" stroke-linejoin="round"/><circle cx="50" cy="44" r="4" fill="'+c+'"/>';
+    var t=TIERS[ti],lv=TIERS.length-1-ti,c=t[2],lo=mix(c,"#000000",.55),M=BMETAL[lv],sh=BSHAPE[lv],id="gb"+(++BID),g="";
+    function sc(k){return ' transform="translate(50 46) scale('+k+') translate(-50 -46)"'}
+    var defs='<defs><linearGradient id="'+id+'m" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="'+M[0]+'"/><stop offset=".45" stop-color="'+M[1]+'"/><stop offset=".7" stop-color="'+M[2]+'"/><stop offset="1" stop-color="'+M[1]+'"/></linearGradient>'
+      +'<linearGradient id="'+id+'e" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="'+mix(c,"#ffffff",.38)+'"/><stop offset=".55" stop-color="'+c+'"/><stop offset="1" stop-color="'+mix(c,"#000000",.32)+'"/></linearGradient>'
+      +'<clipPath id="'+id+'c"><path d="'+sh+'"'+sc(.8)+'/></clipPath></defs>';
+    g+='<path d="'+sh+'" fill="url(#'+id+'m)" stroke="'+M[2]+'" stroke-width="1.4" stroke-linejoin="round"/>';
+    g+='<path d="'+sh+'" fill="none" stroke="#fff" stroke-opacity=".55" stroke-width="1"'+sc(.93)+'/>';
+    g+='<path d="'+sh+'" fill="'+lo+'"'+sc(.85)+'/>';
+    g+='<path d="'+sh+'" fill="url(#'+id+'e)"'+sc(.8)+'/>';
+    var em="",ws='fill="#fff" stroke="'+lo+'" stroke-width="1.2" stroke-linejoin="round"';
+    if(lv===0)em='<path d="M40 52L50 41L60 52" fill="none" stroke="#fff" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/>';
+    else if(lv===1)em='<path d="M40 48L50 38L60 48M40 57L50 47L60 57" fill="none" stroke="#fff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>';
+    else if(lv===2)em='<path d="M54 29L39 49H49L45 63L61 42H51Z" '+ws+'/>';
+    else if(lv===3)em='<path d="'+starP(5,15,6.5,50,47)+'" '+ws+'/>';
+    else if(lv===4)em='<path d="M41 37H59L66 45L50 62L34 45Z" '+ws+'/><path d="M34 45H66M44 37L41 45L50 62L59 45L56 37" fill="none" stroke="'+lo+'" stroke-width="1" stroke-linejoin="round"/>';
+    else if(lv===5)em='<path d="M35 56L33 39L42 46L50 34L58 46L67 39L65 56Z" '+ws+'/><path d="M36 60H64" stroke="#fff" stroke-width="3.2" stroke-linecap="round"/>';
+    else em='<path d="'+starP(8,17,7.5,50,46)+'" '+ws+'/><circle cx="50" cy="46" r="4.2" fill="'+c+'" stroke="'+lo+'" stroke-width="1"/>';
     g+=em;
-    if(stars!=null){for(var s=0;s<5;s++)g+='<polygon points="'+sp(28+s*11,92,5,2.2,5)+'" fill="'+(s<stars?"#ffd60a":"#8b8d98")+'" opacity="'+(s<stars?1:.45)+'"/>';}
-    var vh=stars!=null?96:76,h=Math.round(px*vh/100);
+    g+='<g clip-path="url(#'+id+'c)"><path d="M0 0H100V40Q50 30 0 46Z" fill="#fff" opacity=".22"/></g>';
+    if(stars!=null){for(var s=0;s<5;s++)g+='<path d="'+starP(5,5,2.2,28+s*11,94)+'" fill="'+(s<stars?"#ffd60a":"#8b8d98")+'" opacity="'+(s<stars?1:.45)+'"/>'}
+    var vh=stars!=null?96:86,h=Math.round(px*vh/100);
     var e=document.createElement("span");e.className="tb";
-    e.innerHTML='<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 4 100 '+vh+'" width="'+px+'" height="'+h+'" role="img" aria-label="'+t[1]+' tier'+(stars!=null?", "+stars+" of 5 stars":"")+'">'+g+'</svg>';
+    e.innerHTML='<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 4 100 '+vh+'" width="'+px+'" height="'+h+'" role="img" aria-label="'+t[1]+' badge'+(stars!=null?", "+stars+" of 5 stars":"")+'">'+defs+g+'</svg>';
     return e;
+  }
+  function trainerCard(p,big){
+    var r=p.rating,i=tierIdx(r),t=TIERS[i],s=starsOf(r),box=el("div",null,"tcard");box.style.setProperty("--c",t[2]);
+    box.appendChild(badge(i,s,big||96));
+    var tx=el("div",null,"tctx");tx.appendChild(el("span","Trainer badge","tck"));tx.appendChild(el("b",t[1]+" badge"));
+    tx.appendChild(el("span",s+" of 5 stars · "+r+" pts","tcs"));
+    tx.appendChild(el("span",i>0?(TIERS[i-1][0]-r)+" pts to "+TIERS[i-1][1]:"Top tier reached","tcs"));
+    box.appendChild(tx);return box;
   }
   function renderRecent(box,p){
     box.innerHTML="";
@@ -1347,29 +1444,133 @@ button.danger{color:var(--down);border-color:var(--down)}
   setInterval(renderSeason,1000);
   $("newSeason").addEventListener("click",function(){recSeason();S.season={n:(S.season?S.season.n:1)+1,start:Date.now()};save();renderSeason();say("Season "+S.season.n+" started. The 30-day timer was reset.");});
 
-  var deckPid=null, listDirty=false;
+  // ---- yes / no confirmation ----
+  function ask(title,detail,onYes){
+    var prev=document.activeElement,o=el("div",null,"qmodal"),b=el("div",null,"qbox");
+    o.setAttribute("role","alertdialog");o.setAttribute("aria-modal","true");o.setAttribute("aria-labelledby","qT");
+    var h=el("h3",title);h.id="qT";b.appendChild(h);if(detail)b.appendChild(el("p",detail,"foot"));
+    var a=el("div",null,"actions"),no=el("button","No","ghost"),yes=el("button","Yes","danger-fill");no.type=yes.type="button";
+    function close(){o.remove();document.removeEventListener("keydown",key,true);if(prev&&prev.isConnected)prev.focus()}
+    function key(e){if(e.key==="Escape"){e.preventDefault();e.stopPropagation();close()}else if(e.key==="Tab"){var f=e.shiftKey?(document.activeElement===no?yes:null):(document.activeElement===yes?no:null);if(f){e.preventDefault();f.focus()}}}
+    no.onclick=close;yes.onclick=function(){close();onYes()};o.onclick=function(e){if(e.target===o)close()};
+    a.appendChild(no);a.appendChild(yes);b.appendChild(a);o.appendChild(b);document.body.appendChild(o);
+    document.addEventListener("keydown",key,true);no.focus();
+  }
+
+  // ---- saved decklist layout: names and counts on the left, card grid on the right ----
+  function deckSplit(text,x){
+    var cs=listCards(text,x),wrap=el("div"),eb=el("div",null,"est"),w=el("div",null,"dsplit"),L=el("div",null,"dtext"),R=el("div",null,"dside"),tot=0;
+    GR.forEach(function(G){
+      var A=cs.filter(function(c){return gk(c)===G[1]});if(!A.length)return;
+      var q=A.reduce(function(a,c){return a+c.q},0);tot+=q;L.appendChild(el("h4",G[0]+" · "+q));
+      var ul=el("ul");A.forEach(function(c){var li=el("li");li.appendChild(el("b",String(c.q)));li.appendChild(el("span",c.n));if(c.s)li.appendChild(el("small",c.s+" "+c.no));ul.appendChild(li)});L.appendChild(ul);
+    });
+    if(!cs.length){wrap.appendChild(el("pre",text,"dl"));return wrap}
+    L.appendChild(el("p","Total · "+tot+" card"+(tot===1?"":"s")+(tot!==60?" (a legal deck has 60)":""),"dtot"));
+    R.appendChild(deckGrid(cs));w.appendChild(L);w.appendChild(R);
+    wrap.appendChild(eb);estCost(cs,eb);wrap.appendChild(w);return wrap;
+  }
+
+  // ---- GroundZ tournament data (from Swiss events run on the site) ----
+  function tourData(pid){
+    var o={ev:0,won:0,mp:0,mw:0,first:null,last:null};
+    (S.tours||[]).forEach(function(t){var x=t.st.filter(function(y){return y[0]===pid})[0];if(!x)return;
+      o.ev++;if(t.ch===pid)o.won++;o.mp+=x[1]+x[2]+x[3];o.mw+=x[1];
+      if(!o.first||t.ts<o.first.ts)o.first=t;if(!o.last||t.ts>o.last.ts)o.last=t});
+    return o;
+  }
+  function tourPanel(box,pid){
+    box.innerHTML="";var o=tourData(pid),T=el("div",null,"tiles");
+    [[o.ev,"Events joined"],[o.won,"Events won"],[o.mp,"Matches played"],[o.mw,"Matches won"],[o.first?dateS(o.first.ts):"–","First joined tournament"],[o.last?dateS(o.last.ts):"–","Last played tournament"]].forEach(function(x,i){var t=tile(String(x[0]),x[1]);if(i>3)t.classList.add("sm");T.appendChild(t)});
+    box.appendChild(T);
+    box.appendChild(el("p",o.ev?"From "+o.ev+" finished GroundZ Swiss tournament"+(o.ev===1?"":"s")+". Byes don't count as matches played.":"Stats appear after this player finishes a Swiss tournament run on GroundZ.","foot"));
+  }
+
+  // ---- player profile ----
+  var deckPid=null,listDirty=false;
   function openDeck(id){deckPid=id;view("Deck");window.scrollTo(0,0)}
+  function openMine(){var p=myP();if(p)openDeck(p.id)}
   function renderDeck(){
-    var p=byId(S,deckPid); if(!p){view("Rank");return}
-    var r=ranks(S)[p.id], t=tierOf(p.rating), tt=p.w+p.l;
-    $("dkName").textContent=p.name; $("dkBadge").innerHTML=""; $("dkBadge").appendChild(avatar(p)); $("dkBadge").appendChild(badge(tierIdx(p.rating),starsOf(p.rating),84)); $("dkBadge").style.cssText="display:flex;align-items:center;gap:12px"; renderRecent($("dkRecent"),p);
-    var T=$("dkTiles"); T.innerHTML="";
-    [["#"+r,"Rank"],[p.rating,"League pts"],[t[1],"Tier"],[p.w+"–"+p.l,"Record"],[tt?Math.round(100*p.w/tt)+"%":"–","Win rate"]].forEach(function(x){T.appendChild(tile(String(x[0]),x[1]))});
-    var D=$("dkDecks"); D.innerHTML="";
+    var p=byId(S,deckPid);if(!p){view("Rank");return}
+    var r=ranks(S)[p.id],tt=p.w+p.l,own=!!CUR&&p.id===CUR.pid,acc=accPid[p.id];
+    $("dkName").textContent=p.name;$("dkAv").innerHTML="";$("dkAv").appendChild(avatar(p));
+    $("dkSub").textContent=[acc&&acc.username?"@"+acc.username:"",acc&&acc.role==="org"?"Organizer":"Player","#"+r+" of "+S.players.length].filter(Boolean).join(" · ");
+    $("dkBadge").innerHTML="";$("dkBadge").appendChild(trainerCard(p,104));
+    var T=$("dkTiles");T.innerHTML="";
+    [["#"+r,"Rank"],[p.rating,"League pts"],[p.w+"–"+p.l+(p.t?"–"+p.t:""),"Record"],[tt?Math.round(100*p.w/tt)+"%":"–","Win rate"],[Math.max(p.pk||0,p.rating),"Peak Elo"]].forEach(function(x){T.appendChild(tile(String(x[0]),x[1]))});
+    tourPanel($("dkTour"),p.id);renderRecent($("dkRecent"),p);
+    var D=$("dkDecks");D.innerHTML="";
     var ids=Object.keys(p.dk||{}).sort(function(a,b){return p.dk[b]-p.dk[a]});
-    if(!ids.length) D.appendChild(el("li","No reported matches with a deck yet."));
-    ids.forEach(function(id){var d=deckById(S,+id); if(!d) return;
-      var li=document.createElement("li"); li.appendChild(sprite(d,true));
-      var x=el("div",null,"mtxt"); x.appendChild(el("span",d.name)); x.appendChild(el("span",p.dk[id]+" game"+(p.dk[id]===1?"":"s"))); li.appendChild(x); D.appendChild(li);});
-    var box=$("dkList"); box.innerHTML="";
-    if(p.pub&&p.list){
-      var vs=el("div",null,"vseg");[["grid","Cards"],["list","Text"]].forEach(function(o){var b=el("button",o[1]);b.type="button";b.setAttribute("aria-pressed",DVIEW===o[0]?"true":"false");b.onclick=function(){DVIEW=o[0];try{localStorage.setItem("tg-dview",DVIEW)}catch(e){}renderDeck()};vs.appendChild(b)});box.appendChild(vs);
-      if(DVIEW==="grid"){var cs=listCards(p.list,null),eb=el("div",null,"est");box.appendChild(eb);estCost(cs,eb);box.appendChild(deckGrid(cs))}
-      else box.appendChild(el("pre",p.list,"dl"));
+    if(!ids.length)D.appendChild(el("li","No reported matches with a deck yet."));
+    ids.forEach(function(id){var d=deckById(S,+id);if(!d)return;
+      var li=document.createElement("li");li.appendChild(sprite(d,true));
+      var x=el("div",null,"mtxt");x.appendChild(el("span",d.name));x.appendChild(el("span",p.dk[id]+" game"+(p.dk[id]===1?"":"s")));li.appendChild(x);D.appendChild(li)});
+    $("dkDH").textContent=own?"My Decks":p.name+"'s decks";
+    var box=$("dkList");box.innerHTML="";
+    if(own){
+      var V=p.vault||[],pro=isPro(),VS=pro?V:V.slice(0,2);
+      if(!VS.length)box.appendChild(el("p","You haven't saved any decks yet. Build one from the Cards tab or paste a list in My Decks.","foot"));
+      VS.forEach(function(L,k){
+        var lv=L.v[L.v.length-1],d=el("details",null,"pdeck");if(k===0)d.open=true;
+        var sm=el("summary"),pub=isPubDeck(p,L),cnt=listCards(lv.t,lv.x).reduce(function(a,c){return a+c.q},0);
+        sm.appendChild(el("b",L.n));sm.appendChild(el("span",pub?"Public":"Private","vchip"+(pub?" on":"")));if(L.on)sm.appendChild(el("span","Tracking","vchip"));
+        sm.appendChild(el("span","v"+lv.n+" · "+cnt+" cards"+(lv.p?" · "+Math.round(100*lv.w/lv.p)+"% over "+lv.p:""),"pdm"));
+        d.appendChild(sm);d.appendChild(deckSplit(lv.t,lv.x));box.appendChild(d);
+      });
+      if(V.length>VS.length)box.appendChild(el("p",(V.length-VS.length)+" more saved deck"+(V.length-VS.length===1?" is":"s are")+" hidden until Pro is on.","foot"));
+      var ac=el("div",null,"actions"),mb=el("button","Manage My Decks","ghost");mb.type="button";mb.style.flex="none";mb.onclick=function(){view("Pro");window.scrollTo(0,0)};ac.appendChild(mb);box.appendChild(ac);
+      box.appendChild(el("p","Only you see your private decks here. Visitors see the deck you mark Show publicly.","foot"));
+    }else if(p.pub&&p.list){
+      var d2=el("details",null,"pdeck");d2.open=true;var s2=el("summary");s2.appendChild(el("b","Public decklist"));
+      var c2=listCards(p.list,null).reduce(function(a,c){return a+c.q},0);if(c2)s2.appendChild(el("span",c2+" cards","pdm"));
+      d2.appendChild(s2);d2.appendChild(deckSplit(p.list,null));box.appendChild(d2);
     }
-    else box.appendChild(el("p",p.pub?"This player hasn't added a decklist yet.":"This player keeps their decklist private.","foot"));
+    else box.appendChild(el("p",p.pub?"This player hasn't shared a decklist yet.":"This player keeps their decks private.","foot"));
   }
   $("dBack").addEventListener("click",function(){view("Rank")});
+
+  // ---- updates and notices ----
+  var APP_VER="2026.10.08";
+  var CHANGES=[
+    {ts:Date.UTC(2026,9,8),ti:"Profiles, confirmed results and TOM-accurate Swiss",b:"Tap any player to see their profile, trainer badge, saved decks and GroundZ tournament data. In Swiss rounds you now report your own result and your opponent confirms it. Pairings and tiebreakers follow Play! Pokémon rules, and the Swiss calculator covers League Challenge, League Cup and Regional structures."}
+  ];
+  var NEWSALL=false;
+  function newsItems(){
+    var A=(S.notices||[]).map(function(x){return{ts:x.ts,ti:x.ti,b:x.b,k:x.k||"n",id:x.id}});
+    CHANGES.forEach(function(x){A.push({ts:x.ts,ti:x.ti,b:x.b,k:"u"})});
+    return A.sort(function(a,b){return(b.k==="i")-(a.k==="i")||b.ts-a.ts});
+  }
+  var NK={n:"Notice",i:"Important",m:"Maintenance",u:"Site update"};
+  function renderNews(){
+    var ul=$("news");if(!ul)return;ul.innerHTML="";var A=newsItems(),S3=NEWSALL?A:A.slice(0,1);
+    S3.forEach(function(x){var li=el("li",null,"nw nw-"+x.k),hd=el("div",null,"nwh");hd.appendChild(el("span",NK[x.k]||"Notice","nwk"));hd.appendChild(el("b",x.ti));hd.appendChild(el("time",dateS(x.ts)));li.appendChild(hd);if(x.b)li.appendChild(el("p",x.b));ul.appendChild(li)});
+    var mb=$("newsMore");mb.hidden=A.length<=1;mb.textContent=NEWSALL?"Show less":"Show all "+A.length;
+  }
+  $("newsMore").addEventListener("click",function(){NEWSALL=!NEWSALL;renderNews()});
+  function renderNoticeAdmin(){
+    var ul=$("nList");if(!ul)return;ul.innerHTML="";var N=S.notices||[];
+    if(!N.length)ul.appendChild(el("li","No notices posted yet. Site updates show automatically."));
+    N.forEach(function(x){var li=el("li",null,"rr"),s=el("span",(NK[x.k]||"Notice")+" · "+x.ti+" · "+dateS(x.ts)),b=el("button","Delete","ghost rm");b.type="button";b.setAttribute("aria-label","Delete notice "+x.ti);
+      b.onclick=function(){ask("Delete this notice?","“"+x.ti+"” is removed for everyone.",function(){S.notices=(S.notices||[]).filter(function(y){return y!==x});save();renderNews();renderNoticeAdmin()})};
+      li.appendChild(s);li.appendChild(b);ul.appendChild(li)});
+  }
+  $("nPost").addEventListener("click",function(){
+    var ti=$("nTi").value.trim().slice(0,80),b=$("nBody").value.trim().slice(0,600),m=$("nMsg");
+    if(!ti){m.textContent="Add a title for the notice.";return}
+    S.notices=S.notices||[];S.notices.unshift({id:Date.now(),ts:Date.now(),k:$("nK").value,ti:ti,b:b});if(S.notices.length>30)S.notices.length=30;
+    $("nTi").value="";$("nBody").value="";m.textContent="Posted. Everyone sees it under Updates & notices.";save();renderNews();renderNoticeAdmin();
+  });
+  // new-version check: version.json sits next to index.html and changes with each deploy
+  var verSeen=false;
+  function checkVer(){
+    if(verSeen||!/^https?:/.test(location.protocol))return;
+    fetch("version.json?ts="+Date.now(),{cache:"no-store"}).then(function(r){return r.ok?r.json():null}).then(function(j){
+      if(!j||!j.v||j.v===APP_VER)return;verSeen=true;var b=$("upd");b.hidden=false;$("updTxt").textContent="A new version of GroundZ is ready"+(j.note?": "+j.note:".");
+    }).catch(function(){});
+  }
+  $("updGo").addEventListener("click",function(){location.reload()});
+  $("updX").addEventListener("click",function(){$("upd").hidden=true});
+  setTimeout(checkVer,4000);setInterval(checkVer,600000);document.addEventListener("visibilitychange",function(){if(!document.hidden)checkVer()});
   [$("myList"),$("myPub")].forEach(function(e){e.addEventListener("input",function(){listDirty=true});e.addEventListener("change",function(){listDirty=true})});
   $("saveList").addEventListener("click",function(){
     var p=myP(); if(!p) return;
@@ -1382,74 +1583,217 @@ button.danger{color:var(--down);border-color:var(--down)}
   });
 
 
-  // ---- Swiss tournament (3 pts win, 1 tie, 0 loss) ----
-  function roundsFor(n){return n<2?0:n<=2?1:n<=4?2:n<=8?3:n<=16?4:n<=32?5:6}
+  // ---- Swiss tournament, run the way Play! Pokémon TOM runs it ----
+  // Rounds: TCG League Challenge structure (Swiss only). Pairing: round 1 random; later rounds random within
+  // match-record brackets, pairing down from the top bracket, no rematches; with an odd count a random player
+  // from the lowest bracket gets the bye (one bye per player). Standings: match points (W 3, T 1, L 0, bye = win),
+  // then Opponents' Win % (wins / rounds played, byes left out, 25% minimum), then Opponents' Opponents' Win %,
+  // then head-to-head.
+  var TOMV={
+    lc:{n:"League Challenge",d:"Swiss only",rows:[[4,3,0],[9,4,0],[17,5,0],[33,6,0],[65,7,0],[129,8,0],[257,9,0],[513,10,0]]},
+    cup:{n:"League Cup",d:"Swiss + top cut",rows:[[4,3,0],[9,4,2],[13,5,2],[21,5,3],[33,6,3],[65,7,3],[129,8,3],[227,9,3],[410,10,3]]},
+    reg:{n:"Regional and above",d:"two-phase Swiss + top cut",rows:[[4,3,3,0,0,0],[9,4,4,0,0,2],[17,6,6,0,0,4],[33,7,7,0,0,6],[65,9,7,13,2,8],[129,10,8,16,2,8],[257,11,8,16,3,8],[513,12,8,16,4,8],[1025,13,8,16,5,8],[2049,14,8,16,6,8],[4097,15,9,19,6,8]]}
+  };
+  function tomRow(n,v){var o=null;(TOMV[v]||TOMV.lc).rows.forEach(function(r){if(n>=r[0])o=r});return o}
+  function roundsFor(n){var r=tomRow(n,"lc");return r?r[1]:0}
+  function nmOf(id){var p=byId(S,id);return p?p.name:"Removed player"}
+  function shuffle(a){for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1)),t=a[i];a[i]=a[j];a[j]=t}return a}
+  function swUp(sw){
+    if(!sw||sw.v===2)return sw;
+    // tournament started before this update: rebuild records from its points
+    var cur={};(sw.pairs||[]).forEach(function(pr){if(!pr.b){cur[pr.a]=(cur[pr.a]||0)+3;return}if(pr.r==="T"){cur[pr.a]=(cur[pr.a]||0)+1;cur[pr.b]=(cur[pr.b]||0)+1}else if(pr.r){var W=pr.r==="A"?pr.a:pr.b;cur[W]=(cur[W]||0)+3}});
+    sw.base={};(sw.ids||[]).forEach(function(id){
+      var pts=Math.max(0,(sw.pts&&sw.pts[id]||0)-(cur[id]||0)),byeBefore=sw.bye&&sw.bye[id]&&!(sw.pairs||[]).some(function(pr){return !pr.b&&pr.a===id})?1:0,w=Math.floor(pts/3),t=pts%3,cw=w-byeBefore;
+      var cop=(sw.pairs||[]).map(function(pr){return pr.a===id?pr.b:pr.b===id?pr.a:0}).filter(Boolean),op=((sw.opp&&sw.opp[id])||[]).slice();
+      cop.forEach(function(o){var k=op.lastIndexOf(o);if(k>=0)op.splice(k,1)});
+      sw.base[id]={w:Math.max(0,cw),l:Math.max(0,op.length-Math.max(0,cw)-t),t:t,bye:byeBefore,opp:op};
+    });
+    sw.v=2;sw.hist=[];sw.rng=sw.rng||{};(sw.ids||[]).forEach(function(id){if(sw.rng[id]==null)sw.rng[id]=Math.random()});
+    if(!sw.ts)sw.ts=Date.now();
+    return sw;
+  }
+  function swStats(sw){
+    var R={};
+    sw.ids.forEach(function(id){var b=sw.base&&sw.base[id];R[id]={w:b?b.w:0,l:b?b.l:0,t:b?b.t:0,bye:b?b.bye:0,pts:0,opp:b?b.opp.slice():[],beat:{}}});
+    (sw.hist||[]).concat([sw.pairs||[]]).forEach(function(rd){rd.forEach(function(pr){
+      var A=R[pr.a],B=pr.b?R[pr.b]:null;if(!A)return;
+      if(!pr.b){A.bye++;return}
+      if(!B||!pr.r)return;
+      A.opp.push(pr.b);B.opp.push(pr.a);
+      if(pr.r==="T"){A.t++;B.t++}else if(pr.r==="A"){A.w++;B.l++;A.beat[pr.b]=1}else{B.w++;A.l++;B.beat[pr.a]=1}
+    })});
+    function wp(s){var n=s.w+s.l+s.t;return n?Math.min(1,Math.max(.25,s.w/n)):.25}
+    sw.ids.forEach(function(id){var s=R[id];s.pts=3*(s.w+s.bye)+s.t;s.wp=wp(s)});
+    sw.ids.forEach(function(id){var s=R[id];s.owp=s.opp.length?s.opp.reduce(function(a,o){return a+(R[o]?R[o].wp:.25)},0)/s.opp.length:0});
+    sw.ids.forEach(function(id){var s=R[id];s.oowp=s.opp.length?s.opp.reduce(function(a,o){return a+(R[o]?R[o].owp:0)},0)/s.opp.length:0});
+    return R;
+  }
+  function swOrder(sw,R){
+    var rng=sw.rng||{},E=1e-9;
+    return sw.ids.slice().sort(function(a,b){
+      var A=R[a],B=R[b];
+      if(A.pts!==B.pts)return B.pts-A.pts;
+      if(Math.abs(A.owp-B.owp)>E)return B.owp-A.owp;
+      if(Math.abs(A.oowp-B.oowp)>E)return B.oowp-A.oowp;
+      if(A.beat[b]&&!B.beat[a])return -1;if(B.beat[a]&&!A.beat[b])return 1;
+      return (rng[a]||0)-(rng[b]||0);
+    });
+  }
+  function pairList(order,R,allowRe){
+    var out=[],steps=0;
+    function go(L){
+      if(!L.length)return true;if(++steps>50000)return false;
+      var a=L[0];
+      for(var k=1;k<L.length;k++){var b=L[k];if(!allowRe&&R[a].opp.indexOf(b)>=0)continue;out.push([a,b]);if(go(L.slice(1,k).concat(L.slice(k+1))))return true;out.pop()}
+      return false;
+    }
+    if(go(order))return out;
+    if(!allowRe)return null;
+    out=[];for(var i=0;i+1<order.length;i+=2)out.push([order[i],order[i+1]]);return out;
+  }
   function pairRound(){
-    var sw=S.sw; sw.rd++;
-    var pool=sw.ids.slice().sort(function(a,b){return sw.pts[b]-sw.pts[a]||byId(S,b).rating-byId(S,a).rating}), pr=[], b;
-    if(pool.length%2){
-      for(var i=pool.length-1;i>=0;i--) if(!sw.bye[pool[i]]){b=pool.splice(i,1)[0];break;}
-      if(b==null) b=pool.pop();
-      sw.bye[b]=1; sw.pts[b]+=3; pr.push({a:b,b:0,r:"A"});
+    var sw=S.sw;sw.rd++;
+    var R=swStats(sw),ids=sw.ids.slice(),bye=null,pr=[];
+    if(ids.length%2){
+      var cand=ids.filter(function(id){return !sw.bye[id]});if(!cand.length)cand=ids.slice();
+      var lo=Math.min.apply(null,cand.map(function(id){return R[id].pts})),low=cand.filter(function(id){return R[id].pts===lo});
+      bye=low[Math.floor(Math.random()*low.length)];ids.splice(ids.indexOf(bye),1);sw.bye[bye]=1;
     }
-    while(pool.length){
-      var a=pool.shift(), k=0;
-      while(k<pool.length-1&&sw.opp[a].indexOf(pool[k])>=0) k++;
-      var o=pool.splice(k,1)[0]; pr.push({a:a,b:o,r:null}); sw.opp[a].push(o); sw.opp[o].push(a);
-    }
+    var G={};ids.forEach(function(id){(G[R[id].pts]=G[R[id].pts]||[]).push(id)});
+    var order=[];Object.keys(G).map(Number).sort(function(a,b){return b-a}).forEach(function(k){order=order.concat(shuffle(G[k]))});
+    (pairList(order,R,false)||pairList(order,R,true)).forEach(function(x){pr.push({a:x[0],b:x[1],r:null})});
+    if(bye!=null)pr.push({a:bye,b:0,r:"A"});
     sw.pairs=pr;
   }
   function startSw(){
-    var ids=S.t.reg.slice(); if(ids.length<2) return;
-    var sw=S.sw={rd:0,tot:roundsFor(ids.length),pairs:[],pts:{},opp:{},bye:{},ids:ids,done:false};
-    ids.forEach(function(id){sw.pts[id]=0;sw.opp[id]=[]}); pairRound(); save(); render();
+    var ids=S.t.reg.filter(function(id){return byId(S,id)});if(ids.length<4)return;
+    var sw=S.sw={v:2,id:"t"+Date.now().toString(36),ts:Date.now(),rd:0,tot:roundsFor(ids.length),pairs:[],hist:[],bye:{},ids:ids,rng:{},done:false};
+    ids.forEach(function(id){sw.rng[id]=Math.random()});pairRound();save();render();
   }
-  function topDeckId(id){var t=topDecks(byId(S,id))[0];return t?t.id:0}
-  function setRes(i,r){
-    var sw=S.sw, pr=sw.pairs[i]; if(!pr||pr.r||!pr.b) return; pr.r=r;
-    if(r==="T"){sw.pts[pr.a]++;sw.pts[pr.b]++;play(S,pr.a,pr.b,topDeckId(pr.a),topDeckId(pr.b),true);}
-    else{var W=r==="A"?pr.a:pr.b,L=r==="A"?pr.b:pr.a;sw.pts[W]+=3;play(S,W,L,topDeckId(W),topDeckId(L));}
-    save(); render();
+  function topDeckId(id){var p=byId(S,id),t=p?topDecks(p)[0]:null;return t?t.id:0}
+  function setRes(i,r,quiet){
+    var sw=S.sw,pr=sw&&sw.pairs[i];if(!pr||pr.r||!pr.b)return;pr.r=r;
+    if(byId(S,pr.a)&&byId(S,pr.b)){
+      if(r==="T")play(S,pr.a,pr.b,topDeckId(pr.a),topDeckId(pr.b),true);
+      else{var W=r==="A"?pr.a:pr.b,L=r==="A"?pr.b:pr.a;play(S,W,L,topDeckId(W),topDeckId(L))}
+    }
+    if(!quiet){save();render()}
+  }
+  function nextRound(){var sw=S.sw;if(!sw||sw.done||!sw.pairs.every(function(x){return x.r}))return;sw.hist.push(sw.pairs);sw.pairs=[];pairRound();save();render()}
+  function finishSw(){
+    var sw=S.sw;if(!sw||sw.done||!sw.pairs.every(function(x){return x.r}))return;
+    sw.hist.push(sw.pairs);sw.pairs=[];sw.done=true;
+    var R=swStats(sw),ord=swOrder(sw,R);sw.ch=ord[0];if(byId(S,ord[0]))recChamp(ord[0]);recordTour(sw,ord,R);save();render();
+  }
+  function recordTour(sw,ord,R){
+    S.tours=S.tours||[];if(S.tours.some(function(t){return t.id===sw.id}))return;
+    S.tours.unshift({id:sw.id,ts:sw.ts||Date.now(),end:Date.now(),wk:S.week,sn:S.season?S.season.n:1,n:sw.ids.length,rd:sw.tot,ch:ord[0],
+      st:ord.map(function(id){var s=R[id];return[id,s.w,s.l,s.t,s.bye]})});
+    if(S.tours.length>300)S.tours.length=300;
+  }
+
+  // ---- player-reported results: both players report, matching reports confirm, otherwise the organizer decides ----
+  var REP={},REPOK=null,repSig="",repBusy=false;
+  function loadReps(){
+    var sw=S.sw;if(!REMOTE||!sw||!sw.id||sw.done)return Promise.resolve(false);
+    return api("/rest/v1/match_reports?sw=eq."+encodeURIComponent(sw.id)+"&select=rd,pid,res").then(function(rows){
+      REPOK=true;var m={};(rows||[]).forEach(function(x){m[x.rd+"|"+x.pid]=x.res});var sig=JSON.stringify(m),ch=sig!==repSig;repSig=sig;REP=m;return ch;
+    },function(e){if(e.status===404||/match_reports|schema cache|does not exist|relation/i.test(e.message))REPOK=false;return false});
+  }
+  function claim(pr,rd){
+    var ra=REP[rd+"|"+pr.a],rb=pr.b?REP[rd+"|"+pr.b]:null,ma=ra?{W:"A",L:"B",T:"T"}[ra]:null,mb=rb?{W:"B",L:"A",T:"T"}[rb]:null;
+    return{ra:ra,rb:rb,ma:ma,mb:mb,agree:ma&&mb&&ma===mb?ma:null,conflict:!!(ma&&mb&&ma!==mb)};
+  }
+  function applyAgreed(){
+    var sw=S.sw,n=0;if(!sw||sw.done||!isOrg())return 0;
+    sw.pairs.forEach(function(pr,i){if(pr.r||!pr.b)return;var c=claim(pr,sw.rd);if(c.agree){setRes(i,c.agree,true);pr.by="p";n++}});
+    return n;
+  }
+  function swRerender(){
+    var a=document.activeElement;if(a&&/^(INPUT|TEXTAREA|SELECT)$/.test(a.tagName))return;
+    if(!$("vTour").hidden)renderTour();if(!$("vDash").hidden)renderDash();
+  }
+  function repTick(){
+    if(repBusy||!REMOTE||!S.sw||S.sw.done||!S.sw.id||document.hidden)return;repBusy=true;
+    loadReps().then(function(ch){if(applyAgreed()){save();render();return}if(ch)swRerender()}).then(function(){repBusy=false},function(){repBusy=false});
+  }
+  setInterval(repTick,10000);
+  function sendRep(res,msg){
+    var u=me(),sw=S.sw;if(!u||!sw||!sw.id)return;
+    msg.textContent="Sending…";
+    api("/rest/v1/match_reports?on_conflict=sw,rd,pid",{method:"POST",prefer:"resolution=merge-duplicates,return=minimal",body:{sw:sw.id,rd:sw.rd,pid:u.pid,res:res}}).then(function(){
+      REP[sw.rd+"|"+u.pid]=res;repSig="";swRerender();if(!$("vTour").hidden||!$("vDash").hidden){}
+    },function(e){
+      if(e.status===404||/match_reports|schema cache|relation/i.test(e.message)){REPOK=false;swRerender();return}
+      msg.textContent="Couldn't send your result ("+friendly(e)+"). Try again.";
+    });
+  }
+  var RW={W:"won",L:"lost",T:"tied"};
+  function myMatch(li,pr,p,sw){
+    var opp=pr.a===p.id?pr.b:pr.a,c=claim(pr,sw.rd),mine=pr.a===p.id?c.ra:c.rb,theirs=pr.a===p.id?c.rb:c.ra,on=nmOf(opp);
+    var box=el("div",null,"rpt"),msg=el("p",null,"foot");msg.setAttribute("role","status");msg.setAttribute("aria-live","polite");
+    function btns(lbl){var a=el("div",null,"rbtns");if(lbl)a.appendChild(el("span",lbl,"rlbl"));[["W","I won"],["T","Tie"],["L","I lost"]].forEach(function(x){var b=el("button",x[1],"ghost rm");b.type="button";b.onclick=function(){sendRep(x[0],msg)};a.appendChild(b)});box.appendChild(a)}
+    if(REPOK===false){box.appendChild(el("p","Player reporting needs a one-time database update, so the organizer records this result.","foot"));li.appendChild(box);return}
+    if(c.agree){box.appendChild(el("p","Confirmed: you both reported that "+(c.agree==="T"?"the match was a tie":(c.agree==="A"?nmOf(pr.a):nmOf(pr.b))+" won")+". It's recorded as soon as the organizer's page syncs.","rok"))}
+    else if(c.conflict){box.appendChild(el("p","Your reports don't match (you said you "+RW[mine]+", "+on+" said they "+RW[theirs]+"). The organizer will confirm the result.","rbad"));btns("Change your report:")}
+    else if(mine){var ch=el("p","You reported that you "+RW[mine]+". Waiting for "+on+" to confirm.","foot");box.appendChild(ch);var cb=el("button","Change","ghost rm");cb.type="button";cb.onclick=function(){cb.remove();btns()};box.appendChild(cb)}
+    else if(theirs){
+      box.appendChild(el("p",on+" reported that they "+RW[theirs]+".","foot"));
+      var a=el("div",null,"rbtns"),ok=el("button","Confirm","rm"),no=el("button","That's not right","ghost rm");ok.type=no.type="button";
+      ok.onclick=function(){sendRep({W:"L",L:"W",T:"T"}[theirs],msg)};no.onclick=function(){a.remove();btns("What happened?")};
+      a.appendChild(ok);a.appendChild(no);box.appendChild(a);
+    }else btns("Report your result:");
+    if(REMOTE&&!accPid[opp])box.appendChild(el("p",on+" has no account, so the organizer confirms this match.","foot"));
+    box.appendChild(msg);li.appendChild(box);
   }
   function swissView(box,p,org){
-    box.innerHTML=""; var sw=S.sw, n=S.t.reg.length;
+    box.innerHTML="";var sw=swUp(S.sw),n=S.t.reg.filter(function(id){return byId(S,id)}).length;
     if(!sw){
-      box.appendChild(el("p",n<2?"Swiss pairings appear once at least 2 players have registered.":n+" players registered, so "+roundsFor(n)+" Swiss rounds. Round 1 pairings appear when the organizer starts the tournament. Win 3 pts, tie 1, loss 0.","foot"));
-      if(org&&n>=2){var sb=el("button","Start tournament");sb.type="button";sb.onclick=startSw;box.appendChild(sb);}
+      box.appendChild(el("p",n<4?n+" player"+(n===1?"":"s")+" registered. Play! Pokémon rules need at least 4 players to run Swiss rounds.":n+" players registered, so "+roundsFor(n)+" Swiss rounds (Play! Pokémon League Challenge structure). Round 1 is paired at random when the organizer starts the tournament. Win 3 pts, tie 1, loss 0.","foot"));
+      if(org&&n>=4){var sb=el("button","Start tournament");sb.type="button";sb.onclick=startSw;box.appendChild(sb)}
       return;
     }
+    if(!sw.id&&org){sw.id="t"+Date.now().toString(36);save()}
+    var R=swStats(sw),ord=swOrder(sw,R);
+    if(sw.done&&!sw.ch){sw.ch=ord[0];if(byId(S,ord[0]))recChamp(ord[0])}
     box.appendChild(el("p",sw.done?"Final standings · "+sw.tot+" rounds":"Round "+sw.rd+" of "+sw.tot,"tbig"));
     if(!sw.done){
-      var ul=el("ul",null,"log");
+      var ul=el("ul",null,"log pairs");
       sw.pairs.forEach(function(pr,i){
-        var li=el("li"), a=byId(S,pr.a), b=pr.b?byId(S,pr.b):null;
-        li.appendChild(el("span",a.name+(b?" vs "+b.name:" · bye (3 pts)")));
+        var li=el("li"),b=pr.b?1:0,tn=el("span",b?"Table "+(i+1):"Bye","tno");li.appendChild(tn);
+        li.appendChild(el("span",nmOf(pr.a)+(b?" vs "+nmOf(pr.b):" · free win (3 pts)")));
+        var mine=p&&(pr.a===p.id||pr.b===p.id);if(mine)li.className="mine";
         if(b){
-          if(pr.r) li.appendChild(el("span"," · "+(pr.r==="T"?"Tie":(pr.r==="A"?a.name:b.name)+" won")));
-          else if(org){li.appendChild(el("br"));[["A",a.name+" won"],["T","Tie"],["B",b.name+" won"]].forEach(function(x){var bt=el("button",x[1],"ghost rm");bt.type="button";bt.onclick=function(){setRes(i,x[0])};li.appendChild(bt)});}
-          else li.appendChild(el("span"," · in progress"));
+          var c=claim(pr,sw.rd);
+          if(pr.r)li.appendChild(el("span"," · "+(pr.r==="T"?"Tie":(pr.r==="A"?nmOf(pr.a):nmOf(pr.b))+" won")+(pr.by==="p"?" · confirmed by both players":"")));
+          else if(org){
+            var info=[];if(c.ra)info.push(nmOf(pr.a)+" says they "+RW[c.ra]);if(c.rb)info.push(nmOf(pr.b)+" says they "+RW[c.rb]);
+            if(info.length)li.appendChild(el("p",info.join(" · ")+(c.conflict?" · reports don't match, you decide":""),c.conflict?"rbad":"foot"));
+            var bw=el("div",null,"rbtns");[["A",nmOf(pr.a)+" won"],["T","Tie"],["B",nmOf(pr.b)+" won"]].forEach(function(x){var bt=el("button",x[1],"ghost rm");bt.type="button";bt.onclick=function(){setRes(i,x[0])};bw.appendChild(bt)});li.appendChild(bw);
+          }
+          else if(mine&&me())myMatch(li,pr,p,sw);
+          else li.appendChild(el("span",c.agree?" · both players agree, recording soon":(c.ra||c.rb)?" · result reported, awaiting confirmation":" · in progress"));
         }
-        if(p&&(pr.a===p.id||pr.b===p.id)) li.style.fontWeight="600";
         ul.appendChild(li);
       });
       box.appendChild(ul);
+      if(org&&REPOK===false)box.appendChild(el("p","Players can't report results yet: run the match_reports SQL in Supabase once, then they confirm their own matches and you only step in when reports are missing or don't match.","foot"));
     }
-    function omw(id){var o=sw.opp[id];return o.length?o.reduce(function(x,y){return x+Math.max(.33,sw.pts[y]/(3*sw.rd))},0)/o.length:0}
-    var ord=sw.ids.slice().sort(function(a,b){return sw.pts[b]-sw.pts[a]||omw(b)-omw(a)||byId(S,b).rating-byId(S,a).rating});
-    if(sw.done&&!sw.ch){sw.ch=ord[0];recChamp(ord[0]);}
-    var wr=el("div",null,"tw"), tb=el("table",null,"mx"), hr=el("tr");
-    ["#","Player","Match pts","OMW%"].forEach(function(x){var h=el("th",x);h.scope="col";hr.appendChild(h)}); tb.appendChild(hr);
+    var wr=el("div",null,"tw"),tb=el("table",null,"mx"),hr=el("tr");
+    ["#","Player","Record","Match pts","Opp Win %","Opp Opp Win %"].forEach(function(x){var h=el("th",x);h.scope="col";hr.appendChild(h)});tb.appendChild(hr);
     ord.forEach(function(id,i){
-      var tr=el("tr"), nm=el("td",byId(S,id).name); nm.style.textAlign="left";
-      tr.appendChild(el("td",String(i+1))); tr.appendChild(nm); tr.appendChild(el("td",String(sw.pts[id]))); tr.appendChild(el("td",Math.round(100*omw(id))+"%"));
-      if(p&&p.id===id) tr.style.fontWeight="600"; tb.appendChild(tr);
+      var s=R[id],tr=el("tr"),nm=el("td",nmOf(id));nm.style.textAlign="left";
+      tr.appendChild(el("td",String(i+1)));tr.appendChild(nm);tr.appendChild(el("td",(s.w+s.bye)+"–"+s.l+"–"+s.t));tr.appendChild(el("td",String(s.pts)));
+      tr.appendChild(el("td",s.opp.length?(100*s.owp).toFixed(1)+"%":"–"));tr.appendChild(el("td",s.opp.length?(100*s.oowp).toFixed(1)+"%":"–"));
+      if(p&&p.id===id)tr.style.fontWeight="600";tb.appendChild(tr);
     });
-    wr.appendChild(tb); box.appendChild(wr);
-    box.appendChild(el("p","Placement: match points, then opponents' win % (OMW). League points are awarded per match, including any upset bonus.","foot"));
+    wr.appendChild(tb);box.appendChild(wr);
+    box.appendChild(el("p","Placement follows Play! Pokémon rules: match points (win 3, tie 1, loss 0, a bye counts as a win), then Opponents' Win % (each opponent's wins divided by rounds they played, byes left out, never below 25%), then Opponents' Opponents' Win %, then head-to-head. Elo league points still move with every match.","foot"));
     if(org){
       var row=el("div",null,"actions");
-      if(!sw.done){var nb=el("button",sw.rd<sw.tot?"Next round":"Finish tournament");nb.type="button";nb.disabled=!sw.pairs.every(function(x){return x.r});nb.onclick=function(){if(sw.rd<sw.tot)pairRound();else sw.done=true;save();render();};row.appendChild(nb);}
-      var rb=el("button","Reset tournament","ghost");rb.type="button";rb.onclick=function(){S.sw=null;save();render();};row.appendChild(rb);
+      if(!sw.done){var all=sw.pairs.every(function(x){return x.r}),nb=el("button",sw.rd<sw.tot?"Pair round "+(sw.rd+1):"Finish tournament");nb.type="button";nb.disabled=!all;nb.onclick=sw.rd<sw.tot?nextRound:finishSw;row.appendChild(nb)}
+      var rb=el("button",sw.done?"Clear finished tournament":"Reset tournament","ghost");rb.type="button";
+      rb.onclick=function(){if(sw.done){S.sw=null;save();render();return}ask("Reset this tournament?","All pairings and Swiss standings for the running tournament are cleared. Elo points from matches already recorded stay.",function(){S.sw=null;save();render()})};row.appendChild(rb);
       box.appendChild(row);
     }
   }
@@ -1480,7 +1824,7 @@ button.danger{color:var(--down);border-color:var(--down)}
   var ACH=[["s5","5-win streak","Win 5 matches in a row"],["b1","Giant slayer","Beat the #1 seed"],["gs","Big upset","Earn a +2 upset bonus"],["w10","Veteran","Reach 10 match wins"],["ch","Tournament champion","Win a weekly Swiss tournament"]];
   function isPro(){var u=me();return !!S.pro||(!!u&&(u.role==="org"||S.patreon.patrons.some(function(x){return x.toLowerCase()===u.k||x.toLowerCase()===u.u.toLowerCase()})))}
   function ensureV4(st){
-    st.hof=st.hof||{seasons:[],champs:[]}; st.patreon=st.patreon||{url:"",patrons:[]};
+    st.hof=st.hof||{seasons:[],champs:[]}; st.patreon=st.patreon||{url:"",patrons:[]}; st.tours=st.tours||[]; st.notices=st.notices||[];
     if(!st.wk){st.wk={};st.log.forEach(function(g){var k=g.wk;st.wk[k]=st.wk[k]||{};[[g.wd,g.t?.5:1],[g.ld,g.t?.5:0]].forEach(function(x){var d=x[0]&&byName(st.decks,x[0]);if(!d)return;var o=st.wk[k][d.id]=st.wk[k][d.id]||[0,0];o[0]++;o[1]+=x[1]})})}
   }
   function rec(p,x){if(REMOTE&&accPid[p.id]&&(!CUR||p.id!==CUR.pid)){if(isOrg())api("/rest/v1/rpc/rec_vault",{method:"POST",body:{pid:p.id,x:x}}).catch(function(){});return}var L=(p.vault||[]).filter(function(a){return a.on})[0];if(L){var v=L.v[L.v.length-1];v.p++;v.w+=x}}
@@ -1535,12 +1879,11 @@ button.danger{color:var(--down);border-color:var(--down)}
       cp.onclick=function(){ta.select();try{document.execCommand("copy");oc.textContent="Copied. In TCG Live use Decks, then Import."}catch(e){}};
       out.appendChild(el("h3","TCG Live export"));out.appendChild(ta);out.appendChild(oc);out.appendChild(cp);
       var VL=p.vault||[];
-      if(VL.length){var vs=el("div",null,"vseg");vs.setAttribute("role","group");vs.setAttribute("aria-label","Deck view");[["list","List"],["grid","Grid"]].forEach(function(o){var b=el("button",o[1]);b.type="button";b.setAttribute("aria-pressed",DVIEW===o[0]?"true":"false");b.onclick=function(){DVIEW=o[0];try{localStorage.setItem("tg-dview",DVIEW)}catch(e){}renderHub()};vs.appendChild(b)});w.appendChild(vs)}
       (pro?VL:VL.slice(0,2)).forEach(function(L){
-        var hh=el("h3",L.n+(L.on?" · tracking matches":""));hh.appendChild(el("span",isPubDeck(p,L)?"Public":"Private","vchip"+(isPubDeck(p,L)?" on":"")));w.appendChild(hh);
+        var card=el("div",null,"vdeck"),hh=el("h3",L.n+(L.on?" · tracking matches":""));hh.appendChild(el("span",isPubDeck(p,L)?"Public":"Private","vchip"+(isPubDeck(p,L)?" on":"")));card.appendChild(hh);
         var lv=L.v[L.v.length-1];
-        if(DVIEW==="grid"){var cs=listCards(lv.t,lv.x),eb=el("div",null,"est");w.appendChild(eb);estCost(cs,eb);w.appendChild(deckGrid(cs))}
-        w.appendChild(tbl(["Version","Saved","Games","Win rate"],L.v.slice().reverse().map(function(v){return["v"+v.n,dateS(v.ts),v.p,v.p?Math.round(100*v.w/v.p)+"%":"–"]})));
+        card.appendChild(deckSplit(lv.t,lv.x));
+        card.appendChild(tbl(["Version","Saved","Games","Win rate"],L.v.slice().reverse().map(function(v){return["v"+v.n,dateS(v.ts),v.p,v.p?Math.round(100*v.w/v.p)+"%":"–"]})));
         var ac=el("div",null,"actions"),sel=el("select");sel.style.cssText="width:auto;flex:none";sel.setAttribute("aria-label","Version of "+L.n);
         L.v.slice().reverse().forEach(function(v){var o=el("option","v"+v.n);o.value=v.n;sel.appendChild(o)});ac.appendChild(sel);
         function btn(t,fn,g){var b=el("button",t,g?"ghost":"");b.type="button";b.style.flex="none";b.onclick=fn;ac.appendChild(b)}
@@ -1551,10 +1894,10 @@ button.danger{color:var(--down);border-color:var(--down)}
         var pubNow=isPubDeck(p,L);
         btn(pubNow?"Make private":"Show publicly",function(){var b=this;b.disabled=true;setPublicList(p,pubNow?(p.list||""):lv.t,!pubNow,function(ok){if(!ok){b.disabled=false;b.textContent="Couldn't save. Try again";return}renderHub()})},1);
         var del=el("button","Delete deck","ghost danger");del.type="button";del.style.flex="none";
-        del.onclick=function(){if(!del.dataset.ok){del.dataset.ok="1";del.textContent="Tap again to delete "+L.n;setTimeout(function(){if(del.isConnected){delete del.dataset.ok;del.textContent="Delete deck"}},3500);return}
-          var wasPub=isPubDeck(p,L);p.vault.splice(p.vault.indexOf(L),1);if(L.on&&p.vault[0])p.vault[0].on=1;save();if(wasPub)setPublicList(p,"",false);renderHub()};
+        del.onclick=function(){ask("Delete "+L.n+"?","Every saved version of this deck is removed. This can't be undone.",function(){
+          var wasPub=isPubDeck(p,L),k=p.vault.indexOf(L);if(k<0)return;p.vault.splice(k,1);if(L.on&&p.vault[0])p.vault[0].on=1;save();if(wasPub)setPublicList(p,"",false);renderHub()})};
         ac.appendChild(del);
-        w.appendChild(ac);
+        card.appendChild(ac);w.appendChild(card);
       });
       w.appendChild(out);
       w.appendChild(el("p",pro?"Pro: unlimited saved decklists.":"Free: your first 2 saved decklists ("+Math.min(2,VL.length)+" of 2 used). Pro unlocks unlimited decklists."+(VL.length>2?" Lists beyond the first 2 stay saved but are hidden until Pro is on.":""),"foot"));
@@ -1860,14 +2203,32 @@ button.danger{color:var(--down);border-color:var(--down)}
   $("cImpFull").addEventListener("click",function(){if(window.confirm("Refresh every card in the chosen scope? This takes longer than a normal update."))importCards(true)});
   $("cImpStop").addEventListener("click",function(){imp.stop=true;$("cImpMsg").textContent="Stopping…"});
   function C2(n,k){var r=1;for(var i=1;i<=k;i++)r=r*(n-k+i)/i;return r}
-  function renderTools(){
-    var n=Math.max(2,Math.min(1024,+$("swN").value||2)),r=+$("swR").value||Math.max(roundsFor(n),Math.ceil(Math.log(n)/Math.LN2)),T=$("swT");
-    r=Math.max(1,Math.min(12,r));T.innerHTML="";
-    [[r,"Rounds"],[3*r,"Max match pts"],[n<2?0:Math.max(0,n/Math.pow(2,r)).toFixed(1),"Undefeated (approx)"],[Math.ceil(n/2)+(n%2?" (1 bye)":""),"Tables in round 1"]].forEach(function(x){T.appendChild(tile(String(x[0]),x[1]))});
-    var rows=[];for(var w=r;w>=0;w--){rows.push([w+"–"+(r-w),3*w,Math.round(n*C2(r,w)/Math.pow(2,r)*10)/10])}
-    var b=$("swTab");b.innerHTML="";b.appendChild(tbl(["Record (W–L)","Match pts","Players (approx)"],rows));
+  function renderTools(){renderCalc()}
+  function renderCalc(){
+    var n=Math.max(1,Math.min(8192,Math.floor(+$("swN").value)||0)),v=$("swF").value,T=$("swT"),B=$("swTab"),N=$("swNote"),row=tomRow(n,v);
+    T.innerHTML="";B.innerHTML="";
+    if(!row){T.appendChild(tile(String(n),"Players"));B.appendChild(el("p","Play! Pokémon events need at least 4 players, and every player must be able to play 3 full rounds.","status"));N.textContent="";return}
+    var reg=v==="reg",rounds=row[1],cutR=reg?0:row[2],top=reg?row[5]:(cutR?Math.pow(2,cutR):0),p1=reg?row[2]:rounds,thr=reg?row[3]:0,p2=reg?row[4]:0;
+    var tiles=[[rounds,reg?"Total Swiss rounds":"Swiss rounds"],[top?"Top "+top:"None",reg&&top?"Top cut (asymmetrical)":"Top cut"]];
+    if(!reg)tiles.push([rounds+cutR,"Total rounds"]);
+    if(reg&&p2){tiles.push([p1,"Phase One rounds"]);tiles.push([thr+" pts","Phase Two threshold"]);tiles.push([p2,"Phase Two rounds"])}
+    tiles.push([3*rounds,"Max match pts"]);tiles.push([Math.floor(n/2)+(n%2?" + bye":""),"Round 1 tables"]);
+    tiles.forEach(function(x){T.appendChild(tile(String(x[0]),x[1]))});
+    // expected records if every match were a coin flip (no ties); with two phases, only Phase One is modelled
+    var r=reg&&p2?p1:rounds,rows=[],cum=0,adv=0;
+    for(var w=r;w>=0;w--){
+      var cnt=n*C2(r,w)/Math.pow(2,r),before=cum;cum+=cnt;var st="";
+      if(reg&&p2){if(3*w>=thr){st="Advances to Phase Two";adv+=cnt}else st="Done after Phase One"}
+      else if(top){st=cum<=top+1e-9?"Makes top cut":before<top?"Bubble · tiebreakers decide":"Misses top cut"}
+      rows.push([w+"–"+(r-w),3*w,cnt>=10?Math.round(cnt):Math.round(cnt*10)/10].concat(st?[st]:[]));
+    }
+    B.appendChild(el("h3",reg&&p2?"Records after Phase One ("+r+" rounds)":"Final Swiss records"));
+    B.appendChild(tbl(["Record (W–L)","Match pts","Players (expected)"].concat((reg&&p2)||top?["Outcome"]:[]),rows));
+    if(reg&&p2)B.appendChild(el("p","About "+Math.round(adv)+" of "+n+" players reach "+thr+" match points and play Phase Two, then the Top "+top+" plays single elimination.","foot"));
+    else if(top)B.appendChild(el("p","The Top "+top+" plays "+cutR+" single-elimination rounds after Swiss, seeded by final standings.","foot"));
+    N.textContent="Structure from the Play! Pokémon Tournament Rules Handbook for the TCG: "+TOMV[v].n+" ("+TOMV[v].d+"). Match points: win 3, tie 1, loss 0, and a bye counts as a win. Ties in the standings are broken by Opponents' Win % (25% minimum), then Opponents' Opponents' Win %, then head-to-head. Expected player counts assume every match is a coin flip with no ties, so real events will differ. GroundZ's weekly tournament uses the League Challenge structure.";
   }
-  ["swN","swR"].forEach(function(i){$(i).addEventListener("input",renderTools)});
+  ["swN","swF"].forEach(function(i){$(i).addEventListener("input",renderCalc);$(i).addEventListener("change",renderCalc)});
   function renderMH(){
     var b=$("mhBody"),p=me()?myP():null;b.innerHTML="";
     if(!p){b.appendChild(el("p","Sign in to record the tournaments you play in.","foot"));return}
