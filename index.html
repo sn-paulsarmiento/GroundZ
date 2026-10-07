@@ -294,6 +294,30 @@ button.cbuild[aria-pressed=true]{background:var(--accent);color:var(--accent-ink
 .cval{background:rgba(255,255,255,.1);border-radius:14px;padding:10px 14px;font-size:.86rem;width:100%;text-align:left;line-height:1.5}
 .cval b{font-weight:600}
 .cval a{color:#9ccfff}
+.dgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(96px,1fr));gap:10px;margin:10px 0 4px;padding:0}
+.bpanel .dgrid{grid-template-columns:repeat(auto-fill,minmax(80px,1fr));gap:8px}
+.dgc{position:relative;min-width:0}
+.dgc .cimg{border-radius:5px;box-shadow:0 1px 4px rgba(0,0,0,.3)}
+.dgc .cph{padding:6px;font-size:.62rem;border-width:2px}.dgc .cph b{font-size:.68rem}.dgc .cph span{font-size:.58rem}
+.dgq{position:absolute;left:4px;bottom:4px;z-index:2;background:rgba(20,20,22,.88);color:#fff;border-radius:999px;padding:1px 8px;font:700 .78rem/1.5 var(--font);font-variant-numeric:tabular-nums}
+.dgc .cstep{position:absolute;bottom:4px;right:4px;z-index:2}
+.dgc .cstep~.dgq,.dgc .dgq:has(~.cstep){display:none}
+.dgc .cstep button{width:24px;height:24px;font-size:.95rem}
+.dgh{grid-column:1/-1;font:600 .8rem/1.3 var(--font);color:var(--muted);margin:6px 0 -2px}
+.est{font-size:.88rem;margin:8px 0;padding:10px 12px;border-radius:12px;background:var(--raise);border:1px solid var(--line)}
+.est b{font-size:1.05rem;font-variant-numeric:tabular-nums}
+.vseg{display:inline-flex;gap:2px;padding:3px;border-radius:999px;background:var(--line);margin:4px 0 8px}
+.vseg button{background:transparent;color:var(--muted);border:0;padding:5px 14px;font-size:.84rem}
+.vseg button[aria-pressed=true]{background:var(--panel);color:var(--ink);box-shadow:0 1px 3px rgba(0,0,0,.18)}
+.vchip{display:inline-block;margin-left:8px;padding:2px 9px;border-radius:999px;font:600 .7rem/1.5 var(--font);vertical-align:middle;background:var(--line);color:var(--muted)}
+.vchip.on{background:color-mix(in srgb,var(--up) 20%,transparent);color:var(--up)}
+button.danger{color:var(--down);border-color:var(--down)}
+.av{flex:none;display:inline-grid;place-items:center;border-radius:50%;overflow:hidden;background:var(--c,#888);color:#fff;font-weight:700;letter-spacing:-.02em;line-height:1}
+.av img{width:100%;height:100%;object-fit:cover;display:block}
+.who .av{width:28px;height:28px;font-size:.78rem}
+.avrow{display:flex;align-items:center;gap:16px;flex-wrap:wrap;margin:16px 0 4px}
+.avrow .av{width:72px;height:72px;font-size:1.6rem}
+.phd .av{width:52px;height:52px;font-size:1.2rem}
 
 .cwrap .ctile{display:block;width:100%}
 @media(max-width:600px){.cgrid{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.cbrowser{padding:16px}}
@@ -599,7 +623,7 @@ button.cbuild[aria-pressed=true]{background:var(--accent);color:var(--accent-ink
       li.innerHTML=(i<3?'<span class="rank"><span class="medal m'+(i+1)+'" role="img" aria-label="Rank '+(i+1)+'">'+(i+1)+'</span></span>':'<span class="rank">'+(i+1)+'</span>')+'<span class="move '+m.c+'">'+m.t+'</span>'+
         '<span class="who"><span class="name"></span><span class="sprs"></span></span><span class="rec">'+p.w+'–'+p.l+(p.t?'–'+p.t:'')+
         (total?' ('+Math.round(100*p.w/total)+'%)':'')+'</span><span class="pc'+(isPro()?'':' lock')+'">'+(isPro()?(p.st?(p.st>0?"W"+p.st:"L"+(-p.st)):"–")+" · peak "+Math.max(p.pk||0,p.rating):"🔒 Pro")+'</span><span class="rating"><span class="tbw"></span><span class="rn">'+p.rating+'<small class="tier"></small></span></span>';
-      li.querySelector(".name").textContent=p.name;
+      li.querySelector(".name").textContent=p.name;li.querySelector(".who").insertBefore(avatar(p),li.querySelector(".name"));
       var tr=tierOf(p.rating),sm=li.querySelector(".tier");sm.textContent=tr[1];sm.style.color=tr[2];li.querySelector(".tbw").appendChild(badge(tierIdx(p.rating),starsOf(p.rating),54));
       var wh=li.querySelector(".who");wh.tabIndex=0;wh.setAttribute("role","button");wh.setAttribute("aria-label","View "+p.name+" decklist");
       wh.onclick=function(){openDeck(p.id)};wh.onkeydown=function(e){if(e.key==="Enter"||e.key===" "){e.preventDefault();openDeck(p.id)}};
@@ -829,7 +853,13 @@ button.cbuild[aria-pressed=true]{background:var(--accent);color:var(--accent-ink
   // ---- shared league database (Supabase) ----
   var SB_URL="https://solkaumnuhctnerjjprd.supabase.co", SB_KEY="sb_publishable_1bVR12vV8A83tNcKAtGgfQ_XTGWEObO";
   var REMOTE=false, BOOTED=false, SK="tg-session", SES=null, CUR=null, PROFS=[], accPid={}, regBase=[], remVer=0, lastSig="", mode="in";
-  var saveT=null, saving=false, dirty=false;
+  var saveT=null, saving=false, dirty=false, AV={}, AVOK=false;
+  function avatar(p,cls){
+    var a=el("span",null,"av"+(cls?" "+cls:""));a.setAttribute("aria-hidden","true");
+    var src=p&&AV[p.id];
+    if(src){var im=new Image();im.alt="";im.src=src;a.appendChild(im)}
+    else{var n=(p&&p.name)||"?",h=0;for(var i=0;i<n.length;i++)h=(h*31+n.charCodeAt(i))%360;a.style.setProperty("--c","hsl("+h+" 45% 42%)");a.textContent=n.replace(/[^A-Za-z0-9]/g,"").slice(0,2).toUpperCase()||"?"}
+    return a}
   function blankState(){return {players:[],decks:[],log:[],week:1,snap:{},nextId:1,mu:{}}}
   function sget(){try{return JSON.parse(localStorage.getItem(SK))}catch(e){return null}}
   function sset(s){SES=s;try{if(s)localStorage.setItem(SK,JSON.stringify(s));else localStorage.removeItem(SK);}catch(e){}}
@@ -863,7 +893,8 @@ button.cbuild[aria-pressed=true]{background:var(--accent);color:var(--accent-ink
       api("/rest/v1/profiles?select=id,username,display_name,role,player_id"),
       api("/rest/v1/registrations?select=user_id"),
       api("/rest/v1/decklists?select=user_id,list,is_public"),
-      SES&&SES.uid?api("/rest/v1/player_data?select=data&user_id=eq."+SES.uid).catch(function(){return []}):Promise.resolve([])
+      SES&&SES.uid?api("/rest/v1/player_data?select=data&user_id=eq."+SES.uid).catch(function(){return []}):Promise.resolve([]),
+      api("/rest/v1/profiles?select=player_id,avatar&avatar=not.is.null").catch(function(){return null})
     ]);
   }
   var mineT=null, mineSig="", mineBusy=false, mineDirty=false;
@@ -896,6 +927,7 @@ button.cbuild[aria-pressed=true]{background:var(--accent);color:var(--accent-ink
     var st=row.data||{}, keep=S&&S.pro, keepDraft=S&&S.draft, b=blankState(), k;
     for(k in b)if(st[k]==null)st[k]=b[k];
     remVer=row.version; PROFS=r[1]||[]; accPid={}; var byUid={};
+    AVOK=r[5]!=null; AV={}; (r[5]||[]).forEach(function(x){if(x.avatar)AV[x.player_id]=x.avatar});
     PROFS.forEach(function(f){accPid[f.player_id]=f;byUid[f.id]=f;});
     var renamed=false;
     PROFS.forEach(function(f){
@@ -910,15 +942,17 @@ button.cbuild[aria-pressed=true]{background:var(--accent);color:var(--accent-ink
     var dl={};(r[3]||[]).forEach(function(x){dl[x.user_id]=x});
     PROFS.forEach(function(f){var p=byId(st,f.player_id),d=dl[f.id];if(!p)return;if(d){p.list=d.list||"";p.pub=!!d.is_public}else{delete p.list;p.pub=false}});
     REMOTE=true; S=st; if(keep)S.pro=keep; ensureSprites(S); ensureV4(S);
-    lastSig=JSON.stringify([r[1],r[2],r[3],r[4]]);
+    lastSig=JSON.stringify([r[1],r[2],r[3],r[4],r[5]]);
     var f=SES&&SES.uid?byUid[SES.uid]:null;
     CUR=f?{u:f.display_name,un:f.username,k:f.username.toLowerCase(),role:f.role==="org"?"org":"pl",pid:f.player_id,uid:f.id}:null;
     var mine=(r[4]&&r[4][0]&&r[4][0].data)||null, has=function(d){return d&&d.cards&&d.cards.length};
     if(CUR){
       var mp=byId(S,CUR.pid);if(mp){mp.vault=(mine&&mine.vault)||[];mp.mh=(mine&&mine.mh)||[]}
-      S.draft=has(mine&&mine.draft)?mine.draft:(has(keepDraft)?keepDraft:{name:"",cards:[]});
-      mineSig=JSON.stringify({vault:(mp&&mp.vault)||[],mh:(mp&&mp.mh)||[],draft:has(mine&&mine.draft)?mine.draft:{name:"",cards:[]}});
-      if(!has(mine&&mine.draft)&&has(S.draft))queueMine();
+      var sd=mine&&mine.draft,ld0=null;try{ld0=JSON.parse(localStorage.getItem("tg-draft"))}catch(e){}
+      var loc=has(keepDraft)?keepDraft:(has(ld0)?ld0:null);
+      S.draft=loc&&(!has(sd)||(loc.ts||Date.now())>=(sd.ts||0))?loc:(has(sd)?sd:{name:"",cards:[]});
+      mineSig=JSON.stringify({vault:(mp&&mp.vault)||[],mh:(mp&&mp.mh)||[],draft:has(sd)?sd:{name:"",cards:[]}});
+      if(has(S.draft)&&S.draft!==sd){queueMine();try{localStorage.removeItem("tg-draft")}catch(e){}}
     }else{
       var ld=null;try{ld=JSON.parse(localStorage.getItem("tg-draft"))}catch(e){}
       S.draft=has(keepDraft)?keepDraft:(has(ld)?ld:{name:"",cards:[]});
@@ -983,7 +1017,7 @@ button.cbuild[aria-pressed=true]{background:var(--accent);color:var(--accent-ink
     var a=document.activeElement; if(a&&/^(INPUT|TEXTAREA|SELECT)$/.test(a.tagName))return;
     loadRemote().then(function(r){
       var row=r[0]&&r[0][0]; if(!row)return;
-      if(row.version===remVer&&JSON.stringify([r[1],r[2],r[3],r[4]])===lastSig)return;
+      if(row.version===remVer&&JSON.stringify([r[1],r[2],r[3],r[4],r[5]])===lastSig)return;
       if(saving||dirty||mineDirty||mineBusy)return;
       applyRemote(r); rerender();
     }).catch(function(){});
@@ -1036,6 +1070,7 @@ button.cbuild[aria-pressed=true]{background:var(--accent);color:var(--accent-ink
     if(u){
       var p=myP()||{rating:START,w:0,l:0}, reg=!!(S.t&&p.id&&S.t.reg.indexOf(p.id)>=0);
       b.innerHTML='<p>Signed in as <b></b> <span class="foot" id="aUn"></span></p><p class="foot" id="aInfo"></p>'
+        +'<div class="avrow"><span id="avPrev"></span><div><label for="avFile">Profile picture</label><input id="avFile" type="file" accept="image/*"><div class="actions" style="margin-top:8px"><button id="avRm" type="button" class="ghost" style="flex:none">Remove picture</button></div></div></div><p class="status" id="avMsg" role="status" aria-live="polite"></p>'
         +'<div class="grid" style="margin-top:12px"><div><label for="adn">Display name</label><input id="adn" maxlength="24"></div></div>'
         +'<div class="actions"><button id="adSave" type="button">Save display name</button><button id="so" type="button" class="ghost">Sign out</button></div>'
         +'<p class="status" id="adMsg" role="status" aria-live="polite"></p>'
@@ -1045,6 +1080,23 @@ button.cbuild[aria-pressed=true]{background:var(--accent);color:var(--accent-ink
       $("adn").value=u.u;
       $("aInfo").textContent="League pts "+p.rating+" · record "+p.w+"–"+p.l+" · "+(reg?"registered for this week's tournament":"not registered for this week's tournament");
       $("so").onclick=signOut;
+      $("avPrev").appendChild(avatar(myP()||{name:u.u}));$("avRm").hidden=!AV[u.pid];
+      function setAv(data){
+        var m=$("avMsg");m.textContent=data?"Saving your picture…":"Removing your picture…";
+        api("/rest/v1/rpc/set_avatar",{method:"POST",body:{a:data}}).then(function(){
+          if(data)AV[u.pid]=data;else delete AV[u.pid];rerender();var mm=$("avMsg");if(mm)mm.textContent=data?"Profile picture updated.":"Profile picture removed.";
+        },function(e){m.textContent=/set_avatar|function|schema cache|404/i.test(e.message+" "+e.status)?"Profile pictures need a one-time database update. The organizer runs the profile-picture SQL in Supabase, then this works.":friendly(e)});
+      }
+      $("avRm").onclick=function(){setAv(null)};
+      $("avFile").onchange=function(){
+        var f=this.files[0];if(!f)return;var m=$("avMsg");
+        if(!/^image\//.test(f.type)){m.textContent="Choose an image file, like a PNG or JPG.";return}
+        var rd=new FileReader();rd.onload=function(){var im=new Image();im.onload=function(){
+          var z=160,cv=document.createElement("canvas"),k=Math.min(im.width,im.height);cv.width=cv.height=z;
+          cv.getContext("2d").drawImage(im,(im.width-k)/2,(im.height-k)/2,k,k,0,0,z,z);
+          var out=cv.toDataURL("image/webp",.82);if(out.indexOf("data:image/webp")!==0)out=cv.toDataURL("image/jpeg",.82);setAv(out)};
+          im.onerror=function(){m.textContent="That image couldn't be read. Try a PNG or JPG."};im.src=rd.result};rd.readAsDataURL(f);
+      };
       $("adSave").onclick=function(){
         var n=clean($("adn").value), m=$("adMsg");
         if(n.length<2){m.textContent="Display name must be at least 2 characters.";return;}
@@ -1201,7 +1253,7 @@ button.cbuild[aria-pressed=true]{background:var(--accent);color:var(--accent-ink
       return;
     }
     var p=myP(), r=ranks(S)[p.id], tt=p.w+p.l, isReg=t.reg.indexOf(p.id)>=0;
-    $("pName").textContent="Welcome, "+p.name; $("pBadge").innerHTML=""; $("pBadge").appendChild(badge(tierIdx(p.rating),starsOf(p.rating),84)); renderRecent($("pRecent"),p);
+    $("pName").textContent="Welcome, "+p.name; $("pBadge").innerHTML=""; $("pBadge").appendChild(avatar(p)); $("pBadge").appendChild(badge(tierIdx(p.rating),starsOf(p.rating),84)); $("pBadge").style.cssText="display:flex;align-items:center;gap:12px"; renderRecent($("pRecent"),p);
     var P=$("pTiles"); P.innerHTML="";
     [["#"+r+" of "+S.players.length,"Rank"],[p.rating,"League pts"],[tierOf(p.rating)[1],"Tier"],[p.w+"–"+p.l,"Record"],[tt?Math.round(100*p.w/tt)+"%":"–","Win rate"],[p.st?(p.st>0?"W"+p.st:"L"+(-p.st)):"–","Streak"],[Math.max(p.pk||0,p.rating),"Peak Elo"],[movement(p,r).t.replace("new","New"),"Since last week"]].forEach(function(x){P.appendChild(tile(String(x[0]),x[1]))});
     $("pWhen").textContent=when;
@@ -1300,7 +1352,7 @@ button.cbuild[aria-pressed=true]{background:var(--accent);color:var(--accent-ink
   function renderDeck(){
     var p=byId(S,deckPid); if(!p){view("Rank");return}
     var r=ranks(S)[p.id], t=tierOf(p.rating), tt=p.w+p.l;
-    $("dkName").textContent=p.name; $("dkBadge").innerHTML=""; $("dkBadge").appendChild(badge(tierIdx(p.rating),starsOf(p.rating),84)); renderRecent($("dkRecent"),p);
+    $("dkName").textContent=p.name; $("dkBadge").innerHTML=""; $("dkBadge").appendChild(avatar(p)); $("dkBadge").appendChild(badge(tierIdx(p.rating),starsOf(p.rating),84)); $("dkBadge").style.cssText="display:flex;align-items:center;gap:12px"; renderRecent($("dkRecent"),p);
     var T=$("dkTiles"); T.innerHTML="";
     [["#"+r,"Rank"],[p.rating,"League pts"],[t[1],"Tier"],[p.w+"–"+p.l,"Record"],[tt?Math.round(100*p.w/tt)+"%":"–","Win rate"]].forEach(function(x){T.appendChild(tile(String(x[0]),x[1]))});
     var D=$("dkDecks"); D.innerHTML="";
@@ -1310,7 +1362,11 @@ button.cbuild[aria-pressed=true]{background:var(--accent);color:var(--accent-ink
       var li=document.createElement("li"); li.appendChild(sprite(d,true));
       var x=el("div",null,"mtxt"); x.appendChild(el("span",d.name)); x.appendChild(el("span",p.dk[id]+" game"+(p.dk[id]===1?"":"s"))); li.appendChild(x); D.appendChild(li);});
     var box=$("dkList"); box.innerHTML="";
-    if(p.pub&&p.list) box.appendChild(el("pre",p.list,"dl"));
+    if(p.pub&&p.list){
+      var vs=el("div",null,"vseg");[["grid","Cards"],["list","Text"]].forEach(function(o){var b=el("button",o[1]);b.type="button";b.setAttribute("aria-pressed",DVIEW===o[0]?"true":"false");b.onclick=function(){DVIEW=o[0];try{localStorage.setItem("tg-dview",DVIEW)}catch(e){}renderDeck()};vs.appendChild(b)});box.appendChild(vs);
+      if(DVIEW==="grid"){var cs=listCards(p.list,null),eb=el("div",null,"est");box.appendChild(eb);estCost(cs,eb);box.appendChild(deckGrid(cs))}
+      else box.appendChild(el("pre",p.list,"dl"));
+    }
     else box.appendChild(el("p",p.pub?"This player hasn't added a decklist yet.":"This player keeps their decklist private.","foot"));
   }
   $("dBack").addEventListener("click",function(){view("Rank")});
@@ -1473,13 +1529,17 @@ button.cbuild[aria-pressed=true]{background:var(--accent);color:var(--accent-ink
         if(L&&L.v[L.v.length-1].t===t){m.textContent="That matches the latest version already.";return}
         if(!L&&!pro&&V.length>=2){m.textContent="Free accounts can save 2 decklists. Unlock Pro for unlimited decklists.";return}
         if(!L){L={n:n,v:[],on:V.some(function(x){return x.on})?0:1};V.push(L)}
-        L.v.push({n:L.v.length+1,ts:Date.now(),t:t,p:0,w:0});$("vName").value="";$("vText").value="";save();renderHub();
+        var wp=isPubDeck(p,L);L.v.push({n:L.v.length+1,ts:Date.now(),t:t,p:0,w:0});if(wp)setPublicList(p,t,true);$("vName").value="";$("vText").value="";save();renderHub();
       };
       var out=el("div"),ta=el("textarea"),oc=el("p",null,"foot"),cp=el("button","Copy","ghost");out.hidden=true;ta.readOnly=true;cp.type="button";
       cp.onclick=function(){ta.select();try{document.execCommand("copy");oc.textContent="Copied. In TCG Live use Decks, then Import."}catch(e){}};
       out.appendChild(el("h3","TCG Live export"));out.appendChild(ta);out.appendChild(oc);out.appendChild(cp);
-      var VL=p.vault||[];(pro?VL:VL.slice(0,2)).forEach(function(L){
-        w.appendChild(el("h3",L.n+(L.on?" · tracking matches":"")));
+      var VL=p.vault||[];
+      if(VL.length){var vs=el("div",null,"vseg");vs.setAttribute("role","group");vs.setAttribute("aria-label","Deck view");[["list","List"],["grid","Grid"]].forEach(function(o){var b=el("button",o[1]);b.type="button";b.setAttribute("aria-pressed",DVIEW===o[0]?"true":"false");b.onclick=function(){DVIEW=o[0];try{localStorage.setItem("tg-dview",DVIEW)}catch(e){}renderHub()};vs.appendChild(b)});w.appendChild(vs)}
+      (pro?VL:VL.slice(0,2)).forEach(function(L){
+        var hh=el("h3",L.n+(L.on?" · tracking matches":""));hh.appendChild(el("span",isPubDeck(p,L)?"Public":"Private","vchip"+(isPubDeck(p,L)?" on":"")));w.appendChild(hh);
+        var lv=L.v[L.v.length-1];
+        if(DVIEW==="grid"){var cs=listCards(lv.t,lv.x),eb=el("div",null,"est");w.appendChild(eb);estCost(cs,eb);w.appendChild(deckGrid(cs))}
         w.appendChild(tbl(["Version","Saved","Games","Win rate"],L.v.slice().reverse().map(function(v){return["v"+v.n,dateS(v.ts),v.p,v.p?Math.round(100*v.w/v.p)+"%":"–"]})));
         var ac=el("div",null,"actions"),sel=el("select");sel.style.cssText="width:auto;flex:none";sel.setAttribute("aria-label","Version of "+L.n);
         L.v.slice().reverse().forEach(function(v){var o=el("option","v"+v.n);o.value=v.n;sel.appendChild(o)});ac.appendChild(sel);
@@ -1488,10 +1548,17 @@ button.cbuild[aria-pressed=true]{background:var(--accent);color:var(--accent-ink
         btn("Edit latest",function(){$("vName").value=L.n;$("vText").value=L.v[L.v.length-1].t;$("vText").focus()},1);
         btn("Edit in builder",function(){loadDraft(L.n,L.v[L.v.length-1].t);view("Cards");window.scrollTo(0,0);openDraft()},1);
         if(!L.on) btn("Track matches with this list",function(){p.vault.forEach(function(x){x.on=0});L.on=1;save();renderHub()},1);
+        var pubNow=isPubDeck(p,L);
+        btn(pubNow?"Make private":"Show publicly",function(){var b=this;b.disabled=true;setPublicList(p,pubNow?(p.list||""):lv.t,!pubNow,function(ok){if(!ok){b.disabled=false;b.textContent="Couldn't save. Try again";return}renderHub()})},1);
+        var del=el("button","Delete deck","ghost danger");del.type="button";del.style.flex="none";
+        del.onclick=function(){if(!del.dataset.ok){del.dataset.ok="1";del.textContent="Tap again to delete "+L.n;setTimeout(function(){if(del.isConnected){delete del.dataset.ok;del.textContent="Delete deck"}},3500);return}
+          var wasPub=isPubDeck(p,L);p.vault.splice(p.vault.indexOf(L),1);if(L.on&&p.vault[0])p.vault[0].on=1;save();if(wasPub)setPublicList(p,"",false);renderHub()};
+        ac.appendChild(del);
         w.appendChild(ac);
       });
       w.appendChild(out);
       w.appendChild(el("p",pro?"Pro: unlimited saved decklists.":"Free: your first 2 saved decklists ("+Math.min(2,VL.length)+" of 2 used). Pro unlocks unlimited decklists."+(VL.length>2?" Lists beyond the first 2 stay saved but are hidden until Pro is on.":""),"foot"));
+      w.appendChild(el("p","Show publicly puts that deck on your player page, where anyone who taps your name in the rankings can see it. One deck is public at a time; choosing another replaces it.","foot"));
       w.appendChild(el("p","Saving changed text creates a new version. Each reported match counts toward the latest version of the list marked as tracking.","foot"));
     }
     // hall of fame
@@ -1862,6 +1929,45 @@ button.cbuild[aria-pressed=true]{background:var(--accent);color:var(--accent-ink
     for(var n=0;n<4;n++)next();
   }
 
+  // ---- Deck views: grid, estimated cost, public deck ----
+  var DVIEW="list",BGRID=false;try{DVIEW=localStorage.getItem("tg-dview")||"list";BGRID=localStorage.getItem("tg-bgrid")==="1"}catch(e){}
+  function listCards(t,x){
+    var out=[],cur="Pokémon";x=x||{};
+    String(t||"").split(/\r?\n/).forEach(function(l){l=l.trim();var h=l.match(/^(pok[eé]mon|trainer|energy)\b/i);
+      if(h&&!/^\d/.test(l)){cur=/^t/i.test(h[1])?"Trainer":/^e/i.test(h[1])?"Energy":"Pokémon";return}
+      var m=l.match(/^(\d+)\s+(.+?)(?:\s+([A-Za-z0-9-]{2,6})\s+(\d+[a-z]?))?$/);if(!m||+m[1]>60)return;
+      var c={n:m[2],s:m[3]||"",no:m[4]||"",t:cur,q:+m[1]},o=x[c.s+"|"+c.no];if(o){if(o.i)c.id=o.i;if(o.m)c.img=o.m}out.push(c)});
+    return out}
+  function deckGrid(cards,edit){
+    var g=el("div",null,"dgrid");
+    GR.forEach(function(G){var L=cards.filter(function(c){return gk(c)===G[1]});if(!L.length)return;
+      g.appendChild(el("div",G[0]+" · "+L.reduce(function(a,c){return a+c.q},0),"dgh"));
+      L.forEach(function(c){var w=el("div",null,"dgc");w.appendChild(cardFace({n:c.n,s:c.s,no:c.no,sn:c.s,img:c.img}));var q=el("span","×"+c.q,"dgq");w.appendChild(q);if(edit)w.appendChild(stepper(c));w.title=c.q+" "+c.n+(c.s?" "+c.s+" "+c.no:"");g.appendChild(w)})});
+    return g}
+  function costCard(x){return x.id?{id:x.id,n:x.n,s:x.s,no:x.no}:{builtin:1,n:x.n,s:x.s||"",no:x.no||""}}
+  function estCost(cards,box){
+    var tok=box._tok=(box._tok||0)+1;
+    function paint(){
+      if(box._tok!==tok)return;var sum=0,miss=0,pend=0,tot=0;
+      cards.forEach(function(x){tot+=x.q;var o=PRICE[priceKey(costCard(x))];if(!o){if((x.id||x.no)&&PFAIL<3)pend+=x.q;else miss+=x.q}else if(o.usd!=null)sum+=o.usd*x.q;else miss+=x.q});
+      box.innerHTML="";box.appendChild(document.createTextNode("Estimated cost "));box.appendChild(el("b","$"+sum.toFixed(2)));
+      var t=[];if(pend)t.push("checking "+pend+" more card"+(pend===1?"":"s")+"…");if(miss)t.push(miss+" card"+(miss===1?"":"s")+" without a price");
+      if(PFAIL>=3&&!sum)t=["prices couldn't load here (they load on groundz.win)"];
+      box.appendChild(document.createTextNode(" · "+(t.length?t.join(" · "):"TCGplayer market prices")));
+    }
+    paint();
+    var seen={},need=cards.filter(function(x){var k=priceKey(costCard(x));if(seen[k]||PRICE[k]||!(x.id||x.no))return false;seen[k]=1;return true});
+    var i=0;function next(){if(box._tok!==tok||i>=need.length||PFAIL>=3){paint();return Promise.resolve()}var x=need[i++];return fetchPrice(costCard(x)).catch(function(){}).then(paint).then(next)}
+    for(var n=0;n<4;n++)next();
+  }
+  function isPubDeck(p,L){return !!(p&&L&&p.pub&&p.list&&L.v.length&&p.list===L.v[L.v.length-1].t)}
+  function setPublicList(p,text,pub,cb){
+    p.list=text;p.pub=pub;listDirty=false;
+    if(!REMOTE||!me()){save();if(cb)cb(true);return}
+    api("/rest/v1/decklists?on_conflict=user_id",{method:"POST",prefer:"resolution=merge-duplicates,return=minimal",body:{user_id:me().uid,list:text||"",is_public:!!pub,updated_at:new Date().toISOString()}})
+      .then(function(){if(cb)cb(true)},function(){if(cb)cb(false)});
+  }
+
   // ---- Deck builder: docked beside the card browser so you can build while you browse ----
   var SP=[],ftm,BUILD=false,BMIN=true,TMAP=null;
   try{BUILD=localStorage.getItem("tg-build")==="1";BMIN=localStorage.getItem("tg-build-min")!=="0"}catch(e){}
@@ -1881,9 +1987,9 @@ button.cbuild[aria-pressed=true]{background:var(--accent);color:var(--accent-ink
     if(d>0){
       if(dtot()>=60)return "A deck holds 60 cards.";
       if(!isBasic(c)){var same=L.filter(function(y){return y.n===c.n}).reduce(function(a,y){return a+y.q},0);if(same>=4)return "Max 4 copies of "+c.n+" (any printing).";}
-      if(x)x.q++;else{var e={n:c.n,s:c.s||"",no:c.no||"",t:c.t||guessT(c),q:1};if(c.img)e.img=c.img;L.push(e)}
+      if(x)x.q++;else{var e={n:c.n,s:c.s||"",no:c.no||"",t:c.t||guessT(c),q:1};if(c.img)e.img=c.img;if(c.id&&!c.builtin)e.id=c.id;L.push(e)}
     }else if(x){x.q--;if(x.q<=0)L.splice(L.indexOf(x),1)}
-    save();return "";
+    D().ts=Date.now();save();return "";
   }
   function flash(m){var d=$("dMsg"),b=$("cTrayBtn"),g=$("bNote");if(d)d.textContent=m;if(b)b.textContent=m;if(g)g.textContent=m;clearTimeout(ftm);ftm=setTimeout(function(){trayUpd();if(d)d.textContent="";if(g)g.textContent=""},2400)}
   function added(c,e){if(e){flash(e);return}var g=$("bNote");if(g&&BMIN){g.textContent="+1 "+c.n;clearTimeout(ftm);ftm=setTimeout(function(){g.textContent=""},1600)}}
@@ -1908,7 +2014,7 @@ button.cbuild[aria-pressed=true]{background:var(--accent);color:var(--accent-ink
       if(h&&!/^\d/.test(l)){cur=/^t/i.test(h[1])?"Trainer":/^e/i.test(h[1])?"Energy":"Pokémon";return}
       var m=l.match(/^(\d+)\s+(.+?)(?:\s+([A-Za-z0-9-]{2,6})\s+(\d+[a-z]?))?$/);if(!m)return;
       cards.push({n:m[2],s:m[3]||"",no:m[4]||"",t:cur,q:+m[1]})});
-    S.draft={name:n||"",cards:cards};save();repaintAll();var ni=$("dName2");if(ni)ni.value=n||"";
+    S.draft={name:n||"",cards:cards,ts:Date.now()};save();repaintAll();var ni=$("dName2");if(ni)ni.value=n||"";
   }
   function setBuild(on){
     BUILD=!!on;try{localStorage.setItem("tg-build",BUILD?"1":"0")}catch(e){}
@@ -1930,8 +2036,10 @@ button.cbuild[aria-pressed=true]{background:var(--accent);color:var(--accent-ink
     if(L&&L.v[L.v.length-1].t===t){m.textContent="That matches the latest saved version already.";return}
     if(!L&&!pro&&V.length>=2){m.textContent="Free accounts can save 2 decklists. Unlock Pro for unlimited decklists.";return}
     if(!L){L={n:n,v:[],on:V.some(function(x){return x.on})?0:1};V.push(L)}
-    L.v.push({n:L.v.length+1,ts:Date.now(),t:t,p:0,w:0});
-    S.draft={name:"",cards:[]};save();closeDraft();repaintAll();view("Pro");window.scrollTo(0,0);
+    var wasPub=isPubDeck(p,L),x={};d.cards.forEach(function(c){if(c.s&&(c.id||c.img)){var o={};if(c.id)o.i=c.id;if(c.img)o.m=c.img;x[c.s+"|"+c.no]=o}});
+    L.v.push({n:L.v.length+1,ts:Date.now(),t:t,p:0,w:0,x:x});
+    if(wasPub)setPublicList(p,t,true);
+    S.draft={name:"",cards:[],ts:Date.now()};save();closeDraft();repaintAll();view("Pro");window.scrollTo(0,0);
   }
   function quickSearch(q){
     var ws=qWords(q);if(!ws.length)return Promise.resolve([]);
@@ -1950,14 +2058,14 @@ button.cbuild[aria-pressed=true]{background:var(--accent);color:var(--accent-ink
       +'<div class="bbody" id="bBody"><label for="dName2">List name</label><input id="dName2" maxlength="24" placeholder="e.g. Charizard ex">'
       +'<p class="bsum" id="bSum"></p>'
       +'<label for="bQ">Add any card</label><div class="csearch"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg><input id="bQ" type="search" placeholder="Search, like Ultra Ball" autocomplete="off"></div>'
-      +'<div class="bres" id="bRes" aria-live="polite"></div><div id="bList"></div>'
+      +'<div class="bres" id="bRes" aria-live="polite"></div><div class="est" id="bEst"></div><div class="vseg" id="bView" role="group" aria-label="Draft view"><button type="button" data-v="list">List</button><button type="button" data-v="grid">Grid</button></div><div id="bList"></div>'
       +'<h3>Basic energy</h3><div class="dbas" id="bEn"></div>'
       +'<p class="status" id="dMsg" role="status" aria-live="polite"></p>'
       +'<div class="actions"><button id="bSave" type="button">Save to My Decks</button><button id="bClr" type="button" class="ghost">Clear draft</button></div>'
       +'<p class="foot">Tap + on any card in the grid, or search here. Your draft saves as you go, so you can keep browsing and come back to it. Max 60 cards and 4 copies per name (basic energy is unlimited).</p></div>';
     $("bGrab").onclick=function(){if(window.matchMedia&&matchMedia("(max-width:900px)").matches)setMin(!BMIN)};
     $("bDone").onclick=closeDraft;
-    var ni=$("dName2");ni.value=D().name||"";ni.addEventListener("input",function(){D().name=ni.value;save()});
+    var ni=$("dName2");ni.value=D().name||"";ni.addEventListener("input",function(){D().name=ni.value;D().ts=Date.now();save()});
     var be=$("bEn");["Grass","Fire","Water","Lightning","Psychic","Fighting","Darkness","Metal"].forEach(function(t,k){
       var b=el("button","+ "+t,"ghost");b.type="button";b.onclick=function(){var c={n:"Basic "+t+" Energy",s:"SVE",no:String(k+1),t:"Energy"},e=dstep(c,1);repaintAll();added(c,e)};be.appendChild(b)});
     var tm,qs=0;$("bQ").addEventListener("input",function(){var v=this.value;clearTimeout(tm);tm=setTimeout(function(){var my=++qs,R=$("bRes");
@@ -1969,8 +2077,9 @@ button.cbuild[aria-pressed=true]{background:var(--accent);color:var(--accent-ink
           r.appendChild(nm);r.appendChild(el("span",(c.t||guessT(c)||"").replace("Pokémon","Pkmn"),"tg"));r.appendChild(stepper(c));R.appendChild(r)});
       },function(){if(my!==qs)return;R.innerHTML="";R.appendChild(el("p","Couldn't search the card database. Try again.","foot"))});
     },250)});
+    [].forEach.call($("bView").querySelectorAll("button"),function(b){b.onclick=function(){BGRID=b.dataset.v==="grid";try{localStorage.setItem("tg-bgrid",BGRID?"1":"0")}catch(e){}paintList()}});
     $("bSave").onclick=saveDraft;
-    $("bClr").onclick=function(){var b=$("bClr");if(!D().cards.length)return;if(b.dataset.ok){delete b.dataset.ok;b.textContent="Clear draft";S.draft={name:"",cards:[]};$("dName2").value="";save();repaintAll();return}b.dataset.ok="1";b.textContent="Tap again to clear";setTimeout(function(){delete b.dataset.ok;b.textContent="Clear draft"},3000)};
+    $("bClr").onclick=function(){var b=$("bClr");if(!D().cards.length)return;if(b.dataset.ok){delete b.dataset.ok;b.textContent="Clear draft";S.draft={name:"",cards:[],ts:Date.now()};$("dName2").value="";save();repaintAll();return}b.dataset.ok="1";b.textContent="Tap again to clear";setTimeout(function(){delete b.dataset.ok;b.textContent="Clear draft"},3000)};
     setMin(BMIN);
   }
   function paintList(){
@@ -1979,8 +2088,10 @@ button.cbuild[aria-pressed=true]{background:var(--accent);color:var(--accent-ink
     $("bCnt").textContent=dtot()+"/60";$("bSum").textContent="Pokémon "+c3.p+" · Trainer "+c3.t+" · Energy "+c3.e;
     var ni=$("dName2");if(document.activeElement!==ni)ni.value=d.name||"";
     var cb=$("cBuild");if(cb&&BUILD)cb.textContent="Building · "+dtot()+"/60";
-    B.innerHTML="";
+    B.innerHTML="";[].forEach.call($("bView").querySelectorAll("button"),function(b){b.setAttribute("aria-pressed",(b.dataset.v==="grid")===BGRID?"true":"false")});
+    $("bEst").hidden=!d.cards.length;if(d.cards.length)estCost(d.cards,$("bEst"));
     if(!d.cards.length){B.appendChild(el("p","No cards yet. Tap + on a card or search above.","foot"));return}
+    if(BGRID){B.appendChild(deckGrid(d.cards,true));return}
     GR.forEach(function(G){
       var L=d.cards.filter(function(x){return gk(x)===G[1]}).sort(function(a,b){return a.n<b.n?-1:a.n>b.n?1:0});if(!L.length)return;
       B.appendChild(el("h3",G[0]+" · "+L.reduce(function(a,x){return a+x.q},0)));
