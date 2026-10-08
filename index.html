@@ -1431,44 +1431,273 @@ button.gear svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-widt
   function starsOf(r){var i=tierIdx(r),lo=i===TIERS.length-1?0:TIERS[i][0],hi=i===0?lo+100:TIERS[i-1][0];return Math.max(1,Math.min(5,Math.floor((r-lo)/(hi-lo)*5)+1))}
   function mix(h,t,a){var o="#";for(var i=0;i<3;i++){var x=parseInt(h.substr(1+i*2,2),16),y=parseInt(t.substr(1+i*2,2),16);o+=("0"+Math.round(x*(1-a)+y*a).toString(16)).slice(-2)}return o}
   function sp(cx,cy,R,r,n){var o=[];for(var i=0;i<n*2;i++){var q=i%2?r:R,a=Math.PI*i/n-Math.PI/2;o.push((cx+q*Math.cos(a)).toFixed(1)+","+(cy+q*Math.sin(a)).toFixed(1))}return o.join(" ")}
-  // Gym-style enamel medallions: each tier has its own pin shape, metal rim and emblem. Stars show progress within the tier.
-  function poly(n,R,rot,cx,cy){cx=cx==null?50:cx;cy=cy==null?46:cy;var o=[];for(var i=0;i<n;i++){var a=(rot+360*i/n)*Math.PI/180;o.push((cx+R*Math.cos(a)).toFixed(1)+" "+(cy+R*Math.sin(a)).toFixed(1))}return "M"+o.join("L")+"Z"}
-  function starP(n,R,r,cx,cy){cx=cx==null?50:cx;cy=cy==null?46:cy;var o=[];for(var i=0;i<2*n;i++){var q=i%2?r:R,a=Math.PI*i/n-Math.PI/2;o.push((cx+q*Math.cos(a)).toFixed(1)+" "+(cy+q*Math.sin(a)).toFixed(1))}return "M"+o.join("L")+"Z"}
-  var BSHAPE=[
-    poly(5,38,-90),                                                         // Rookie: pentagon
-    poly(6,38,-90),                                                         // Trainer: hexagon
-    "M43 8H57L84 39V53L57 84H43L16 53V39Z",                                 // Ace: cut diamond
-    "M50 8L83 18V45C83 65 69 78 50 87C31 78 17 65 17 45V18Z",               // Elite: shield
-    starP(8,40,31),                                                         // Master: eight-point star
-    "M17 14L33 23L50 8L67 23L83 14V45C83 65 69 78 50 87C31 78 17 65 17 45Z",// Champion: crowned crest
-    starP(12,42,34)                                                         // Legend: sunburst
-  ];
-  var BMETAL=[["#eef1f5","#a3aab4","#5d646e"],["#f7d2ad","#bf8350","#6b4021"],["#ffffff","#c6ccd5","#768090"],["#ffffff","#c6ccd5","#768090"],["#fff4bf","#e3b33a","#8a6200"],["#fff4bf","#e3b33a","#8a6200"],["#fffbe0","#f2c94c","#9a6a00"]];
-  var BID=0;
+  // GroundZ rank crests: winged metal shields that grow with the tier; the ribbon shows stars within the tier.
+  var GZ_CREST=(function(){
+// GroundZ rank crests v4. Tiers, colors, Elo cutoffs and the 5-star split mirror index.html (TIERS / starsOf).
+// viewBox 240 x 216, centre line x = 120. Every shape is built from its right half and mirrored, so symmetry is exact.
+const TIERS = [
+  { name: "Rookie",   min: -1e9, color: "#8b8d98" },
+  { name: "Trainer",  min: 990,  color: "#3e63dd" },
+  { name: "Ace",      min: 1020, color: "#12a594" },
+  { name: "Elite",    min: 1060, color: "#8e4ec6" },
+  { name: "Master",   min: 1120, color: "#d6409f" },
+  { name: "Champion", min: 1200, color: "#f76808" },
+  { name: "Legend",   min: 1300, color: "#e5484d" },
+];
+const METALS = {
+  steel:  ["#ffffff", "#c9ced6", "#7d858f", "#3d434b"],
+  bronze: ["#fbe3c8", "#d49a64", "#8a5428", "#40220c"],
+  silver: ["#ffffff", "#dde2ea", "#8f98a6", "#424956"],
+  gold:   ["#fffbe6", "#f2d27a", "#c99520", "#5a3a06"],
+  sun:    ["#fffef0", "#ffe58a", "#e7a91d", "#6b3e00"],
+};
+const TIER_METAL = ["steel", "bronze", "silver", "silver", "gold", "gold", "sun"];
+const CX = 120;
+
+/* ---------- colour helpers ---------- */
+function mix(h, t, a) {
+  let o = "#";
+  for (let i = 0; i < 3; i++) {
+    const x = parseInt(h.substr(1 + i * 2, 2), 16), y = parseInt(t.substr(1 + i * 2, 2), 16);
+    o += ("0" + Math.round(x * (1 - a) + y * a).toString(16)).slice(-2);
+  }
+  return o;
+}
+// b in [0,1]: 0 = darkest metal stop, 1 = brightest
+function shade(M, b) {
+  b = Math.max(0, Math.min(1, b));
+  const s = [M[3], M[2], M[1], M[0]], p = b * 3, i = Math.min(2, Math.floor(p));
+  return mix(s[i], s[i + 1], p - i);
+}
+// light comes from the upper left
+const LIGHT = (() => { const x = -0.55, y = -0.83, l = Math.hypot(x, y); return [x / l, y / l]; })();
+function facetShade(M, nx, ny, bias = 0) {
+  const l = Math.hypot(nx, ny) || 1, d = (nx * LIGHT[0] + ny * LIGHT[1]) / l;
+  return shade(M, 0.5 + 0.48 * d + bias);
+}
+
+/* ---------- geometry helpers ---------- */
+const f = n => (+n.toFixed(2)).toString();
+const pts = a => a.map(p => f(p[0]) + " " + f(p[1])).join(" L");
+// cubic segments of a right half, from top centre down to bottom centre: [[c1,c2,end],...] with x relative to CX
+function mirrorPath(start, segs, sx = 1, sy = 1, ox = CX, oy = 0) {
+  const T = p => [ox + p[0] * sx, oy + p[1] * sy];
+  const L = p => [ox - p[0] * sx, oy + p[1] * sy];
+  let d = `M${pts([T(start)])}`;
+  segs.forEach(([a, b, e]) => { d += ` C${pts([T(a)]).replace(" L", " ")} ${pts([T(b)])} ${pts([T(e)])}`; });
+  const all = [start, ...segs.map(s => s[2])];
+  for (let i = segs.length - 1; i >= 0; i--) {
+    const [a, b] = segs[i];
+    d += ` C${pts([L(b)])} ${pts([L(a)])} ${pts([L(all[i])])}`;
+  }
+  return d + " Z";
+}
+function bez(p0, p1, p2, p3, t) {
+  const u = 1 - t;
+  return [0, 1].map(k => u * u * u * p0[k] + 3 * u * u * t * p1[k] + 3 * u * t * t * p2[k] + t * t * t * p3[k]);
+}
+
+/* ---------- shield silhouette ---------- */
+// Centre cusp on top, the top edge dips then flares into swept horns, the waist pinches,
+// the flanks swell and the base sweeps to a sharp point.
+const S_START = [0, 26];
+const S_SEGS = [
+  [[16, 42], [44, 42], [70, 15]],    // dip from the cusp, sweep up to the horn tip
+  [[64, 32], [52, 40], [50, 58]],    // inner edge of the horn curls down
+  [[49, 76], [64, 82], [63, 106]],   // waist pinch, then the flank swells
+  [[62, 142], [22, 160], [0, 198]],  // concave sweep to a long point
+];
+// y of the top edge at a given dx (for seating crown spires)
+function topY(dx) {
+  const [c1, c2, e] = S_SEGS[0];
+  let best = 0, bd = 1e9;
+  for (let t = 0; t <= 1; t += 0.01) { const p = bez(S_START, c1, c2, e, t); const d = Math.abs(p[0] - dx); if (d < bd) { bd = d; best = p[1]; } }
+  return best;
+}
+const shieldAt = (k, cy = 100) => {
+  // uniform scale about (CX, cy)
+  const segs = S_SEGS.map(s => s.map(p => [p[0] * k, (p[1] - cy) * k + cy]));
+  return mirrorPath([S_START[0] * k, (S_START[1] - cy) * k + cy], segs);
+};
+
+/* ---------- faceted emblem builders ---------- */
+// Star-convex polygon cut into facets meeting at a kernel point (classic struck-metal look).
+function facetPoly(M, P, K, stroke) {
+  let g = "";
+  for (let i = 0; i < P.length; i++) {
+    const a = P[i], b = P[(i + 1) % P.length];
+    const mx = (a[0] + b[0]) / 2 - K[0], my = (a[1] + b[1]) / 2 - K[1];
+    // outward normal of the edge
+    let nx = b[1] - a[1], ny = -(b[0] - a[0]);
+    if (nx * mx + ny * my < 0) { nx = -nx; ny = -ny; }
+    const c = facetShade(M, nx, ny);
+    g += `<path d="M${pts([a, b, K])}Z" fill="${c}" stroke="${c}" stroke-width=".5" stroke-linejoin="round"/>`;
+  }
+  return g + `<path d="M${pts(P)}Z" fill="none" stroke="${stroke}" stroke-width="1.3" stroke-linejoin="round"/>`;
+}
+// Bevelled bar along a spine (chevrons, bolt): each side of the ridge is shaded by its own normal.
+function ridge(M, S, W, stroke, capTaper = true) {
+  const n = S.length, O = [], I = [];
+  for (let i = 0; i < n; i++) {
+    const p = S[i], a = S[Math.max(0, i - 1)], b = S[Math.min(n - 1, i + 1)];
+    let tx = b[0] - a[0], ty = b[1] - a[1]; const tl = Math.hypot(tx, ty); tx /= tl; ty /= tl;
+    let nx = -ty, ny = tx, m = 1;
+    if (i > 0 && i < n - 1) {
+      const d1 = [p[0] - a[0], p[1] - a[1]], l1 = Math.hypot(...d1), n1 = [-d1[1] / l1, d1[0] / l1];
+      m = Math.min(2.4, 1 / Math.max(0.2, nx * n1[0] + ny * n1[1]));
+    }
+    O.push([p[0] + nx * W[i] * m, p[1] + ny * W[i] * m]);
+    I.push([p[0] - nx * W[i] * m, p[1] - ny * W[i] * m]);
+  }
+  let g = "";
+  for (let i = 0; i < n - 1; i++) {
+    const sx = S[i + 1][0] - S[i][0], sy = S[i + 1][1] - S[i][1];
+    const c1 = facetShade(M, -sy, sx), c2 = facetShade(M, sy, -sx);
+    g += `<path d="M${pts([O[i], O[i + 1], S[i + 1], S[i]])}Z" fill="${c1}" stroke="${c1}" stroke-width=".5" stroke-linejoin="round"/>`;
+    g += `<path d="M${pts([S[i], S[i + 1], I[i + 1], I[i]])}Z" fill="${c2}" stroke="${c2}" stroke-width=".5" stroke-linejoin="round"/>`;
+  }
+  const outline = [...O, ...I.slice().reverse()];
+  return g + `<path d="M${pts(outline)}Z" fill="none" stroke="${stroke}" stroke-width="1.3" stroke-linejoin="round"/>`;
+}
+function starPts(n, R, r, cx, cy, rot = -Math.PI / 2) {
+  const o = [];
+  for (let i = 0; i < 2 * n; i++) { const q = i % 2 ? r : R, a = rot + (Math.PI * i) / n; o.push([cx + q * Math.cos(a), cy + q * Math.sin(a)]); }
+  return o;
+}
+function starP(n, R, r, cx, cy) { return "M" + pts(starPts(n, R, r, cx, cy)) + "Z"; }
+
+/* ---------- emblems, all in tier metal, centred on (120, 94) ---------- */
+const mirR = R => [...R, ...R.slice(1, -1).reverse().map(([x, y]) => [-x, y])];
+const at = (arr, ox, oy, k = 1) => arr.map(([x, y]) => [ox + x * k, oy + y * k]);
+const EMBLEM_NAMES = ["Chevron", "Double chevron", "Triple chevron", "Star", "Hexastar", "Trophy", "Phoenix"];
+function emblem(ti, M, id) {
+  const ink = M[3], ey = 94;
+  const chev = (y, w = 6.5, span = 21, h = 17) => ridge(M, [[CX - span, y + h / 2], [CX, y - h / 2], [CX + span, y + h / 2]], [w * .7, w, w * .7], ink);
+  switch (ti) {
+    case 0: return chev(ey + 2, 7.5, 23, 20);
+    case 1: return chev(ey - 7, 6.5) + chev(ey + 11, 6.5);
+    case 2: return [-15, 0, 15].map(dy => chev(ey + 1 + dy, 5.6, 21, 14)).join("");
+    case 3: return facetPoly(M, starPts(5, 27, 11.5, CX, ey + 2), [CX, ey + 2], ink);
+    case 4: return facetPoly(M, starPts(6, 30, 16, CX, ey), [CX, ey], ink) +
+      `<circle cx="${CX}" cy="${ey}" r="6" fill="url(#${id}e)" stroke="#000" stroke-opacity=".45" stroke-width="1"/><circle cx="${CX - 1.8}" cy="${ey - 2.1}" r="1.8" fill="#fff" opacity=".7"/>`;
+    case 6: return facetPoly(M, at(mirR([[0, -31], [5, -20], [9, -12], [33, -26], [27, -10], [34, -6], [22, 4], [26, 8], [12, 10], [9, 30], [0, 22]]), CX, ey), [CX, ey - 4], ink);
+    case 5: { // trophy
+      const P = (arr) => at(arr, CX, ey);
+      return ridge(M, P([[19, -21], [27, -19], [27, -10], [15, -3]]), [2.4, 2.4, 2.4, 2.4], ink) +
+        ridge(M, P([[-19, -21], [-27, -19], [-27, -10], [-15, -3]]), [2.4, 2.4, 2.4, 2.4], ink) +
+        ridge(M, P([[0, 3], [0, 17]]), [3, 3], ink) +
+        facetPoly(M, P(mirR([[0, 15], [10, 17], [15, 27], [0, 27]])), [CX, ey + 21], ink) +
+        facetPoly(M, P(mirR([[0, -26], [21, -26], [18, -8], [7, 4], [0, 5]])), [CX, ey - 12], ink);
+    }
+  }
+  return "";
+}
+
+/* ---------- rank ranges (site maths) ---------- */
+function starRanges(ti) {
+  const lo = ti === 0 ? 0 : TIERS[ti].min;
+  const hi = ti === 6 ? lo + 100 : TIERS[ti + 1].min;
+  const w = hi - lo, out = [];
+  for (let k = 1; k <= 5; k++) {
+    const a = lo + Math.ceil(((k - 1) * w) / 5), b = lo + Math.ceil((k * w) / 5) - 1;
+    if (k === 1 && ti === 0) out.push(`under ${b + 1}`);
+    else if (k === 5 && ti === 6) out.push(`${a}+`);
+    else out.push(`${a}–${b}`);
+  }
+  return out;
+}
+function tierRange(ti) {
+  if (ti === 0) return `under ${TIERS[1].min}`;
+  if (ti === 6) return `${TIERS[6].min}+`;
+  return `${TIERS[ti].min}–${TIERS[ti + 1].min - 1}`;
+}
+
+/* ---------- escalation per tier ---------- */
+const WING_COUNT = [0, 1, 2, 3, 3, 4, 4];
+const WING_SCALE = [0, 0.74, 0.82, 0.88, 0.96, 1, 1.06];
+const FEATHER_DIRS = [[60, -26], [54, -12], [45, -1], [34, 9]];
+const CROWNS = [[], [], [], [[0, 14]], [[0, 18], [17, 11]], [[0, 22], [17, 14], [33, 8]], [[0, 27], [17, 18], [33, 11]]];
+
+function crestSVG(ti, stars, size = 160, emb) {
+  const T = TIERS[ti], M = METALS[TIER_METAL[ti]], c = T.color;
+  const id = `z${ti}${stars}${Math.random().toString(36).slice(2, 6)}`;
+  const m = `url(#${id}m)`;
+
+  // wings: feathers rooted behind the waist, fanning back
+  const feathers = FEATHER_DIRS.slice(0, WING_COUNT[ti]).map(([dx, dy], k) => {
+    const s = WING_SCALE[ti], y = 62 + k * 17, x0 = 166, tx = x0 + dx * s, ty = y + dy * s;
+    const body = `M${x0} ${y} C${f(x0 + 24 * s)} ${y - 6} ${f(tx - 18 * s)} ${f(ty + 2)} ${f(tx)} ${f(ty)} C${f(tx - 8 * s)} ${f(ty + 12)} ${f(tx - 30 * s)} ${y + 17} ${x0} ${y + 17} Z`;
+    const hi = `M${x0} ${y} C${f(x0 + 24 * s)} ${y - 6} ${f(tx - 18 * s)} ${f(ty + 2)} ${f(tx)} ${f(ty)} C${f(tx - 22 * s)} ${f(ty + 6)} ${f(x0 + 22 * s)} ${y + 2} ${x0} ${y + 7} Z`;
+    return `<path d="${body}" fill="${m}" stroke="${M[3]}" stroke-width="1.4" stroke-linejoin="round"/><path d="${hi}" fill="#fff" opacity=".35"/>`;
+  }).reverse().join("");
+  const wings = feathers ? `<g>${feathers}</g><g transform="matrix(-1 0 0 1 240 0)">${feathers}</g>` : "";
+
+  // crown spires seated on the top edge
+  const spire = (dx, h) => {
+    const x = CX + dx, base = topY(Math.abs(dx)) + 8, tip = topY(Math.abs(dx)) - h, w = dx === 0 ? 7 : 5.5;
+    const L = facetShade(M, -1, -0.3), R = facetShade(M, 1, -0.3);
+    return `<path d="M${f(x)} ${f(tip)} L${f(x)} ${f(base)} L${f(x - w)} ${f(base)} Z" fill="${L}"/><path d="M${f(x)} ${f(tip)} L${f(x + w)} ${f(base)} L${f(x)} ${f(base)} Z" fill="${R}"/><path d="M${f(x)} ${f(tip)} L${f(x + w)} ${f(base)} L${f(x - w)} ${f(base)} Z" fill="none" stroke="${M[3]}" stroke-width="1.2" stroke-linejoin="round"/>`;
+  };
+  const crown = CROWNS[ti].flatMap(([dx, h]) => (dx === 0 ? [spire(0, h)] : [spire(-dx, h), spire(dx, h)])).join("");
+  const crownGem = ti >= 5 ? (() => { const y = topY(0) - CROWNS[ti][0][1] - 9; return `<path d="M${CX} ${f(y)} l5 6 l-5 6 l-5 -6 Z" fill="url(#${id}e)" stroke="${M[3]}" stroke-width=".9"/>`; })() : "";
+
+  // Legend: tail feathers and sunburst
+  const tailOne = `<path d="M106 176 C100 188 92 198 82 208 C96 205 106 196 114 183 Z" fill="${m}" stroke="${M[3]}" stroke-width="1.2" stroke-linejoin="round"/>`;
+  const tail = ti === 6 ? `${tailOne}<g transform="matrix(-1 0 0 1 240 0)">${tailOne}</g>` : "";
+  const burst = ti === 6 ? `<path d="${starP(16, 104, 58, CX, 104)}" fill="url(#${id}b)"/>` : "";
+  const halo = ti >= 5 ? `<circle cx="${CX}" cy="104" r="${ti === 6 ? 92 : 86}" fill="url(#${id}h)"/>` : "";
+
+  // horn-tip gems from Master up
+  const hornGem = x => `<circle cx="${x}" cy="27" r="4" fill="url(#${id}e)" stroke="${M[3]}" stroke-width=".9"/><circle cx="${x - 1.2}" cy="25.8" r="1.2" fill="#fff" opacity=".8"/>`;
+  const hornGems = ti >= 4 ? hornGem(CX + 60) + hornGem(CX - 60) : "";
+
+  // star ribbon (the site's 5-star progress)
+  const ribbonEnd = `<path d="M76 146 L58 149 L65 156 L58 163 L76 164 Z" fill="url(#${id}d)" stroke="${M[3]}" stroke-width="1" stroke-linejoin="round"/>`;
+  const ribbon =
+    `${ribbonEnd}<g transform="matrix(-1 0 0 1 240 0)">${ribbonEnd}</g>` +
+    `<path d="M72 143 Q120 151 168 143 L168 162 Q120 170 72 162 Z" fill="url(#${id}d)" stroke="${m}" stroke-width="2" stroke-linejoin="round"/>`;
+  const starRow = [0, 1, 2, 3, 4].map(i => {
+    const x = CX + (i - 2) * 16, d = (x - CX) / 48, y = 153 + 4 * (1 - d * d), on = i < stars;
+    return `<path d="${starP(5, 6, 2.6, x, y)}" fill="${on ? "#ffd60a" : "#8b8d98"}" opacity="${on ? 1 : 0.4}" ${on ? `stroke="#7a5a00" stroke-width=".6"` : ""}/>`;
+  }).join("");
+
+  const sv = stars == null ? 5 : stars, glow = 1.5 + sv * 0.8 + ti * 0.6;
+  const OUT = shieldAt(1), BEV = shieldAt(0.9, 98), FACE = shieldAt(0.82, 96);
+
+  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 216" width="${size}" height="${Math.round((size * 216) / 240)}" role="img" aria-label="${T.name}${stars == null ? "" : ", " + stars + " of 5 stars"}">
+<defs>
+<linearGradient id="${id}m" x1="0" y1="0" x2=".25" y2="1"><stop offset="0" stop-color="${M[0]}"/><stop offset=".3" stop-color="${M[1]}"/><stop offset=".7" stop-color="${M[2]}"/><stop offset="1" stop-color="${M[3]}"/></linearGradient>
+<linearGradient id="${id}r" x1="0" y1="1" x2=".2" y2="0"><stop offset="0" stop-color="${M[0]}"/><stop offset=".5" stop-color="${M[2]}"/><stop offset="1" stop-color="${M[3]}"/></linearGradient>
+<linearGradient id="${id}e" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${mix(c, "#ffffff", 0.35)}"/><stop offset=".55" stop-color="${c}"/><stop offset="1" stop-color="${mix(c, "#000000", 0.4)}"/></linearGradient>
+<radialGradient id="${id}f" cx=".42" cy=".3" r=".8"><stop offset="0" stop-color="${mix(c, "#ffffff", 0.18)}"/><stop offset=".6" stop-color="${mix(c, "#000000", 0.2)}"/><stop offset="1" stop-color="${mix(c, "#000000", 0.55)}"/></radialGradient>
+<linearGradient id="${id}d" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${mix(c, "#000000", 0.45)}"/><stop offset="1" stop-color="${mix(c, "#000000", 0.72)}"/></linearGradient>
+<radialGradient id="${id}h" cx=".5" cy=".5" r=".5"><stop offset=".5" stop-color="${c}" stop-opacity="0"/><stop offset=".8" stop-color="${c}" stop-opacity="${ti === 6 ? 0.34 : 0.24}"/><stop offset="1" stop-color="${c}" stop-opacity="0"/></radialGradient>
+<radialGradient id="${id}b" cx=".5" cy=".5" r=".5"><stop offset=".3" stop-color="#ffe58a" stop-opacity=".55"/><stop offset="1" stop-color="#ffe58a" stop-opacity="0"/></radialGradient>
+<clipPath id="${id}c"><path d="${FACE}"/></clipPath>
+<filter id="${id}x" x="-25%" y="-25%" width="150%" height="150%"><feGaussianBlur in="SourceAlpha" stdDeviation="${glow.toFixed(1)}" result="b"/><feFlood flood-color="${mix(c, "#ffffff", 0.25)}" flood-opacity="${(0.18 + sv * 0.07 + ti * 0.03).toFixed(2)}"/><feComposite in2="b" operator="in" result="g"/><feMerge><feMergeNode in="g"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+<filter id="${id}s" x="-20%" y="-20%" width="140%" height="140%"><feDropShadow dx="0" dy="2.2" stdDeviation="1.6" flood-color="#000" flood-opacity=".55"/></filter>
+</defs>
+${burst}${halo}
+<g filter="url(#${id}x)">
+${wings}${tail}${crown}${crownGem}
+<path d="${OUT}" fill="${m}" stroke="${M[3]}" stroke-width="1.6" stroke-linejoin="round"/>
+<path d="M${CX} 26 C136 42 164 42 190 15 C184 32 172 40 170 58 C169 76 184 82 183 106 C182 142 142 160 ${CX} 198 Z" fill="#000" opacity=".13"/>
+<path d="${BEV}" fill="url(#${id}r)" stroke="${M[3]}" stroke-width="1"/>
+<path d="${FACE}" fill="url(#${id}f)" stroke="${M[0]}" stroke-opacity=".6" stroke-width="1"/>
+<g clip-path="url(#${id}c)"><path d="M0 0 H240 V70 Q120 52 0 84 Z" fill="#fff" opacity=".13"/></g>
+<g filter="url(#${id}s)"><g transform="translate(120 94) scale(1.28) translate(-120 -94)">${emb ? emb(M, M[3], 94, id, c) : emblem(ti, M, id)}</g></g>
+${hornGems}
+${stars == null ? "" : ribbon + starRow}
+</g>
+</svg>`;
+}
+
+    return crestSVG;
+  })();
   function badge(ti,stars,px){
-    var t=TIERS[ti],lv=TIERS.length-1-ti,c=t[2],lo=mix(c,"#000000",.55),M=BMETAL[lv],sh=BSHAPE[lv],id="gb"+(++BID),g="";
-    function sc(k){return ' transform="translate(50 46) scale('+k+') translate(-50 -46)"'}
-    var defs='<defs><linearGradient id="'+id+'m" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="'+M[0]+'"/><stop offset=".45" stop-color="'+M[1]+'"/><stop offset=".7" stop-color="'+M[2]+'"/><stop offset="1" stop-color="'+M[1]+'"/></linearGradient>'
-      +'<linearGradient id="'+id+'e" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="'+mix(c,"#ffffff",.38)+'"/><stop offset=".55" stop-color="'+c+'"/><stop offset="1" stop-color="'+mix(c,"#000000",.32)+'"/></linearGradient>'
-      +'<clipPath id="'+id+'c"><path d="'+sh+'"'+sc(.8)+'/></clipPath></defs>';
-    g+='<path d="'+sh+'" fill="url(#'+id+'m)" stroke="'+M[2]+'" stroke-width="1.4" stroke-linejoin="round"/>';
-    g+='<path d="'+sh+'" fill="none" stroke="#fff" stroke-opacity=".55" stroke-width="1"'+sc(.93)+'/>';
-    g+='<path d="'+sh+'" fill="'+lo+'"'+sc(.85)+'/>';
-    g+='<path d="'+sh+'" fill="url(#'+id+'e)"'+sc(.8)+'/>';
-    var em="",ws='fill="#fff" stroke="'+lo+'" stroke-width="1.2" stroke-linejoin="round"';
-    if(lv===0)em='<path d="M40 52L50 41L60 52" fill="none" stroke="#fff" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/>';
-    else if(lv===1)em='<path d="M40 48L50 38L60 48M40 57L50 47L60 57" fill="none" stroke="#fff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>';
-    else if(lv===2)em='<path d="M54 29L39 49H49L45 63L61 42H51Z" '+ws+'/>';
-    else if(lv===3)em='<path d="'+starP(5,15,6.5,50,47)+'" '+ws+'/>';
-    else if(lv===4)em='<path d="M41 37H59L66 45L50 62L34 45Z" '+ws+'/><path d="M34 45H66M44 37L41 45L50 62L59 45L56 37" fill="none" stroke="'+lo+'" stroke-width="1" stroke-linejoin="round"/>';
-    else if(lv===5)em='<path d="M35 56L33 39L42 46L50 34L58 46L67 39L65 56Z" '+ws+'/><path d="M36 60H64" stroke="#fff" stroke-width="3.2" stroke-linecap="round"/>';
-    else em='<path d="'+starP(8,17,7.5,50,46)+'" '+ws+'/><circle cx="50" cy="46" r="4.2" fill="'+c+'" stroke="'+lo+'" stroke-width="1"/>';
-    g+=em;
-    g+='<g clip-path="url(#'+id+'c)"><path d="M0 0H100V40Q50 30 0 46Z" fill="#fff" opacity=".22"/></g>';
-    if(stars!=null){for(var s=0;s<5;s++)g+='<path d="'+starP(5,5,2.2,28+s*11,94)+'" fill="'+(s<stars?"#ffd60a":"#8b8d98")+'" opacity="'+(s<stars?1:.45)+'"/>'}
-    var vh=stars!=null?96:86,h=Math.round(px*vh/100);
+    var lv=TIERS.length-1-ti,w=Math.round(px*1.35);
     var e=document.createElement("span");e.className="tb";
-    e.innerHTML='<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 4 100 '+vh+'" width="'+px+'" height="'+h+'" role="img" aria-label="'+t[1]+' badge'+(stars!=null?", "+stars+" of 5 stars":"")+'">'+defs+g+'</svg>';
+    e.innerHTML=GZ_CREST(lv,stars==null?null:stars,w);
     return e;
   }
   function trainerCard(p,big){
@@ -1648,7 +1877,7 @@ button.gear svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-widt
   $("dkSet").addEventListener("click",function(){view("Acct");window.scrollTo(0,0)});
 
   // ---- updates and notices ----
-  var APP_VER="2026.10.08b";
+  var APP_VER="2026.10.08c";
   var CHANGES=[
     {ts:Date.UTC(2026,9,8,12),ti:"GroundZ refresh: profiles, results and decklists",b:"Tap your name at the top to open your profile; the gear icon has your display name and picture. Match reports show what both players reported, and a misclick can be fixed until the next round as long as your opponent confirms it. Tournament times are in UAE time (GMT+4). Decklists have a list view with card previews and a full-screen grid on phones, the Swiss calculator shows Championship Points, and deck prices now total correctly."},
     {ts:Date.UTC(2026,9,8),ti:"Profiles, confirmed results and TOM-accurate Swiss",b:"Tap any player to see their profile, trainer badge, saved decks and GroundZ tournament data. In Swiss rounds you now report your own result and your opponent confirms it. Pairings and tiebreakers follow Play! Pokémon rules, and the Swiss calculator covers League Challenge, League Cup and Regional structures."}
