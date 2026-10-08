@@ -522,6 +522,42 @@ body.gzbuild .bpanel{top:calc(env(safe-area-inset-top,0px) + 66px);max-height:ca
 .inq{flex:none;font-size:.68rem;font-weight:700;color:var(--accent);white-space:nowrap}
 .inq:empty{display:none}
 .bdh{display:flex;justify-content:space-between;align-items:baseline}
+
+/* match history v16 */
+.mhseg{margin:4px 0 0}
+.mhft{margin:8px 0 12px;font-size:1.02rem}
+.mhprev{display:flex;align-items:center;gap:10px;margin-top:10px}.mhprev:empty{display:none}.mhprev .foot{margin:0}
+.mhrh{display:flex;justify-content:space-between;align-items:center;gap:8px;margin:18px 0 8px;border-top:1px solid var(--line);padding-top:14px}
+.mhrh h4{margin:0;font-size:.95rem}.mhrh button{padding:7px 14px;font-size:.86rem}
+.mhr{display:grid;grid-template-columns:30px 1fr 1fr 1fr 34px auto 34px;gap:8px;align-items:center;margin-bottom:8px}
+.mhr input{padding:9px 11px;font-size:.92rem}
+.mhrn{font:600 .78rem/1 var(--font);color:var(--muted)}
+.mhric{display:flex;justify-content:center}
+.mhres{display:flex;gap:4px}.mhres button{padding:6px 10px;font-size:.82rem;min-width:34px}
+.mhrx{padding:6px 8px;border:0;color:var(--muted)}
+@media(max-width:700px){.mhr{grid-template-columns:30px 1fr 1fr 34px;padding:10px 0;border-bottom:1px solid var(--line)}.mhr>input:nth-of-type(1){grid-column:2/4}.mhr>input:nth-of-type(2){grid-column:2/3}.mhr>input:nth-of-type(3){grid-column:3/4}.mhric{grid-column:4;grid-row:2}.mhres{grid-column:2/4}.mhrx{grid-column:4;grid-row:1}}
+.mhl li.mhi{display:grid;grid-template-columns:auto 1fr auto;gap:12px;align-items:start;padding:14px 0}
+.mhl li.mhi.noic{grid-template-columns:1fr auto}
+.mhis{margin-top:2px}
+.mhb{min-width:0}
+.mhh{display:flex;flex-wrap:wrap;align-items:center;gap:6px}.mhh b{font-size:1rem}
+.mhc{margin:0;font-weight:600}
+.mhc-online{color:var(--accent)}.mhc-regs,.mhc-ics{color:var(--up)}.mhc-worlds{color:var(--gold)}.mhc-cup{color:var(--down)}
+.mhsub{font-size:.84rem;color:var(--muted);margin-top:2px}
+.mhrec{color:var(--ink);font-weight:500;margin-top:6px}
+.mhpl{font-size:.88rem;margin-top:2px;color:var(--muted)}.mhpl b{color:var(--ink);font-weight:700}
+.mhpl.mhp1 b{color:var(--gold)}.mhpl.mhp2 b{color:#8e9aa6}.mhpl.mhp3 b{color:#b06d3b}.mhpn{font-style:italic;opacity:.75}
+.mha{display:flex;flex-direction:column;gap:4px}.mha button.rm{margin:0;padding:6px 12px;font-size:.84rem}
+.mhrd{margin-top:8px}.mhrd summary,.mhmu summary{cursor:pointer;font-size:.86rem;color:var(--accent)}
+.mhro{list-style:none;margin:8px 0 0;padding:0}
+.mhro li{display:grid;grid-template-columns:30px 1fr auto;gap:8px;align-items:center;padding:6px 0;border:0}
+.mhro-m{display:flex;flex-wrap:wrap;align-items:center;gap:6px;color:var(--ink)}.mhro-m .mhsub{margin:0}
+.mhmu{margin:0 0 10px}
+.mhmul{list-style:none;margin:8px 0 0;padding:0}
+.mhmul li{display:grid;grid-template-columns:auto 1fr auto 48px;gap:10px;align-items:center;padding:7px 0;border-bottom:1px solid var(--line);font-size:.9rem}
+.mhmul li .spr+.mhmn{}.mhmul li:not(:has(.spr)){grid-template-columns:1fr auto 48px}
+@media(max-width:560px){.mhl li.mhi{grid-template-columns:auto 1fr}.mhl li.mhi.noic{grid-template-columns:1fr}.mha{grid-column:1/-1;flex-direction:row;justify-content:flex-end}.mhro li{grid-template-columns:24px 1fr auto}}
+.mhmr{color:var(--muted)}.mhup{color:var(--up);text-align:right}.mhdn{color:var(--down);text-align:right}
 </style>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%22558 -8 210 156%22%3E%3Cg transform=%22skewX%28-21%29%22%3E%3Cpath fill=%22#e10600%22 d=%22M598 17L603 19L608 22L614 26L619 26L624 30L629 28L634 29L639 30L644 26L649 29L654 25L659 27L664 28L667 27L671 32L676 29L681 32L686 31L691 28L696 29L701 24L706 26L711 25L716 24L721 26L726 23L731 25L736 22L741 22L746 22L752 20L752 4L748 1L743 1L738 -0L733 -3L728 -2L723 -6L718 -4L713 -5L708 -7L703 -5L698 -11L693 -10L688 -13L683 -16L678 -13L673 -16L667 -12L661 -12L655 -10L650 -7L645 -10L641 -6L635 -9L630 -7L626 -5L620 -6L616 -1L611 0L607 6L602 9L597 13ZM598 17L602 11L607 8L612 6L616 1L621 1L626 -0L631 0L636 -3L641 -2L646 -1L651 -3L656 -2L661 -3L667 -2L673 -5L678 -4L683 -3L688 -3L693 -2L698 -1L702 2L708 -1L712 1L717 2L722 2L727 3L732 4L737 5L742 3L747 3L752 4L752 3L748 1L743 -1L738 -2L733 -2L728 -4L723 -3L718 -2L713 -5L708 -6L703 -8L698 -8L693 -11L688 -10L683 -10L678 -12L673 -13L667 -14L661 -12L655 -14L650 -11L645 -9L640 -8L635 -7L630 -7L626 -5L620 -8L615 -6L611 -2L606 2L602 6L597 9ZM598 17L602 14L607 13L612 10L617 9L622 7L627 8L632 5L637 7L642 7L647 8L652 4L657 5L662 3L667 5L672 3L677 4L682 3L687 3L692 2L697 5L702 6L707 6L712 6L717 7L722 9L727 9L732 11L737 10L742 12L747 10L752 13L757 13L762 16L767 13L772 14L777 12L782 12L787 11L787 9L782 8L777 8L772 5L767 4L763 1L757 2L753 -0L747 2L743 -0L738 1L733 -2L728 -1L723 -0L717 1L713 -1L708 -2L703 -3L698 -4L693 -4L688 -4L683 -3L678 -7L673 -7L667 -7L661 -4L656 -6L651 -5L645 -7L641 -5L635 -6L631 -3L626 -3L621 -1L616 -3L611 1L606 4L602 8L597 11ZM598 18L603 20L608 17L613 17L618 14L623 14L628 14L633 14L638 15L642 12L647 12L652 9L657 12L662 9L667 11L672 9L677 9L682 8L687 9L692 10L697 11L702 11L707 10L712 12L717 11L722 15L727 14L732 16L737 13L742 15L747 15L752 17L757 16L762 14L767 13L772 12L772 11L767 9L762 7L757 5L752 3L747 5L742 4L737 5L732 2L727 4L722 1L717 5L712 3L707 4L702 2L697 2L692 1L687 2L682 2L677 1L672 1L667 -2L662 1L656 -0L651 3L646 0L641 2L636 0L631 1L626 2L621 4L616 5L611 4L607 6L602 6L597 10ZM598 22L603 20L608 20L613 19L618 20L623 18L628 19L633 18L638 17L643 16L648 15L653 16L658 16L663 16L667 16L672 18L677 17L682 17L687 16L692 18L697 17L702 18L707 17L712 18L717 15L722 16L727 15L732 18L737 16L742 19L747 17L752 19L757 16L762 17L767 16L772 16L777 14L777 14L772 12L767 12L762 10L757 11L752 8L747 10L742 8L737 10L732 9L727 11L722 9L717 10L712 7L707 8L702 6L697 7L692 6L687 8L682 6L677 7L672 5L667 6L662 6L657 8L652 9L647 10L642 10L637 10L632 10L627 10L622 11L617 11L612 12L607 10L602 10L597 8ZM598 19L603 23L608 23L614 28L619 28L624 29L629 26L634 26L639 25L644 27L649 25L654 23L658 21L663 22L667 23L671 23L676 22L681 20L686 22L691 21L696 23L701 21L706 23L712 20L716 23L721 22L726 26L731 23L736 24L742 21L746 25L751 22L757 21L762 18L767 18L767 16L762 14L757 12L752 12L747 9L742 12L737 10L732 12L727 10L722 12L717 11L712 15L707 12L702 13L697 11L692 14L687 14L682 14L677 12L672 12L667 12L662 12L658 12L652 12L647 12L642 11L637 13L633 14L628 16L623 14L618 15L612 13L608 15L602 12L597 12ZM598 20L603 21L609 26L614 30L619 30L624 30L629 30L634 29L639 30L644 30L649 30L654 28L659 29L664 32L667 29L671 30L676 30L681 26L686 28L691 29L696 27L701 27L706 26L711 26L716 26L721 26L726 25L731 22L737 21L742 21L742 20L737 20L732 19L727 19L722 21L717 18L712 21L706 23L702 19L697 20L691 20L687 19L681 20L676 20L672 20L667 19L663 19L659 22L653 20L648 20L643 22L638 19L633 22L629 25L623 23L619 24L613 22L608 18L603 17L597 13ZM725 5L718 7L712 9L704 9L697 11L690 12L686 17L680 19L679 26L673 29L671 36L664 37L662 43L654 44L653 51L646 53L646 62L640 65L639 72L632 73L630 79L623 81L622 88L616 91L616 99L610 102L607 107L601 110L598 115L593 118L590 124L586 129L604 146L608 142L614 139L617 134L623 130L625 124L630 121L633 116L640 115L643 109L651 108L652 101L658 99L659 91L667 90L669 84L677 84L679 78L686 77L687 70L693 67L695 60L702 59L705 54L712 52L715 46L719 43L721 36L723 29L724 22L726 15L728 8ZM724 4L721 10L720 18L719 25L717 32L714 37L709 41L704 44L701 49L697 53L690 55L686 59L682 64L677 67L674 73L670 77L664 79L661 84L658 90L652 92L648 97L644 101L637 103L635 109L632 115L625 117L621 121L617 125L612 128L609 134L605 139L600 142L601 143L607 140L612 136L617 134L623 131L627 126L631 122L635 117L639 113L645 111L650 107L653 102L659 99L664 96L669 92L674 89L678 84L680 78L685 76L690 72L692 66L697 62L701 58L704 53L710 51L715 47L717 40L722 37L725 31L726 23L730 19L732 12ZM722 2L720 9L717 14L714 20L711 26L706 29L703 34L696 36L694 42L689 46L686 51L682 55L678 60L674 65L668 66L665 72L660 75L657 80L652 84L649 90L645 94L639 96L635 101L629 104L626 109L620 112L618 117L614 122L609 125L605 130L600 133L596 138L590 141L588 147L584 152L581 156L577 161L577 161L582 158L588 155L592 151L598 149L602 143L608 141L610 135L615 132L620 128L625 125L631 122L635 117L641 115L643 109L648 105L651 100L656 96L659 91L663 87L669 84L671 77L675 74L678 69L683 65L687 60L692 57L698 55L702 50L707 47L710 42L716 39L718 33L722 28L725 23L728 17L732 13ZM724 4L721 10L715 13L711 17L708 22L702 25L699 30L694 33L689 37L685 42L681 45L679 52L674 55L669 59L666 64L660 67L658 73L654 77L648 80L644 85L639 88L636 93L632 98L626 101L622 105L617 108L614 113L611 119L605 122L602 127L597 130L593 135L591 141L585 144L582 150L578 153L574 158L571 163L572 164L577 161L582 157L586 153L591 150L594 144L600 142L605 138L608 133L613 130L617 125L622 121L627 118L630 113L635 109L638 104L642 100L648 97L650 91L655 87L658 81L661 77L667 74L671 70L676 66L679 61L683 57L690 55L693 50L698 47L702 42L705 36L711 34L715 29L719 25L722 20L724 13L730 10ZM723 3L719 7L712 9L707 13L704 18L699 22L695 26L692 31L687 34L682 38L679 44L675 48L670 52L666 56L662 60L656 63L652 68L649 73L643 76L639 80L635 84L630 88L626 92L624 98L619 102L614 105L610 110L607 115L603 119L600 125L596 130L591 133L587 138L585 144L581 148L577 153L578 154L583 150L587 146L592 143L597 139L600 133L604 129L610 126L613 122L618 118L623 114L626 109L629 104L635 101L639 97L642 91L647 87L650 82L653 77L658 74L663 70L666 65L670 61L675 57L679 52L684 49L689 46L693 41L697 36L702 33L707 29L711 25L717 22L721 19L724 13L729 10ZM723 3L718 7L712 9L707 12L702 16L696 19L692 22L688 27L683 31L679 35L675 39L670 42L665 46L660 49L655 53L652 59L647 62L642 67L639 71L633 74L631 80L628 86L623 90L620 95L617 100L611 103L608 108L605 114L600 117L597 123L593 127L587 130L585 135L581 140L577 144L574 150L570 155L566 159L564 165L565 166L570 162L574 158L578 153L583 150L586 145L590 141L595 137L597 131L601 126L605 122L609 117L614 113L618 109L621 104L625 100L629 95L633 90L638 87L642 82L645 78L650 74L653 69L657 64L664 62L667 57L672 53L677 50L679 44L684 40L690 37L692 32L697 28L702 24L704 18L710 16L717 15L722 11L729 9ZM721 1L716 4L709 6L702 7L696 9L693 15L687 18L683 21L681 28L675 31L670 34L668 40L662 43L656 45L652 50L647 54L643 59L640 64L636 68L632 73L627 77L623 81L621 87L616 91L612 95L610 102L605 105L600 108L597 114L592 118L587 121L584 127L581 132L578 137L575 143L572 148L569 154L566 159L566 159L570 155L574 150L579 147L583 142L587 138L593 135L597 131L600 125L604 121L608 116L610 110L614 106L618 101L623 97L626 92L629 86L634 83L636 77L640 72L647 71L651 66L654 61L661 60L665 55L668 49L673 46L677 41L680 36L685 32L689 28L694 25L697 19L700 14L708 14L714 11L721 9L729 10ZM594 130L600 132L605 137L611 139L617 146L622 144L628 148L633 145L638 148L643 144L649 145L654 142L659 143L663 143L667 143L672 145L677 143L682 145L688 141L693 144L699 139L704 142L709 139L714 143L720 141L725 145L730 143L735 144L741 142L746 142L751 142L757 142L759 120L753 118L748 117L743 116L738 113L733 114L727 111L722 114L717 111L711 114L706 110L701 113L696 107L690 109L686 104L680 105L675 102L669 103L662 103L656 104L651 105L645 104L640 106L635 103L630 106L624 103L619 109L614 107L609 116L604 118L599 123L594 126ZM594 130L599 128L604 124L609 120L614 116L620 118L625 116L630 115L636 114L641 116L646 114L651 113L657 111L663 113L669 111L674 112L680 112L685 116L690 114L695 114L701 113L706 117L711 115L716 116L722 116L727 120L732 119L737 121L743 120L748 124L753 122L758 123L764 123L769 125L769 123L764 121L759 118L753 119L748 116L743 115L738 111L733 113L727 111L722 111L717 109L712 111L706 108L701 107L696 103L691 105L686 104L680 103L675 101L669 104L662 102L656 103L650 101L645 104L640 104L635 105L630 105L625 109L619 110L614 110L609 112L604 117L599 119L594 123ZM594 132L600 131L605 126L610 124L615 123L620 122L626 125L631 124L636 122L642 124L647 121L652 121L657 123L663 121L668 122L674 121L679 120L684 121L690 120L695 123L700 123L705 122L710 125L716 123L721 124L726 128L731 128L737 130L742 132L747 130L752 131L758 130L763 132L768 134L774 132L779 133L784 131L790 130L795 131L795 130L790 128L785 126L780 124L774 122L769 119L764 121L759 120L754 117L748 118L743 115L738 113L732 115L727 113L722 115L717 115L711 113L706 113L701 111L695 112L690 113L685 111L680 113L674 110L669 106L663 108L656 107L651 108L646 110L640 108L635 110L630 109L625 110L620 113L614 113L609 117L604 119L599 119L594 123ZM595 136L600 132L605 133L610 130L616 132L621 129L626 130L631 127L637 128L642 125L647 127L652 125L658 126L663 122L668 125L673 124L678 127L684 126L689 130L694 127L699 130L705 128L710 132L715 131L720 134L726 131L731 133L736 131L742 134L747 132L752 133L758 130L763 130L763 128L758 127L753 124L748 123L743 120L737 123L732 119L727 120L722 116L716 118L711 116L706 119L700 116L695 118L690 115L685 116L679 115L674 118L669 116L663 117L657 115L652 117L646 115L641 119L636 117L631 119L625 116L620 117L614 116L609 120L604 119L599 122L594 120ZM595 133L600 134L605 131L610 133L616 132L621 134L626 132L632 132L637 130L642 132L647 131L653 133L658 131L663 131L668 130L673 132L678 132L683 135L688 133L694 134L699 133L704 135L710 135L715 137L720 136L725 136L731 134L736 136L741 136L747 137L752 136L757 135L763 134L768 134L773 134L773 133L768 132L763 131L758 129L753 128L747 126L742 127L737 126L731 127L726 125L721 125L716 123L710 124L705 123L700 124L695 122L689 122L684 120L679 122L674 121L668 122L663 121L657 122L652 121L647 123L642 123L636 126L631 124L626 125L620 124L615 126L610 125L605 127L599 124L594 124ZM595 135L600 137L605 136L611 138L616 142L622 140L627 139L632 141L637 138L643 139L648 142L653 139L659 139L663 139L667 137L672 139L677 143L683 140L688 139L693 141L699 138L704 140L709 141L715 138L720 137L725 139L731 138L736 141L741 143L746 141L752 141L757 144L762 142L767 142L773 141L778 138L784 137L784 136L779 134L774 132L768 131L763 129L758 129L752 131L747 129L742 127L737 129L731 130L726 130L720 132L715 130L710 128L705 130L699 130L694 129L689 130L684 126L679 124L673 126L668 125L663 125L658 127L652 126L647 126L642 130L637 131L631 130L626 132L621 130L615 129L610 131L605 128L599 125L594 124ZM595 134L600 138L606 139L611 144L617 147L622 145L627 146L633 147L638 148L643 147L649 145L654 145L659 143L663 141L667 144L672 144L677 141L682 143L688 143L693 142L698 145L703 146L709 144L714 144L720 143L725 144L730 144L735 144L741 146L746 145L751 143L757 145L762 146L767 144L772 145L778 143L783 140L789 140L789 139L784 138L779 136L773 135L768 134L763 133L757 134L752 134L747 134L742 131L736 132L731 135L726 134L720 134L715 138L710 135L704 134L699 138L693 137L688 136L683 136L678 134L673 132L668 132L663 132L658 135L653 133L648 133L643 136L637 134L632 134L627 138L621 136L616 135L611 134L605 131L599 128L594 126Z%22/%3E%3C/g%3E%3C/svg%3E">
 <script>(function(){var t=null;try{t=localStorage.getItem("tg-theme");}catch(e){}if(t!=="light"&&t!=="dark"){t=window.matchMedia&&matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light";}document.documentElement.setAttribute("data-theme",t);})();</script>
@@ -1971,7 +2007,7 @@ ${stars == null ? "" : ribbon + starRow}
   $("dkSet").addEventListener("click",function(){view("Acct");window.scrollTo(0,0)});
 
   // ---- updates and notices ----
-  var APP_VER="2026.10.08f";
+  var APP_VER="2026.10.09a";
   var CHANGES=[
     {ts:Date.UTC(2026,9,8,15),ti:"Deck builder upgrade",b:"Search and browse cards while your deck stays on screen, on PC and phone."},
     {ts:Date.UTC(2026,9,8,14),ti:"New logo and TCG Live names",b:"GroundZ has a new look. Add your TCG Live username in profile settings."},
@@ -2725,23 +2761,153 @@ ${stars == null ? "" : ribbon + starRow}
     N.textContent="Structure from the Play! Pokémon Tournament Rules Handbook for the TCG: "+TOMV[v].n+" ("+TOMV[v].d+"). Match points: win 3, tie 1, loss 0, and a bye counts as a win. Ties in the standings are broken by Opponents' Win % (25% minimum), then Opponents' Opponents' Win %, then head-to-head. Expected player counts assume every match is a coin flip with no ties, so real events will differ. GroundZ's weekly tournament uses the League Challenge structure.";
   }
   ["swN","swF"].forEach(function(i){$(i).addEventListener("input",renderCalc);$(i).addEventListener("change",renderCalc)});
+  // ---- Match history: categories, deck sprites, rounds & matchups, placement ----
+  var MH_CATS=[["Online","Online"],["Locals","Locals"],["Challenges","League Challenge"],["Cup","League Cup"],["Regs","Regionals"],["ICs","International Championships"],["Worlds","World Championships"]];
+  var MHF="All",MHE=null,MHR=[],MHpid=null;
+  function mhShow(){try{return localStorage.getItem("tg-mhspr")!=="0"}catch(e){return true}}
+  function mhKeys(v){var o=[],bad="";[].concat(v).map(function(x){return String(x||"").trim()}).filter(Boolean).forEach(function(x){var k=PKByName[x.toLowerCase()];if(k){if(o.indexOf(k)<0)o.push(k)}else bad=bad||x});return{k:o,bad:bad}}
+  function mhNm(k){var i=PKL.indexOf(k);return i<0?"":PKN[i]}
+  function mhIcon(name,keys){
+    name=name||"";if(!name&&!(keys&&keys.length))return null;
+    if(keys&&keys.length)return sprite({name:name||"Deck",s:keys,color:hue(name||keys[0])},true);
+    var d=byName(S.decks,name);if(d)return sprite(d,true);
+    return sprite({name:name,s:autoSprites(name),color:hue(name)},true);
+  }
+  function mhRec(h){var R=h.r||[];if(!R.length)return{w:h.w||0,l:h.l||0,t:h.t||0};var o={w:0,l:0,t:0};R.forEach(function(x){if(x.res==="W")o.w++;else if(x.res==="L")o.l++;else if(x.res==="T")o.t++});return o}
+  function mhOrd(n){var s=["th","st","nd","rd"],v=n%100;return n+(s[(v-20)%10]||s[v]||s[0])}
+  function mhDecks(p){var a=[],seen={};S.decks.map(function(d){return d.name}).concat((p.vault||[]).map(function(v){return v.n})).forEach(function(n){if(n&&!seen[n.toLowerCase()]){seen[n.toLowerCase()]=1;a.push(n)}});return a}
   function renderMH(){
-    var b=$("mhBody"),p=me()?myP():null;b.innerHTML="";
-    if(!p){b.appendChild(el("p","Sign in to record the tournaments you play in.","foot"));return}
-    var H=p.mh=p.mh||[],f=el("div");
-    f.innerHTML='<div class="grid"><div><label for="mEv">Tournament</label><input id="mEv" maxlength="40" placeholder="e.g. Weekly free tournament"></div><div><label for="mDt">Date</label><input id="mDt" type="date"></div></div><div class="grid" style="margin-top:12px"><div><label for="mW">Wins</label><input id="mW" type="number" min="0" max="30" value="0"></div><div><label for="mL">Losses</label><input id="mL" type="number" min="0" max="30" value="0"></div></div><div class="grid" style="margin-top:12px"><div><label for="mT">Ties</label><input id="mT" type="number" min="0" max="30" value="0"></div><div><label for="mP">Placement (optional)</label><input id="mP" type="number" min="1" max="1024"></div></div><div style="margin-top:12px"><label for="mD">Deck played (optional)</label><input id="mD" maxlength="24"></div><div class="actions"><button id="mAdd" type="button">Add tournament</button></div><p class="status" id="mMsg" role="status" aria-live="polite"></p>';
-    var tw=0,tl=0,tt=0,best=0;H.forEach(function(h){tw+=h.w;tl+=h.l;tt+=h.t;if(h.p&&(!best||h.p<best))best=h.p});
-    var tl2=el("div",null,"tiles");tl2.style.marginBottom="16px";
-    [[H.length,"Tournaments"],[tw+"–"+tl+(tt?"–"+tt:""),"Match record"],[tw+tl+tt?Math.round(100*tw/(tw+tl+tt))+"%":"–","Win rate"],[best?"#"+best:"–","Best finish"]].forEach(function(x){tl2.appendChild(tile(String(x[0]),x[1]))});
-    b.appendChild(tl2);b.appendChild(f);
-    var ul=el("ul",null,"log");ul.style.marginTop="16px";if(!H.length)ul.appendChild(el("li","No tournaments recorded yet."));
-    H.slice().reverse().forEach(function(h){var li=el("li",null,"rr");li.appendChild(el("span",h.ev+" · "+(h.d||"no date")+" · "+h.w+"–"+h.l+(h.t?"–"+h.t:"")+(h.p?" · #"+h.p:"")+(h.dk?" · "+h.dk:"")));var x=el("button","Delete","ghost rm");x.type="button";x.setAttribute("aria-label","Delete "+h.ev);x.onclick=function(){H.splice(H.indexOf(h),1);save();renderMH()};li.appendChild(x);ul.appendChild(li)});
-    b.appendChild(ul);
-    $("mAdd").onclick=function(){
-      var ev=clean($("mEv").value),m=$("mMsg");if(!ev){m.textContent="Add a tournament name.";return}
-      var w=Math.max(0,+$("mW").value||0),l=Math.max(0,+$("mL").value||0),t=Math.max(0,+$("mT").value||0);
-      H.push({ev:ev,d:$("mDt").value,w:w,l:l,t:t,p:+$("mP").value||0,dk:clean($("mD").value)});if(H.length>200)H.shift();save();renderMH();
-    };
+    var b=$("mhBody"),p=me()?myP():null;
+    if(!p){b.innerHTML="";MHpid=null;b.appendChild(el("p","Sign in to record the tournaments you play in.","foot"));return}
+    var H=p.mh=p.mh||[];
+    if(MHpid!==p.id||!$("mhForm")){MHpid=p.id;MHE=null;MHR=[];b.innerHTML="";b.appendChild(el("div",null,"mhtop")).id="mhTop";mhBuildForm(b);var L=el("div");L.id="mhList";b.appendChild(L)}
+    mhDeckList(p);mhTop(H);mhList(H);
+  }
+  function mhDeckList(p){var dl=$("mhDl");if(!dl)return;dl.innerHTML="";mhDecks(p).forEach(function(n){var o=document.createElement("option");o.value=n;dl.appendChild(o)})}
+  function mhTop(H){
+    var T=$("mhTop");T.innerHTML="";
+    var seg=el("div",null,"cseg mhseg");seg.setAttribute("role","group");seg.setAttribute("aria-label","Filter by category");
+    [["All","All tournaments"]].concat(MH_CATS).forEach(function(c){var n=c[0]==="All"?H.length:H.filter(function(h){return h.cat===c[0]}).length;if(c[0]!=="All"&&!n&&MHF!==c[0])return;var bt=el("button",c[0]+(n?" · "+n:""));bt.type="button";bt.title=c[1];bt.setAttribute("aria-pressed",String(MHF===c[0]));bt.onclick=function(){MHF=c[0];renderMH()};seg.appendChild(bt)});
+    var F=H.filter(function(h){return MHF==="All"||h.cat===MHF}),tw=0,tl=0,tt=0,best=0;
+    F.forEach(function(h){var r=mhRec(h);tw+=r.w;tl+=r.l;tt+=r.t;if(h.p&&(!best||h.p<best))best=h.p});
+    var tl2=el("div",null,"tiles");tl2.style.margin="12px 0 16px";
+    [[F.length,MHF==="All"?"Tournaments":MHF+" events"],[tw+"–"+tl+(tt?"–"+tt:""),"Match record"],[tw+tl+tt?Math.round(100*tw/(tw+tl+tt))+"%":"–","Win rate"],[best?mhOrd(best):"–","Best finish"]].forEach(function(x){tl2.appendChild(tile(String(x[0]),x[1]))});
+    if(H.length)T.appendChild(seg);T.appendChild(tl2);
+    // matchup spread across recorded rounds
+    var M={};F.forEach(function(h){(h.r||[]).forEach(function(x){var k=(x.od||"Unknown deck").trim()||"Unknown deck",o=M[k.toLowerCase()]=M[k.toLowerCase()]||{n:k,s:x.os,w:0,l:0,t:0};if(!o.s||!o.s.length)o.s=x.os;if(x.res==="W")o.w++;else if(x.res==="L")o.l++;else if(x.res==="T")o.t++})});
+    var ks=Object.keys(M);
+    if(ks.length){
+      var d=el("details",null,"mhmu");d.appendChild(el("summary","Matchup spread · "+ks.length+" deck"+(ks.length===1?"":"s")));
+      var ul=el("ul",null,"mhmul");
+      ks.map(function(k){return M[k]}).sort(function(a,b){return(b.w+b.l+b.t)-(a.w+a.l+a.t)}).forEach(function(o){var n=o.w+o.l+o.t,li=el("li");var ic=mhShow()?mhIcon(o.n==="Unknown deck"?"":o.n,o.s):null;if(ic)li.appendChild(ic);li.appendChild(el("span",o.n,"mhmn"));li.appendChild(el("span",o.w+"–"+o.l+(o.t?"–"+o.t:""),"mhmr"));var pc=Math.round(100*o.w/n);li.appendChild(el("b",pc+"%",pc>=50?"mhup":"mhdn"));ul.appendChild(li)});
+      d.appendChild(ul);T.appendChild(d);
+    }
+  }
+  function mhBuildForm(b){
+    var f=el("div");f.id="mhForm";
+    var opts=MH_CATS.map(function(c){return'<option value="'+c[0]+'">'+c[0]+(c[1]!==c[0]?" ("+c[1]+")":"")+'</option>'}).join("");
+    f.innerHTML='<h3 id="mhFt" class="mhft">Record a tournament</h3>'+
+      '<div class="grid"><div><label for="mEv">Tournament</label><input id="mEv" maxlength="40" placeholder="e.g. Weekly free tournament"></div><div><label for="mCat">Category</label><select id="mCat">'+opts+'</select></div></div>'+
+      '<div class="grid" style="margin-top:12px"><div><label for="mDt">Date</label><input id="mDt" type="date"></div><div><label for="mD">Deck played</label><input id="mD" maxlength="24" list="mhDl" autocomplete="off" placeholder="e.g. Charizard Pidgeot"></div></div>'+
+      '<div class="grid" style="margin-top:12px"><div><label for="mS1">Deck sprite 1</label><input id="mS1" list="pkl" autocomplete="off" placeholder="Auto from deck name"></div><div><label for="mS2">Deck sprite 2 (optional)</label><input id="mS2" list="pkl" autocomplete="off" placeholder="e.g. Pidgeot"></div></div>'+
+      '<div class="mhprev" id="mhPrev" aria-live="polite"></div>'+
+      '<div class="mhrh"><h4>Rounds &amp; matchups <span class="foot">(optional)</span></h4><button id="mRAdd" type="button" class="ghost">+ Add round</button></div>'+
+      '<div id="mhRounds"></div>'+
+      '<div id="mhManual"><div class="grid" style="margin-top:12px"><div><label for="mW">Wins</label><input id="mW" type="number" min="0" max="30" value="0" inputmode="numeric"></div><div><label for="mL">Losses</label><input id="mL" type="number" min="0" max="30" value="0" inputmode="numeric"></div></div><div class="grid" style="margin-top:12px"><div><label for="mT">Ties</label><input id="mT" type="number" min="0" max="30" value="0" inputmode="numeric"></div><div></div></div></div>'+
+      '<p class="foot" id="mhAuto" hidden></p>'+
+      '<div class="grid" style="margin-top:12px"><div><label for="mP">Placement (optional)</label><input id="mP" type="number" min="1" max="4096" inputmode="numeric" placeholder="e.g. 3"></div><div><label for="mN">Players in event (optional)</label><input id="mN" type="number" min="2" max="8192" inputmode="numeric" placeholder="e.g. 24"></div></div>'+
+      '<label class="chk"><input id="mShow" type="checkbox"> Show deck sprites in my history</label>'+
+      '<div class="actions"><button id="mAdd" type="button">Add tournament</button><button id="mCancel" type="button" class="ghost" hidden>Cancel</button></div><p class="status" id="mMsg" role="status" aria-live="polite"></p>'+
+      '<datalist id="mhDl"></datalist>';
+    b.appendChild(f);
+    $("mCat").value="Locals";$("mShow").checked=mhShow();
+    $("mShow").onchange=function(){try{localStorage.setItem("tg-mhspr",this.checked?"1":"0")}catch(e){}renderMH()};
+    ["mD","mS1","mS2"].forEach(function(i){$(i).addEventListener("input",mhPrev)});
+    $("mRAdd").onclick=function(){MHR.push({o:"",od:"",os:[],res:""});mhRows();var r=$("mhRounds").querySelectorAll(".mhr");var x=r[r.length-1];if(x)x.querySelector("input").focus()};
+    $("mCancel").onclick=function(){mhReset();$("mMsg").textContent="Edit cancelled."};
+    $("mAdd").onclick=mhSave;
+    mhRows();mhPrev();
+  }
+  function mhPrev(){
+    var box=$("mhPrev");if(!box)return;box.innerHTML="";
+    var k=mhKeys([$("mS1").value,$("mS2").value]).k,n=clean($("mD").value);
+    var ic=mhIcon(n,k);if(!ic)return;box.appendChild(ic);
+    box.appendChild(el("span",k.length?"Sprites picked":(byName(S.decks,n)?"Using the league deck's sprites":autoSprites(n).length?"Sprites from the deck name":"No Pokémon found in the name, so a pixel icon is used"),"foot"));
+  }
+  function mhRows(){
+    var R=$("mhRounds");R.innerHTML="";
+    MHR.forEach(function(x,i){
+      var row=el("div",null,"mhr");
+      row.appendChild(el("span","R"+(i+1),"mhrn"));
+      function inp(ph,val,lbl,list,set){var e=document.createElement("input");e.placeholder=ph;e.value=val||"";e.maxLength=24;e.setAttribute("aria-label","Round "+(i+1)+" "+lbl);if(list){e.setAttribute("list",list);e.autocomplete="off"}e.oninput=function(){set(e.value);if(list==="mhDl"||list==="pkl")ic()};return e}
+      var sw=el("span",null,"mhric");
+      function ic(){sw.innerHTML="";var k=mhKeys([x.osIn||""]).k;var c=(x.od||k.length)?mhIcon(x.od,k):null;if(c)sw.appendChild(c)}
+      row.appendChild(inp("Opponent",x.o,"opponent",null,function(v){x.o=v}));
+      var od=inp("Their deck",x.od,"opponent deck","mhDl",function(v){x.od=v});row.appendChild(od);
+      x.osIn=x.osIn!=null?x.osIn:(x.os&&x.os[0]?mhNm(x.os[0]):"");
+      row.appendChild(inp("Sprite (auto)",x.osIn,"opponent deck sprite","pkl",function(v){x.osIn=v}));
+      row.appendChild(sw);ic();
+      var g=el("div",null,"rbtns mhres");g.setAttribute("role","group");g.setAttribute("aria-label","Round "+(i+1)+" result");
+      [["W","Win"],["L","Loss"],["T","Tie"]].forEach(function(r){var bt=el("button",r[0],"ghost");bt.type="button";bt.title=r[1];bt.setAttribute("aria-label",r[1]);bt.setAttribute("aria-pressed",String(x.res===r[0]));bt.onclick=function(){x.res=x.res===r[0]?"":r[0];mhRows()};g.appendChild(bt)});
+      row.appendChild(g);
+      var rm=el("button","✕","ghost mhrx");rm.type="button";rm.setAttribute("aria-label","Remove round "+(i+1));rm.onclick=function(){MHR.splice(i,1);mhRows()};row.appendChild(rm);
+      R.appendChild(row);
+    });
+    var on=MHR.length>0;$("mhManual").hidden=on;var a=$("mhAuto");a.hidden=!on;
+    if(on){var c={w:0,l:0,t:0};MHR.forEach(function(x){if(x.res)c[x.res.toLowerCase()]++});var miss=MHR.filter(function(x){return !x.res}).length;a.textContent="Record from rounds: "+c.w+"–"+c.l+(c.t?"–"+c.t:"")+" ("+(3*c.w+c.t)+" match pts)"+(miss?". "+miss+" round"+(miss===1?" has":"s have")+" no result yet.":".")}
+  }
+  function mhReset(){
+    MHE=null;MHR=[];["mEv","mDt","mD","mS1","mS2","mP","mN"].forEach(function(i){$(i).value=""});["mW","mL","mT"].forEach(function(i){$(i).value="0"});$("mCat").value="Locals";
+    $("mAdd").textContent="Add tournament";$("mCancel").hidden=true;$("mhFt").textContent="Record a tournament";mhRows();mhPrev();
+  }
+  function mhEdit(h){
+    MHE=h;$("mMsg").textContent="";$("mEv").value=h.ev||"";$("mCat").value=h.cat||"Locals";$("mDt").value=h.d||"";$("mD").value=h.dk||"";
+    $("mS1").value=h.s&&h.s[0]?mhNm(h.s[0]):"";$("mS2").value=h.s&&h.s[1]?mhNm(h.s[1]):"";
+    $("mW").value=h.w||0;$("mL").value=h.l||0;$("mT").value=h.t||0;$("mP").value=h.p||"";$("mN").value=h.n||"";
+    MHR=(h.r||[]).map(function(x){return{o:x.o||"",od:x.od||"",os:x.os||[],res:x.res||""}});
+    $("mAdd").textContent="Save changes";$("mCancel").hidden=false;$("mhFt").textContent="Edit "+h.ev;mhRows();mhPrev();
+    $("mhForm").scrollIntoView({behavior:"smooth",block:"start"});$("mEv").focus({preventScroll:true});
+  }
+  function mhSave(){
+    var p=myP(),m=$("mMsg");if(!p)return;var H=p.mh=p.mh||[];
+    var ev=clean($("mEv").value);if(!ev){m.textContent="Add a tournament name.";$("mEv").focus();return}
+    var sk=mhKeys([$("mS1").value,$("mS2").value]);if(sk.bad){m.textContent="I couldn't find a sprite called "+sk.bad+". Pick one from the suggestions.";return}
+    var R=[],bad="";MHR.forEach(function(x){var k=mhKeys([x.osIn||""]);if(k.bad)bad=k.bad;R.push({o:clean(x.o),od:clean(x.od),os:k.k,res:x.res||""})});
+    if(bad){m.textContent="I couldn't find a sprite called "+bad+" in your rounds. Pick one from the suggestions.";return}
+    var pl=+$("mP").value||0,np=+$("mN").value||0;if(pl&&np&&pl>np){m.textContent="Placement can't be lower than the number of players.";return}
+    var rec=R.length?mhRec({r:R}):{w:Math.max(0,+$("mW").value||0),l:Math.max(0,+$("mL").value||0),t:Math.max(0,+$("mT").value||0)};
+    var dk=clean($("mD").value),o={ev:ev,cat:$("mCat").value,d:$("mDt").value,w:rec.w,l:rec.l,t:rec.t,p:pl,n:np,dk:dk,s:sk.k,r:R};
+    if(MHE&&H.indexOf(MHE)>=0){H[H.indexOf(MHE)]=o;m.textContent=ev+" updated."}else{H.push(o);if(H.length>200)H.shift();m.textContent=ev+" added to your history."}
+    MHE=null;save();mhReset();renderMH();
+  }
+  function mhList(H){
+    var L=$("mhList");L.innerHTML="";var show=mhShow();
+    var F=H.filter(function(h){return MHF==="All"||h.cat===MHF});
+    var ul=el("ul",null,"log mhl");ul.style.marginTop="16px";
+    if(!F.length)ul.appendChild(el("li",H.length?"No "+MHF+" tournaments recorded yet.":"No tournaments recorded yet."));
+    F.slice().sort(function(a,b){return String(b.d||"").localeCompare(String(a.d||""))||H.indexOf(b)-H.indexOf(a)}).forEach(function(h){
+      var li=el("li",null,"mhi"),r=mhRec(h);
+      var ic=show?mhIcon(h.dk,h.s):null;if(ic){ic.classList.add("mhis");li.appendChild(ic)}else li.classList.add("noic");
+      var bd=el("div",null,"mhb"),hd=el("div",null,"mhh");
+      hd.appendChild(el("b",h.ev));if(h.cat){var c=el("span",h.cat,"chip mhc mhc-"+h.cat.toLowerCase());var cf=MH_CATS.filter(function(x){return x[0]===h.cat})[0];if(cf)c.title=cf[1];hd.appendChild(c)}
+      bd.appendChild(hd);
+      bd.appendChild(el("div",[h.d||"No date",h.dk||""].filter(Boolean).join(" · "),"mhsub"));
+      bd.appendChild(el("div","Record "+r.w+"–"+r.l+(r.t?"–"+r.t:"")+" · "+(3*r.w+r.t)+" pts","mhrec"));
+      if(h.p){var pc=el("div",null,"mhpl"+(h.p<=3?" mhp"+h.p:""));pc.appendChild(el("span","Placed "));pc.appendChild(el("b",mhOrd(h.p)));if(h.n)pc.appendChild(el("span"," of "+h.n+" players"));bd.appendChild(pc)}
+      else bd.appendChild(el("div","Placement not recorded","mhpl mhpn"));
+      if(h.r&&h.r.length){
+        var dt=el("details",null,"mhrd");dt.appendChild(el("summary",h.r.length+" round"+(h.r.length===1?"":"s")+" · matchups"));
+        var ol=el("ol",null,"mhro");
+        h.r.forEach(function(x,i){var it=el("li");it.appendChild(el("span","R"+(i+1),"mhrn"));var w=el("span",null,"mhro-m");w.appendChild(el("span",x.o?"vs "+x.o:"vs —"));if(x.od||(x.os&&x.os.length)){var ic2=show?mhIcon(x.od,x.os):null;if(ic2)w.appendChild(ic2);if(x.od)w.appendChild(el("span",x.od,"mhsub"))}it.appendChild(w);it.appendChild(el("span",x.res||"–","rchip"+(x.res==="W"?" rw":x.res==="L"?" rl":x.res==="T"?" rt":" dim")));ol.appendChild(it)});
+        dt.appendChild(ol);bd.appendChild(dt);
+      }
+      li.appendChild(bd);
+      var act=el("div",null,"mha");
+      var e=el("button","Edit","ghost rm");e.type="button";e.setAttribute("aria-label","Edit "+h.ev);e.onclick=function(){mhEdit(h)};act.appendChild(e);
+      var x=el("button","Delete","ghost rm");x.type="button";x.setAttribute("aria-label","Delete "+h.ev);x.onclick=function(){H.splice(H.indexOf(h),1);if(MHE===h)mhReset();save();renderMH()};act.appendChild(x);
+      li.appendChild(act);ul.appendChild(li);
+    });
+    L.appendChild(ul);
   }
   var _rt=renderTools;renderTools=function(){_rt();renderMH()};
 
