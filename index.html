@@ -478,6 +478,23 @@ h1.logo .gzlogo{width:min(100%,720px);height:auto;margin:0 auto}
 .pro .tw{max-height:300px;overflow:auto;margin-top:6px}
 .pro .mx{font-size:.8rem;border-spacing:2px}
 .pro .mx th,.pro .mx td{padding:5px 8px}
+/* build mode: browse + deck on one screen */
+body.gzbuild .hero,body.gzbuild .ad{display:none}
+body.gzbuild main{padding-top:14px}
+body.gzbuild .cbrowser .csearch{position:sticky;top:calc(env(safe-area-inset-top,0px) + 60px);z-index:6;background:var(--panel);border-radius:999px;box-shadow:0 0 0 8px var(--panel)}
+body.gzbuild .bpanel{top:calc(env(safe-area-inset-top,0px) + 66px);max-height:calc(100vh - 82px)}
+@media(max-width:900px){
+  body.gzbuild .bpanel{height:44vh;max-height:none;top:auto}
+  body.gzbuild .bpanel.min{height:auto}
+  body.gzbuild .clay.building{padding-bottom:calc(44vh + 16px)}
+  body.gzbuild .clay.building:has(.bpanel.min){padding-bottom:76px}
+  body.gzbuild .cbrowser .csearch{top:calc(env(safe-area-inset-top,0px) + 54px)}
+  body.gzbuild .cgrid{grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+  body.gzbuild .ccap b{font-size:.7rem}body.gzbuild .ccap span,body.gzbuild .ccap .cmeta{display:none}
+  body.gzbuild .bpanel .foot{display:none}
+  body.gzbuild .bpanel h3{margin-top:8px}
+  body.gzbuild .bpanel .est{font-size:.78rem;padding:6px 10px;margin:6px 0}body.gzbuild .bpanel .est b{font-size:.9rem}
+}
 /* TCG Live name under player names */
 .nmw{display:flex;flex-direction:column;min-width:0;line-height:1.2}
 .ign{display:block;font-size:.74rem;font-weight:500;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;letter-spacing:0}
@@ -1266,7 +1283,7 @@ h1.logo .gzlogo{width:min(100%,720px);height:auto;margin:0 auto}
   function view(v){
     var ownPg=v==="Deck"&&!!CUR&&deckPid===CUR.pid;pvHide();
     ["Rank","Tour","Dash","Acct","Deck","Pro","Cards","Tools"].forEach(function(k){$("v"+k).hidden=k!==v;var tb=$("t"+k);if(tb)tb.setAttribute("aria-current",(k===v||(v==="Deck"&&k===(ownPg?"Acct":"Rank")))?"page":"false");});
-    if(v==="Tour") renderTour(); if(v==="Dash") renderDash(); if(v==="Acct") renderAcct(); if(v==="Deck") renderDeck(); if(v==="Pro") renderHub(); if(v==="Cards") renderCards(); if(v==="Tools") renderTools(); var ty=$("cTray"); if(ty) ty.hidden=v!=="Cards"||BUILD; renderAds();
+    if(v==="Tour") renderTour(); if(v==="Dash") renderDash(); if(v==="Acct") renderAcct(); if(v==="Deck") renderDeck(); if(v==="Pro") renderHub(); if(v==="Cards") renderCards(); if(v==="Tools") renderTools(); var ty=$("cTray"); if(ty) ty.hidden=v!=="Cards"||BUILD; document.body.classList.toggle("gzbuild",v==="Cards"&&BUILD); renderAds();
   }
   $("tRank").addEventListener("click",function(){view("Rank")});
   $("tTour").addEventListener("click",function(){view("Tour")});$("tCards").addEventListener("click",function(){view("Cards")});$("tTools").addEventListener("click",function(){view("Tools")});
@@ -1954,11 +1971,12 @@ ${stars == null ? "" : ribbon + starRow}
   $("dkSet").addEventListener("click",function(){view("Acct");window.scrollTo(0,0)});
 
   // ---- updates and notices ----
-  var APP_VER="2026.10.08e";
+  var APP_VER="2026.10.08f";
   var CHANGES=[
-    {ts:Date.UTC(2026,9,8,14),ti:"New GroundZ logo, TCG Live names and result checks",b:"Add your TCG Live username in profile settings: it shows under your name, or in place of it if you prefer. Tapping I won, Tie or I lost now asks you to confirm. Tournament pairings and standings show each player's deck, the power rankings show each player's most recent deck, and the deck builder keeps your deck in view while you search."},
-    {ts:Date.UTC(2026,9,8,12),ti:"GroundZ refresh: profiles, results and decklists",b:"Tap your name at the top to open your profile; the gear icon has your display name and picture. Match reports show what both players reported, and a misclick can be fixed until the next round as long as your opponent confirms it. Tournament times are in UAE time (GMT+4). Decklists have a list view with card previews and a full-screen grid on phones, the Swiss calculator shows Championship Points, and deck prices now total correctly."},
-    {ts:Date.UTC(2026,9,8),ti:"Profiles, confirmed results and TOM-accurate Swiss",b:"Tap any player to see their profile, trainer badge, saved decks and GroundZ tournament data. In Swiss rounds you now report your own result and your opponent confirms it. Pairings and tiebreakers follow Play! Pokémon rules, and the Swiss calculator covers League Challenge, League Cup and Regional structures."}
+    {ts:Date.UTC(2026,9,8,15),ti:"Deck builder upgrade",b:"Search and browse cards while your deck stays on screen, on PC and phone."},
+    {ts:Date.UTC(2026,9,8,14),ti:"New logo and TCG Live names",b:"GroundZ has a new look. Add your TCG Live username in profile settings."},
+    {ts:Date.UTC(2026,9,8,12),ti:"Player profiles and match reporting",b:"Tap any player to see their profile. Report your own match results; your opponent confirms them."},
+    {ts:Date.UTC(2026,9,8),ti:"Official Swiss tournaments",b:"Weekly tournaments now follow Play! Pokémon Swiss pairing and tiebreaker rules."}
   ];
   function newsItems(){
     var A=(S.notices||[]).map(function(x){return{ts:x.ts,ti:x.ti,b:x.b,k:x.k||"n",id:x.id}});
@@ -2880,13 +2898,13 @@ ${stars == null ? "" : ribbon + starRow}
   function setBuild(on){
     BUILD=!!on;try{localStorage.setItem("tg-build",BUILD?"1":"0")}catch(e){}
     var lay=$("cLay"),pn=$("bPanel"),cb=$("cBuild"),ty=$("cTray");
-    lay.classList.toggle("building",BUILD);pn.hidden=!BUILD;
+    lay.classList.toggle("building",BUILD);pn.hidden=!BUILD;document.body.classList.toggle("gzbuild",BUILD&&!$("vCards").hidden);
     cb.setAttribute("aria-pressed","false");cb.textContent="Build a deck";cb.hidden=BUILD;
     if(ty)ty.hidden=$("vCards").hidden||BUILD;
     if(BUILD){buildPanel();paintList()}
   }
   function setMin(m){BMIN=!!m;try{localStorage.setItem("tg-build-min",BMIN?"1":"0")}catch(e){}var p=$("bPanel");p.classList.toggle("min",BMIN);var g=$("bGrab");if(g)g.setAttribute("aria-expanded",BMIN?"false":"true")}
-  function openDraft(){setBuild(true);if(window.matchMedia&&matchMedia("(max-width:900px)").matches)setMin(false)}
+  function openDraft(){setBuild(true);if(window.matchMedia&&matchMedia("(max-width:900px)").matches)setMin(false);var q=$("cQ");if(q)window.scrollTo({top:Math.max(0,q.getBoundingClientRect().top+window.pageYOffset-80)})}
   function closeDraft(){setBuild(false);trayUpd()}
   function saveDraft(){
     var d=D(),m=$("dMsg"),u=me();
@@ -2921,23 +2939,13 @@ ${stars == null ? "" : ribbon + starRow}
     var pn=$("bPanel");if(pn.dataset.b)return;pn.dataset.b="1";
     pn.innerHTML='<div class="bhd"><button class="bgrab" id="bGrab" type="button" aria-controls="bBody"><b>Deck builder</b> <span id="bCnt"></span> <em id="bNote" aria-live="polite"></em></button><button id="bDone" class="ghost rm" type="button">Done</button></div>'
       +'<div class="bbody" id="bBody">'
-      +'<label for="bQ">Add any card</label><div class="csearch"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg><input id="bQ" type="search" placeholder="Search, like Ultra Ball" autocomplete="off"></div>'
-      +'<div class="bres" id="bRes" aria-live="polite"></div><h3 class="bdh">Your deck</h3><p class="bsum" id="bSum"></p><div class="est" id="bEst"></div><div class="vseg" id="bView" role="group" aria-label="Draft view"><button type="button" data-v="list">List</button><button type="button" data-v="grid">Grid</button></div><div id="bList"></div>'
+            +'<h3 class="bdh">Your deck</h3><p class="bsum" id="bSum"></p><div class="est" id="bEst"></div><div class="vseg" id="bView" role="group" aria-label="Draft view"><button type="button" data-v="list">List</button><button type="button" data-v="grid">Grid</button></div><div id="bList"></div>'
       +'<p class="status" id="dMsg" role="status" aria-live="polite"></p>'
       +'<div class="actions"><button id="bSave" type="button">Save to My Decks</button><button id="bClr" type="button" class="ghost">Clear draft</button></div>'
-      +'<p class="foot">Tap + on any card in the grid, or search here: results stay above your deck and cards already in it are marked. Your draft saves as you go, so you can keep browsing and come back to it. Max 60 cards and 4 copies per name (basic energy is unlimited).</p></div>';
+      +'<p class="foot">Search and browse on the left (above on phones) and tap + to add a card. Your draft saves as you go, so you can keep browsing and come back to it. Max 60 cards and 4 copies per name (basic energy is unlimited).</p></div>';
     $("bGrab").onclick=function(){if(window.matchMedia&&matchMedia("(max-width:900px)").matches)setMin(!BMIN)};
     $("bDone").onclick=closeDraft;
-    var tm,qs=0;$("bQ").addEventListener("input",function(){var v=this.value;clearTimeout(tm);tm=setTimeout(function(){var my=++qs,R=$("bRes");
-      if(!qWords(v).length){R.innerHTML="";return}
-      R.innerHTML="";R.appendChild(el("p","Searching…","foot"));
-      quickSearch(v).then(function(rows){if(my!==qs)return;R.innerHTML="";
-        if(!rows.length){R.appendChild(el("p","No cards match.","foot"));return}
-        rows.forEach(function(c){var r=el("div",null,"drow"),nm=el("div",null,"nm");nm.appendChild(document.createTextNode(c.n));nm.appendChild(el("small",(c.s||"")+" "+(c.no||"")));
-          var iq=el("span","","inq");r.appendChild(nm);r.appendChild(iq);r.appendChild(el("span",(c.t||guessT(c)||"").replace("Pokémon","Pkmn"),"tg"));r.appendChild(stepper(c));R.appendChild(r);
-          var rp=function(){var q=dq(c);r.classList.toggle("indeck",q>0);iq.textContent=q?"In deck":""};rp.st=r;SP.push(rp);rp()});
-      },function(){if(my!==qs)return;R.innerHTML="";R.appendChild(el("p","Couldn't search the card database. Try again.","foot"))});
-    },250)});
+    
     [].forEach.call($("bView").querySelectorAll("button"),function(b){b.onclick=function(){BGRID=b.dataset.v==="grid";try{localStorage.setItem("tg-bgrid",BGRID?"1":"0")}catch(e){}paintList()}});
     $("bSave").onclick=saveDraft;
     $("bClr").onclick=function(){var b=$("bClr");if(!D().cards.length)return;if(b.dataset.ok){delete b.dataset.ok;b.textContent="Clear draft";S.draft={name:"",cards:[],ts:Date.now()};save();repaintAll();return}b.dataset.ok="1";b.textContent="Tap again to clear";setTimeout(function(){delete b.dataset.ok;b.textContent="Clear draft"},3000)};
