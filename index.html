@@ -863,6 +863,28 @@ body[data-view]:not([data-view="Rank"]):not([data-view="Tour"]) main{padding-top
 .mhdact{display:flex;gap:8px;margin-top:auto}.mhdact button{padding:7px 14px;font-size:.86rem}.mhdel{color:var(--down)!important}
 @media(max-width:860px){.mhsplit{flex-direction:column}.mhlist{flex-basis:auto;max-height:360px}}
 @media(max-width:560px){.mhlh,.mhli{grid-template-columns:44px 52px minmax(0,1fr) 40px 38px;gap:6px;padding:7px 8px}.mhstat{grid-template-columns:repeat(2,minmax(0,1fr))}.mhstat div:nth-child(2){border-right:0}.mhstat div:nth-child(-n+2){border-bottom:1px solid var(--line)}.mhdet{padding:14px}}
+
+/* TCG Live linking */
+.lnbox .grid{margin-top:4px}
+.lnhint{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;padding:12px 14px;margin:0 0 14px;border:1px dashed var(--line);border-radius:8px}
+.lnhint .foot{margin:0}
+.tgtab{margin-top:8px}
+.tgrow{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr) auto;gap:10px;align-items:center;padding:8px 0;border-bottom:1px solid var(--line)}
+.tgrow b{display:block;font-weight:600}.tgrow .foot{margin:0;font-size:.78rem}
+.tgrow input{padding:8px 10px;font-size:.92rem}.tgrow button{padding:7px 12px;font-size:.84rem}
+.lnreq{padding:12px 0;border-top:1px solid var(--line)}.lnreq .foot{margin:4px 0 0}.lnreq .actions{margin-top:8px}
+#oTcg h3{margin:20px 0 4px;font-size:1rem}
+@media(max-width:560px){.tgrow{grid-template-columns:1fr auto}.tgrow>div{grid-column:1/-1}}
+/* story share */
+.rkhead{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.rkhead h2{margin-bottom:16px}
+.rkhead button{padding:7px 14px;font-size:.86rem;margin-bottom:16px}
+.storyov{position:fixed;inset:0;z-index:80;background:rgba(10,12,16,.72);display:grid;place-items:center;padding:20px}
+.storycard{background:var(--panel);border-radius:10px;padding:18px;max-width:420px;width:100%;max-height:calc(100vh - 40px);overflow:auto;display:flex;flex-direction:column;gap:12px}
+.storycard img{width:100%;height:auto;border-radius:8px;border:1px solid var(--line);max-height:58vh;object-fit:contain}
+.storycard .actions{margin:0;flex-wrap:wrap}.storycard .actions>*{flex:1 1 auto;text-align:center}
+.storycard a.btn{display:inline-flex;align-items:center;justify-content:center;padding:11px 18px;border:1px solid var(--line);border-radius:6px;color:var(--ink);text-decoration:none;font-weight:600}
+.storycard .foot{margin:0}
 </style>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%22558 -8 210 156%22%3E%3Cg transform=%22skewX%28-21%29%22%3E%3Cpath fill=%22#e10600%22 d=%22M598 17L603 19L608 22L614 26L619 26L624 30L629 28L634 29L639 30L644 26L649 29L654 25L659 27L664 28L667 27L671 32L676 29L681 32L686 31L691 28L696 29L701 24L706 26L711 25L716 24L721 26L726 23L731 25L736 22L741 22L746 22L752 20L752 4L748 1L743 1L738 -0L733 -3L728 -2L723 -6L718 -4L713 -5L708 -7L703 -5L698 -11L693 -10L688 -13L683 -16L678 -13L673 -16L667 -12L661 -12L655 -10L650 -7L645 -10L641 -6L635 -9L630 -7L626 -5L620 -6L616 -1L611 0L607 6L602 9L597 13ZM598 17L602 11L607 8L612 6L616 1L621 1L626 -0L631 0L636 -3L641 -2L646 -1L651 -3L656 -2L661 -3L667 -2L673 -5L678 -4L683 -3L688 -3L693 -2L698 -1L702 2L708 -1L712 1L717 2L722 2L727 3L732 4L737 5L742 3L747 3L752 4L752 3L748 1L743 -1L738 -2L733 -2L728 -4L723 -3L718 -2L713 -5L708 -6L703 -8L698 -8L693 -11L688 -10L683 -10L678 -12L673 -13L667 -14L661 -12L655 -14L650 -11L645 -9L640 -8L635 -7L630 -7L626 -5L620 -8L615 -6L611 -2L606 2L602 6L597 9ZM598 17L602 14L607 13L612 10L617 9L622 7L627 8L632 5L637 7L642 7L647 8L652 4L657 5L662 3L667 5L672 3L677 4L682 3L687 3L692 2L697 5L702 6L707 6L712 6L717 7L722 9L727 9L732 11L737 10L742 12L747 10L752 13L757 13L762 16L767 13L772 14L777 12L782 12L787 11L787 9L782 8L777 8L772 5L767 4L763 1L757 2L753 -0L747 2L743 -0L738 1L733 -2L728 -1L723 -0L717 1L713 -1L708 -2L703 -3L698 -4L693 -4L688 -4L683 -3L678 -7L673 -7L667 -7L661 -4L656 -6L651 -5L645 -7L641 -5L635 -6L631 -3L626 -3L621 -1L616 -3L611 1L606 4L602 8L597 11ZM598 18L603 20L608 17L613 17L618 14L623 14L628 14L633 14L638 15L642 12L647 12L652 9L657 12L662 9L667 11L672 9L677 9L682 8L687 9L692 10L697 11L702 11L707 10L712 12L717 11L722 15L727 14L732 16L737 13L742 15L747 15L752 17L757 16L762 14L767 13L772 12L772 11L767 9L762 7L757 5L752 3L747 5L742 4L737 5L732 2L727 4L722 1L717 5L712 3L707 4L702 2L697 2L692 1L687 2L682 2L677 1L672 1L667 -2L662 1L656 -0L651 3L646 0L641 2L636 0L631 1L626 2L621 4L616 5L611 4L607 6L602 6L597 10ZM598 22L603 20L608 20L613 19L618 20L623 18L628 19L633 18L638 17L643 16L648 15L653 16L658 16L663 16L667 16L672 18L677 17L682 17L687 16L692 18L697 17L702 18L707 17L712 18L717 15L722 16L727 15L732 18L737 16L742 19L747 17L752 19L757 16L762 17L767 16L772 16L777 14L777 14L772 12L767 12L762 10L757 11L752 8L747 10L742 8L737 10L732 9L727 11L722 9L717 10L712 7L707 8L702 6L697 7L692 6L687 8L682 6L677 7L672 5L667 6L662 6L657 8L652 9L647 10L642 10L637 10L632 10L627 10L622 11L617 11L612 12L607 10L602 10L597 8ZM598 19L603 23L608 23L614 28L619 28L624 29L629 26L634 26L639 25L644 27L649 25L654 23L658 21L663 22L667 23L671 23L676 22L681 20L686 22L691 21L696 23L701 21L706 23L712 20L716 23L721 22L726 26L731 23L736 24L742 21L746 25L751 22L757 21L762 18L767 18L767 16L762 14L757 12L752 12L747 9L742 12L737 10L732 12L727 10L722 12L717 11L712 15L707 12L702 13L697 11L692 14L687 14L682 14L677 12L672 12L667 12L662 12L658 12L652 12L647 12L642 11L637 13L633 14L628 16L623 14L618 15L612 13L608 15L602 12L597 12ZM598 20L603 21L609 26L614 30L619 30L624 30L629 30L634 29L639 30L644 30L649 30L654 28L659 29L664 32L667 29L671 30L676 30L681 26L686 28L691 29L696 27L701 27L706 26L711 26L716 26L721 26L726 25L731 22L737 21L742 21L742 20L737 20L732 19L727 19L722 21L717 18L712 21L706 23L702 19L697 20L691 20L687 19L681 20L676 20L672 20L667 19L663 19L659 22L653 20L648 20L643 22L638 19L633 22L629 25L623 23L619 24L613 22L608 18L603 17L597 13ZM725 5L718 7L712 9L704 9L697 11L690 12L686 17L680 19L679 26L673 29L671 36L664 37L662 43L654 44L653 51L646 53L646 62L640 65L639 72L632 73L630 79L623 81L622 88L616 91L616 99L610 102L607 107L601 110L598 115L593 118L590 124L586 129L604 146L608 142L614 139L617 134L623 130L625 124L630 121L633 116L640 115L643 109L651 108L652 101L658 99L659 91L667 90L669 84L677 84L679 78L686 77L687 70L693 67L695 60L702 59L705 54L712 52L715 46L719 43L721 36L723 29L724 22L726 15L728 8ZM724 4L721 10L720 18L719 25L717 32L714 37L709 41L704 44L701 49L697 53L690 55L686 59L682 64L677 67L674 73L670 77L664 79L661 84L658 90L652 92L648 97L644 101L637 103L635 109L632 115L625 117L621 121L617 125L612 128L609 134L605 139L600 142L601 143L607 140L612 136L617 134L623 131L627 126L631 122L635 117L639 113L645 111L650 107L653 102L659 99L664 96L669 92L674 89L678 84L680 78L685 76L690 72L692 66L697 62L701 58L704 53L710 51L715 47L717 40L722 37L725 31L726 23L730 19L732 12ZM722 2L720 9L717 14L714 20L711 26L706 29L703 34L696 36L694 42L689 46L686 51L682 55L678 60L674 65L668 66L665 72L660 75L657 80L652 84L649 90L645 94L639 96L635 101L629 104L626 109L620 112L618 117L614 122L609 125L605 130L600 133L596 138L590 141L588 147L584 152L581 156L577 161L577 161L582 158L588 155L592 151L598 149L602 143L608 141L610 135L615 132L620 128L625 125L631 122L635 117L641 115L643 109L648 105L651 100L656 96L659 91L663 87L669 84L671 77L675 74L678 69L683 65L687 60L692 57L698 55L702 50L707 47L710 42L716 39L718 33L722 28L725 23L728 17L732 13ZM724 4L721 10L715 13L711 17L708 22L702 25L699 30L694 33L689 37L685 42L681 45L679 52L674 55L669 59L666 64L660 67L658 73L654 77L648 80L644 85L639 88L636 93L632 98L626 101L622 105L617 108L614 113L611 119L605 122L602 127L597 130L593 135L591 141L585 144L582 150L578 153L574 158L571 163L572 164L577 161L582 157L586 153L591 150L594 144L600 142L605 138L608 133L613 130L617 125L622 121L627 118L630 113L635 109L638 104L642 100L648 97L650 91L655 87L658 81L661 77L667 74L671 70L676 66L679 61L683 57L690 55L693 50L698 47L702 42L705 36L711 34L715 29L719 25L722 20L724 13L730 10ZM723 3L719 7L712 9L707 13L704 18L699 22L695 26L692 31L687 34L682 38L679 44L675 48L670 52L666 56L662 60L656 63L652 68L649 73L643 76L639 80L635 84L630 88L626 92L624 98L619 102L614 105L610 110L607 115L603 119L600 125L596 130L591 133L587 138L585 144L581 148L577 153L578 154L583 150L587 146L592 143L597 139L600 133L604 129L610 126L613 122L618 118L623 114L626 109L629 104L635 101L639 97L642 91L647 87L650 82L653 77L658 74L663 70L666 65L670 61L675 57L679 52L684 49L689 46L693 41L697 36L702 33L707 29L711 25L717 22L721 19L724 13L729 10ZM723 3L718 7L712 9L707 12L702 16L696 19L692 22L688 27L683 31L679 35L675 39L670 42L665 46L660 49L655 53L652 59L647 62L642 67L639 71L633 74L631 80L628 86L623 90L620 95L617 100L611 103L608 108L605 114L600 117L597 123L593 127L587 130L585 135L581 140L577 144L574 150L570 155L566 159L564 165L565 166L570 162L574 158L578 153L583 150L586 145L590 141L595 137L597 131L601 126L605 122L609 117L614 113L618 109L621 104L625 100L629 95L633 90L638 87L642 82L645 78L650 74L653 69L657 64L664 62L667 57L672 53L677 50L679 44L684 40L690 37L692 32L697 28L702 24L704 18L710 16L717 15L722 11L729 9ZM721 1L716 4L709 6L702 7L696 9L693 15L687 18L683 21L681 28L675 31L670 34L668 40L662 43L656 45L652 50L647 54L643 59L640 64L636 68L632 73L627 77L623 81L621 87L616 91L612 95L610 102L605 105L600 108L597 114L592 118L587 121L584 127L581 132L578 137L575 143L572 148L569 154L566 159L566 159L570 155L574 150L579 147L583 142L587 138L593 135L597 131L600 125L604 121L608 116L610 110L614 106L618 101L623 97L626 92L629 86L634 83L636 77L640 72L647 71L651 66L654 61L661 60L665 55L668 49L673 46L677 41L680 36L685 32L689 28L694 25L697 19L700 14L708 14L714 11L721 9L729 10ZM594 130L600 132L605 137L611 139L617 146L622 144L628 148L633 145L638 148L643 144L649 145L654 142L659 143L663 143L667 143L672 145L677 143L682 145L688 141L693 144L699 139L704 142L709 139L714 143L720 141L725 145L730 143L735 144L741 142L746 142L751 142L757 142L759 120L753 118L748 117L743 116L738 113L733 114L727 111L722 114L717 111L711 114L706 110L701 113L696 107L690 109L686 104L680 105L675 102L669 103L662 103L656 104L651 105L645 104L640 106L635 103L630 106L624 103L619 109L614 107L609 116L604 118L599 123L594 126ZM594 130L599 128L604 124L609 120L614 116L620 118L625 116L630 115L636 114L641 116L646 114L651 113L657 111L663 113L669 111L674 112L680 112L685 116L690 114L695 114L701 113L706 117L711 115L716 116L722 116L727 120L732 119L737 121L743 120L748 124L753 122L758 123L764 123L769 125L769 123L764 121L759 118L753 119L748 116L743 115L738 111L733 113L727 111L722 111L717 109L712 111L706 108L701 107L696 103L691 105L686 104L680 103L675 101L669 104L662 102L656 103L650 101L645 104L640 104L635 105L630 105L625 109L619 110L614 110L609 112L604 117L599 119L594 123ZM594 132L600 131L605 126L610 124L615 123L620 122L626 125L631 124L636 122L642 124L647 121L652 121L657 123L663 121L668 122L674 121L679 120L684 121L690 120L695 123L700 123L705 122L710 125L716 123L721 124L726 128L731 128L737 130L742 132L747 130L752 131L758 130L763 132L768 134L774 132L779 133L784 131L790 130L795 131L795 130L790 128L785 126L780 124L774 122L769 119L764 121L759 120L754 117L748 118L743 115L738 113L732 115L727 113L722 115L717 115L711 113L706 113L701 111L695 112L690 113L685 111L680 113L674 110L669 106L663 108L656 107L651 108L646 110L640 108L635 110L630 109L625 110L620 113L614 113L609 117L604 119L599 119L594 123ZM595 136L600 132L605 133L610 130L616 132L621 129L626 130L631 127L637 128L642 125L647 127L652 125L658 126L663 122L668 125L673 124L678 127L684 126L689 130L694 127L699 130L705 128L710 132L715 131L720 134L726 131L731 133L736 131L742 134L747 132L752 133L758 130L763 130L763 128L758 127L753 124L748 123L743 120L737 123L732 119L727 120L722 116L716 118L711 116L706 119L700 116L695 118L690 115L685 116L679 115L674 118L669 116L663 117L657 115L652 117L646 115L641 119L636 117L631 119L625 116L620 117L614 116L609 120L604 119L599 122L594 120ZM595 133L600 134L605 131L610 133L616 132L621 134L626 132L632 132L637 130L642 132L647 131L653 133L658 131L663 131L668 130L673 132L678 132L683 135L688 133L694 134L699 133L704 135L710 135L715 137L720 136L725 136L731 134L736 136L741 136L747 137L752 136L757 135L763 134L768 134L773 134L773 133L768 132L763 131L758 129L753 128L747 126L742 127L737 126L731 127L726 125L721 125L716 123L710 124L705 123L700 124L695 122L689 122L684 120L679 122L674 121L668 122L663 121L657 122L652 121L647 123L642 123L636 126L631 124L626 125L620 124L615 126L610 125L605 127L599 124L594 124ZM595 135L600 137L605 136L611 138L616 142L622 140L627 139L632 141L637 138L643 139L648 142L653 139L659 139L663 139L667 137L672 139L677 143L683 140L688 139L693 141L699 138L704 140L709 141L715 138L720 137L725 139L731 138L736 141L741 143L746 141L752 141L757 144L762 142L767 142L773 141L778 138L784 137L784 136L779 134L774 132L768 131L763 129L758 129L752 131L747 129L742 127L737 129L731 130L726 130L720 132L715 130L710 128L705 130L699 130L694 129L689 130L684 126L679 124L673 126L668 125L663 125L658 127L652 126L647 126L642 130L637 131L631 130L626 132L621 130L615 129L610 131L605 128L599 125L594 124ZM595 134L600 138L606 139L611 144L617 147L622 145L627 146L633 147L638 148L643 147L649 145L654 145L659 143L663 141L667 144L672 144L677 141L682 143L688 143L693 142L698 145L703 146L709 144L714 144L720 143L725 144L730 144L735 144L741 146L746 145L751 143L757 145L762 146L767 144L772 145L778 143L783 140L789 140L789 139L784 138L779 136L773 135L768 134L763 133L757 134L752 134L747 134L742 131L736 132L731 135L726 134L720 134L715 138L710 135L704 134L699 138L693 137L688 136L683 136L678 134L673 132L668 132L663 132L658 135L653 133L648 133L643 136L637 134L632 134L627 138L621 136L616 135L611 134L605 131L599 128L594 126Z%22/%3E%3C/g%3E%3C/svg%3E">
 <script>(function(){var t=null;try{t=localStorage.getItem("tg-theme");}catch(e){}if(t!=="light"&&t!=="dark"){t=window.matchMedia&&matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light";}document.documentElement.setAttribute("data-theme",t);})();</script>
@@ -1141,9 +1163,9 @@ body[data-view]:not([data-view="Rank"]):not([data-view="Tour"]) main{padding-top
   function recentDeck(p){var x=(p.rc||[]).filter(function(y){return deckById(S,y.d)})[0];return x?deckById(S,x.d):(topDecks(p)[0]||null)}
   // TCG Live in-game names (from profiles.tcg_ign); ign_only shows the IGN in place of the display name
   var IGN={},IGNOK=false;
-  function ignOf(p){var x=p&&IGN[p.id];return x&&x.ign||""}
+  function ignOf(p){var x=p&&IGN[p.id];return x&&x.ign||(p&&p.tcg)||""}
   function pname(p){var x=p&&IGN[p.id];return x&&x.only&&x.ign?x.ign:(p?p.name:"")}
-  function ignSub(p){var x=p&&IGN[p.id];return x&&x.ign&&!x.only?x.ign:""}
+  function ignSub(p){var x=p&&IGN[p.id];if(!x&&p&&p.tcg&&p.tcg!==p.name)return p.tcg;return x&&x.ign&&!x.only?x.ign:""}
   function tagP(id){
     var p=byId(S,id),w=el("span",null,"tp"),n=el("span",null,"nmw");
     n.appendChild(el("span",p?pname(p):"Removed player","tpn"));var ig=p?ignSub(p):"";if(ig)n.appendChild(el("small",ig,"ign"));w.appendChild(n);
@@ -1644,7 +1666,7 @@ body[data-view]:not([data-view="Rank"]):not([data-view="Tour"]) main{padding-top
   var PRO_HIDDEN=true;
   function proVis(){return !PRO_HIDDEN||isOrg()}
   function chrome(){var u=me();document.body.classList.toggle("nopro",!proVis());if(!proVis()&&!$("vPro").hidden&&!u)view("Rank");$("tAcct").textContent=u?u.u:"Sign in";$("tDash").hidden=!u;$("tDash").textContent=u&&u.role==="org"?"Organizer":"My dashboard";if(!u&&!$("vDash").hidden)view("Rank");renderAds();}
-  var TOOL="sw";try{var tq=localStorage.getItem("tg-tool");TOOL=tq==="mh"||tq==="ht"?tq:"sw"}catch(e){}
+  var TOOL="mh";try{var tq=localStorage.getItem("tg-tool");TOOL=tq==="sw"||tq==="ht"?tq:"mh"}catch(e){}
   function view(v){
     var ownPg=v==="Deck"&&!!CUR&&deckPid===CUR.pid;pvHide();
     ["Rank","Tour","Dash","Acct","Deck","Pro","Cards","Tools"].forEach(function(k){$("v"+k).hidden=k!==v;var tb=$("t"+k);if(tb)tb.setAttribute("aria-current",(k===v||(v==="Deck"&&k===(ownPg?"Acct":"Rank")))?"page":"false");});
@@ -1653,9 +1675,9 @@ body[data-view]:not([data-view="Rank"]):not([data-view="Tour"]) main{padding-top
   $("tRank").addEventListener("click",function(){view("Rank")});
   $("tTour").addEventListener("click",function(){view("Tour")});$("tCards").addEventListener("click",function(){view("Cards")});(function(){
     var btn=$("tTools"),m=el("div",null,"tmenu");m.id="tMenu";m.setAttribute("role","menu");m.setAttribute("aria-label","Tools");m.hidden=true;document.body.appendChild(m);
-    [["sw","Swiss calculator","Rounds, top cut and Championship Points"],["mh","Match history","Your tournaments, rounds and matchups"],["ht","Hand test","Opening hands, prizes and mulligan odds"]].forEach(function(t){var b=el("button",null,"tmi");b.type="button";b.setAttribute("role","menuitem");b.appendChild(el("b",t[1]));b.appendChild(el("span",t[2]));b.onclick=function(){close();TOOL=t[0];try{localStorage.setItem("tg-tool",TOOL)}catch(e){}view("Tools");window.scrollTo(0,0)};m.appendChild(b)});
+    [["mh","Match history","Your tournaments, rounds and matchups"],["ht","Hand test","Opening hands, prizes and mulligan odds"],["sw","Swiss calculator","Rounds, top cut and Championship Points"]].forEach(function(t){var b=el("button",null,"tmi");b.type="button";b.setAttribute("role","menuitem");b.appendChild(el("b",t[1]));b.appendChild(el("span",t[2]));b.onclick=function(){close();TOOL=t[0];try{localStorage.setItem("tg-tool",TOOL)}catch(e){}view("Tools");window.scrollTo(0,0)};m.appendChild(b)});
     function place(){var r=btn.getBoundingClientRect(),w=260;if(r.top>window.innerHeight/2){m.style.top="auto";m.style.bottom=(window.innerHeight-r.top+8)+"px"}else{m.style.bottom="auto";m.style.top=(r.bottom+8)+"px"}m.style.left=Math.max(12,Math.min(window.innerWidth-w-12,r.left+r.width/2-w/2))+"px"}
-    function open(){place();m.hidden=false;btn.setAttribute("aria-expanded","true");var it=m.querySelectorAll(".tmi"),k=TOOL==="mh"?1:TOOL==="ht"?2:0;it[k].focus()}
+    function open(){place();m.hidden=false;btn.setAttribute("aria-expanded","true");var it=m.querySelectorAll(".tmi"),k=TOOL==="mh"?0:TOOL==="ht"?1:2;it[k].focus()}
     function close(f){if(m.hidden)return;m.hidden=true;btn.setAttribute("aria-expanded","false");if(f)btn.focus()}
     btn.addEventListener("click",function(e){e.stopPropagation();if(m.hidden)open();else close()});
     document.addEventListener("click",function(e){if(!m.contains(e.target))close()});
@@ -1720,7 +1742,7 @@ body[data-view]:not([data-view="Rank"]):not([data-view="Tour"]) main{padding-top
           var mm=$("adMsg"); if(mm)mm.textContent="Display name updated.";
         }).catch(function(e){m.textContent=friendly(e);}).then(function(){var bt=$("adSave");if(bt)bt.disabled=false;});
       };
-      pwBlock(b);
+      pwBlock(b);linkBlock(b);
       return;
     }
     if(!REMOTE){b.innerHTML='<p class="foot"></p>';b.firstChild.textContent="Accounts are unavailable because the league database can't be reached. Reload the page to try again.";return;}
@@ -2377,7 +2399,7 @@ ${stars == null ? "" : ribbon + starRow}
   $("dkSet").addEventListener("click",function(){view("Acct");window.scrollTo(0,0)});
 
   // ---- updates and notices ----
-  var APP_VER="2026.10.09i";
+  var APP_VER="2026.10.09j";
   var CHANGES=[
     {ts:Date.UTC(2026,9,8,15),ti:"Deck builder upgrade",b:"Search and browse cards while your deck stays on screen, on PC and phone."},
     {ts:Date.UTC(2026,9,8,14),ti:"New logo and TCG Live names",b:"GroundZ has a new look. Add your TCG Live username in profile settings."},
@@ -3295,7 +3317,8 @@ ${stars == null ? "" : ribbon + starRow}
     }else dt.appendChild(el("p","No rounds recorded for this tournament. Edit it to add rounds and matchups.","foot"));
     var act=el("div",null,"mhdact"),e=el("button","Edit","ghost"),x=el("button","Delete","ghost mhdel");e.type=x.type="button";
     e.onclick=function(){mhEdit(h)};x.onclick=function(){if(x.dataset.ok){H.splice(H.indexOf(h),1);if(MHE===h){mhReset();mhOpen(false)}MHSEL=null;save();renderMH();return}x.dataset.ok="1";x.textContent="Tap again to delete";setTimeout(function(){delete x.dataset.ok;x.textContent="Delete"},3000)};
-    act.appendChild(e);act.appendChild(x);dt.appendChild(act);
+    var shb=el("button","Share to story","ghost");shb.type="button";shb.onclick=function(){shareCanvas(storyResult(h),"groundz-"+(h.ev||"result").toLowerCase().replace(/[^a-z0-9]+/g,"-")+".png",h.ev)};
+    act.appendChild(e);act.appendChild(x);act.appendChild(shb);dt.appendChild(act);
     wrap.appendChild(dt);L.appendChild(wrap);
   }
   // ---- My Decks: deck win rate, matchups, hand test ----
@@ -3392,6 +3415,214 @@ ${stars == null ? "" : ribbon + starRow}
     sel.onchange=function(){sync();if(sel.value!=="paste")go();else out.innerHTML=""};
     $("htGo").onclick=go;sync();if(sel.value!=="paste")go();
   }
+  // ---- TCG Live players: organizer entry, player link requests, organizer approval ----
+  var LINKPID=null,LRCACHE=null,LRERR="";
+  function guestTcg(){return S.players.filter(function(p){return p.tcg&&!accPid[p.id]&&!(CUR&&CUR.pid===p.id)}).sort(function(a,b){return a.name.localeCompare(b.name)})}
+  function lrMissing(e){return /link_requests|42P01|schema cache|relation|404|approve_link|function/i.test((e&&e.message||"")+" "+(e&&e.status||""))}
+  function lrLoad(org){
+    if(!REMOTE){S.lr=S.lr||[];return Promise.resolve(S.lr.slice())}
+    var q=org?"/rest/v1/link_requests?status=eq.pending&select=id,user_id,player_id,tcg_ign,tcg_email,status,created_at&order=created_at":"/rest/v1/link_requests?select=id,player_id,tcg_ign,status,created_at&order=created_at.desc&limit=3";
+    return api(q).then(function(r){LRERR="";return r||[]},function(e){LRERR=lrMissing(e)?"setup":"err";return []});
+  }
+  function mergeInto(guest,old){
+    if(!old||old===guest)return;
+    var gg=guest.w+guest.l+(guest.t||0),og=old.w+old.l+(old.t||0);
+    if(og&&gg)guest.rating=Math.round((guest.rating*gg+old.rating*og)/(gg+og));else if(og)guest.rating=old.rating;
+    guest.w+=old.w;guest.l+=old.l;guest.t=(guest.t||0)+(old.t||0);guest.pk=Math.max(guest.pk||0,old.pk||0,guest.rating);
+    guest.dk=guest.dk||{};Object.keys(old.dk||{}).forEach(function(k){guest.dk[k]=(guest.dk[k]||0)+old.dk[k]});
+    if(old.vault&&!guest.vault)guest.vault=old.vault;if(old.mh&&!guest.mh)guest.mh=old.mh;
+    var gn=guest.name,nn=old.name;(S.log||[]).forEach(function(g){if(g.w===gn)g.w=nn;if(g.l===gn)g.l=nn});guest.name=nn;
+    if(S.t&&S.t.reg){S.t.reg=S.t.reg.map(function(id){return id===old.id?guest.id:id}).filter(function(id,i,a){return a.indexOf(id)===i})}
+    if(S.snap&&old.id in S.snap&&!(guest.id in S.snap))S.snap[guest.id]=S.snap[old.id];
+    S.players.splice(S.players.indexOf(old),1);
+  }
+  // player side, in profile settings
+  function linkBlock(b){
+    var d=el("div",null,"pwbox lnbox");d.id="lnBox";b.appendChild(d);
+    d.appendChild(el("h3","Link your TCG Live entry"));
+    d.appendChild(el("p","If the organizer added you to the leaderboard by your TCG Live username, link that entry to this account so your results, rank and decks come together.","foot"));
+    var out=el("div");d.appendChild(out);out.appendChild(el("p","Checking…","foot"));
+    lrLoad(false).then(function(rows){
+      out.innerHTML="";
+      if(LRERR==="setup"){out.appendChild(el("p","Linking needs a one-time database update. The organizer runs groundz-link-requests.sql in Supabase, then this works.","foot"));return}
+      var mine=REMOTE?rows:rows.filter(function(r){return r.mine});
+      var pend=mine.filter(function(r){return r.status==="pending"})[0],last=mine[0];
+      if(pend){var p=byId(S,pend.player_id);out.appendChild(el("p","Request sent to link "+(p?p.name:"a leaderboard entry")+" (TCG Live: "+pend.tcg_ign+"). The organizer will confirm it's you.","status"));return}
+      if(last&&last.status==="approved"&&!REMOTE){out.appendChild(el("p","Linked. Your TCG Live results are part of your profile now.","status"))}
+      if(last&&last.status==="rejected")out.appendChild(el("p","Your last link request was declined. Talk to the organizer if you think that's a mistake.","foot"));
+      var G=guestTcg();
+      if(!G.length){out.appendChild(el("p","There are no unlinked TCG Live entries on the leaderboard right now.","foot"));return}
+      var f=el("div");
+      f.innerHTML='<div class="grid"><div><label for="lnSel">Leaderboard entry</label><select id="lnSel"></select></div><div><label for="lnEm">Email on your TCG Live account</label><input id="lnEm" type="email" autocomplete="email" placeholder="Same email you log in here with"></div></div><label class="chk"><input id="lnOk" type="checkbox"> This TCG Live account is mine, and I allow GroundZ to add its results to my profile.</label><div class="actions"><button id="lnGo" type="button">Request link</button></div><p class="status" id="lnMsg" role="status" aria-live="polite"></p>';
+      out.appendChild(f);
+      var sel=$("lnSel");G.forEach(function(p){var o=document.createElement("option");o.value=p.id;o.textContent=p.name+" · TCG Live: "+p.tcg+" · "+p.rating;sel.appendChild(o)});
+      if(LINKPID&&G.some(function(p){return p.id===LINKPID}))sel.value=LINKPID;LINKPID=null;
+      $("lnGo").onclick=function(){
+        var m=$("lnMsg"),em=$("lnEm").value.trim(),pid=+sel.value,p=byId(S,pid),bt=$("lnGo");
+        if(!p){m.textContent="Pick your leaderboard entry.";return}
+        if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(em)){m.textContent="Enter the email your TCG Live account uses.";return}
+        if(!$("lnOk").checked){m.textContent="Tick the box to confirm the account is yours.";return}
+        bt.disabled=true;m.textContent="Checking your email…";
+        if(!REMOTE){S.lr=S.lr||[];S.lr.push({id:Date.now(),user:CUR.u,uname:CUR.un||CUR.u,player_id:pid,tcg_ign:p.tcg,tcg_email:em,status:"pending",mine:1,created_at:new Date().toISOString()});save();renderAcct();return}
+        sbx("/auth/v1/user").then(function(u){
+          if(!u||!u.email||u.email.toLowerCase()!==em.toLowerCase())throw new Error("That email doesn't match the one on your GroundZ account. Use the same email for both, or update one of them first.");
+          return api("/rest/v1/link_requests",{method:"POST",prefer:"return=minimal",body:{player_id:pid,tcg_ign:p.tcg,tcg_email:em}});
+        }).then(function(){renderAcct()},function(e){m.textContent=lrMissing(e)?"Linking needs a one-time database update. The organizer runs groundz-link-requests.sql in Supabase.":/duplicate|23505/i.test(e.message)?"You already have a request waiting for the organizer.":/row-level|policy/i.test(e.message)?"That email doesn't match your GroundZ login email.":friendly(e)}).then(function(){var x=$("lnGo");if(x)x.disabled=false});
+      };
+    });
+  }
+  // organizer side, in the dashboard
+  function orgTcg(){
+    var u=me();if(!u||u.role!=="org")return;var host=$("dOrg");if(!host)return;
+    var sec=$("oTcg");if(!sec){sec=el("section",null,"panel");sec.id="oTcg";var anchor=host.children[2]||null;host.insertBefore(sec,anchor)}
+    sec.innerHTML="";sec.appendChild(el("h2","TCG Live players"));
+    var add=el("div");add.innerHTML='<div class="grid"><div><label for="tgN">TCG Live username</label><input id="tgN" maxlength="24" placeholder="e.g. AshK_TCG"></div><div><label for="tgD">Name on the leaderboard (optional)</label><input id="tgD" maxlength="24" placeholder="Uses the TCG Live username if blank"></div></div><div class="actions"><button id="tgAdd" type="button">Add to leaderboard</button></div><p class="status" id="tgMsg" role="status" aria-live="polite"></p>';
+    sec.appendChild(add);
+    $("tgAdd").onclick=function(){var n=clean($("tgN").value),dn=clean($("tgD").value)||n,m=$("tgMsg");
+      if(!n){m.textContent="Enter a TCG Live username.";return}
+      if(S.players.some(function(p){return (p.tcg||"").toLowerCase()===n.toLowerCase()})){m.textContent=n+" is already on the leaderboard.";return}
+      if(S.players.some(function(p){return p.name.toLowerCase()===dn.toLowerCase()})){m.textContent="Someone is already called "+dn+". Choose another leaderboard name.";return}
+      S.players.push({id:S.nextId++,name:dn,tcg:n,rating:START,w:0,l:0,dk:{}});save();render();renderDash();var mm=$("tgMsg");if(mm)mm.textContent=dn+" added. Report their results with Report a match.";};
+    // edit TCG Live usernames
+    var det=el("details",null,"mhmu");det.appendChild(el("summary","Edit TCG Live usernames · "+S.players.length+" players"));
+    var tb=el("div",null,"tgtab");
+    S.players.slice().sort(function(a,b){return a.name.localeCompare(b.name)}).forEach(function(p){
+      var row=el("div",null,"tgrow"),acc=accPid[p.id];
+      var nm=el("div");nm.appendChild(el("b",p.name));nm.appendChild(el("span",acc?"Account @"+(acc.username||"player"):"Guest entry","foot"));row.appendChild(nm);
+      var inp=document.createElement("input");inp.maxLength=24;inp.value=acc?(IGN[p.id]&&IGN[p.id].ign||p.tcg||""):(p.tcg||"");inp.placeholder="TCG Live username";inp.setAttribute("aria-label","TCG Live username for "+p.name);
+      if(acc){inp.disabled=true;inp.title="Players with an account set this in their profile settings."}
+      row.appendChild(inp);
+      var bt=el("button","Save","ghost");bt.type="button";bt.disabled=!!acc;bt.onclick=function(){var v=clean(inp.value);if(v&&S.players.some(function(q){return q!==p&&(q.tcg||"").toLowerCase()===v.toLowerCase()})){bt.textContent="Taken";return}if(v)p.tcg=v;else delete p.tcg;save();render();bt.textContent="Saved";setTimeout(function(){bt.textContent="Save"},1500)};
+      row.appendChild(bt);tb.appendChild(row);
+    });
+    det.appendChild(tb);sec.appendChild(det);
+    // link requests
+    sec.appendChild(el("h3","Link requests"));var box=el("div");box.appendChild(el("p","Loading…","foot"));sec.appendChild(box);
+    lrLoad(true).then(function(rows){
+      box.innerHTML="";
+      if(LRERR==="setup"){box.appendChild(el("p","Run groundz-link-requests.sql once in Supabase (SQL Editor) to turn on link requests.","foot"));return}
+      var P=rows.filter(function(r){return r.status==="pending"});
+      if(!P.length){box.appendChild(el("p","No requests waiting.","foot"));return}
+      P.forEach(function(r){
+        var g=byId(S,r.player_id),f=REMOTE?PROFS.filter(function(x){return x.id===r.user_id})[0]:null,who=f?(f.display_name||f.username)+" (@"+f.username+")":(r.uname||"A player");
+        var li=el("div",null,"lnreq"),tx=el("div");
+        tx.appendChild(el("b",who));tx.appendChild(el("span"," wants to link "+(g?g.name:"a removed entry")+" · TCG Live: "+r.tcg_ign));
+        tx.appendChild(el("p","Their TCG Live email matches their GroundZ login. Approve only after they show you the TCG Live profile with this username.","foot"));
+        li.appendChild(tx);
+        var ac=el("div",null,"actions"),ok=el("button","Approve"),no=el("button","Decline","ghost");ok.type=no.type="button";ok.style.flex=no.style.flex="none";
+        ok.disabled=!g;
+        ok.onclick=function(){ok.disabled=no.disabled=true;
+          var old=REMOTE?(f&&byId(S,f.player_id)):byId(S,CUR.pid);
+          if(old&&old!==g)mergeInto(g,old);
+          if(!REMOTE){r.status="approved";if(CUR&&old)CUR.pid=g.id;save();rerender();renderDash();return}
+          save();
+          api("/rest/v1/rpc/approve_link",{method:"POST",body:{rid:r.id}}).then(loadRemote).then(function(x){applyRemote(x);rerender();renderDash()}).catch(function(e){ok.disabled=no.disabled=false;var m=el("p",lrMissing(e)?"Run groundz-link-requests.sql in Supabase first.":friendly(e),"status");li.appendChild(m)});
+        };
+        no.onclick=function(){ok.disabled=no.disabled=true;
+          if(!REMOTE){r.status="rejected";save();renderDash();return}
+          api("/rest/v1/rpc/reject_link",{method:"POST",body:{rid:r.id}}).then(function(){renderDash()}).catch(function(e){ok.disabled=no.disabled=false;li.appendChild(el("p",friendly(e),"status"))});
+        };
+        ac.appendChild(ok);ac.appendChild(no);li.appendChild(ac);box.appendChild(li);
+      });
+    });
+  }
+  var _rdash=renderDash;renderDash=function(){_rdash();orgTcg()};
+  var _rdeck=renderDeck;renderDeck=function(){_rdeck();var p=byId(S,deckPid),box=$("dkList");if(!p||!box||!CUR||accPid[p.id]||!p.tcg||CUR.pid===p.id)return;
+    var n=el("div",null,"lnhint");n.appendChild(el("p","This is a TCG Live entry ("+p.tcg+"). If it's you, link it to your account so your results come together.","foot"));
+    var b=el("button","Link to my account","ghost");b.type="button";b.style.flex="none";b.onclick=function(){LINKPID=p.id;view("Acct");setTimeout(function(){var x=$("lnBox");if(x)x.scrollIntoView({block:"start"})},80)};n.appendChild(b);box.parentNode.insertBefore(n,box)};
+
+  // ---- Instagram story images (1080 x 1920) ----
+  var SHEETIMG=null;
+  function sheetImg(){if(SHEETIMG)return SHEETIMG;SHEETIMG=new Promise(function(ok){var i=new Image();i.onload=function(){ok(i)};i.onerror=function(){ok(null)};i.src=SHEET});return SHEETIMG}
+  function svgImg(svg){return new Promise(function(ok){var u=URL.createObjectURL(new Blob([svg],{type:"image/svg+xml"})),i=new Image();i.onload=function(){ok(i);setTimeout(function(){URL.revokeObjectURL(u)},1000)};i.onerror=function(){ok(null)};i.src=u})}
+  function logoImg(){var s=document.getElementById("gzLogo");if(!s)return Promise.resolve(null);return svgImg('<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="'+s.getAttribute("viewBox")+'" width="1670" height="332"><style>.gzi{fill:#FFFFFF}.gzr{fill:#E10600}</style>'+s.innerHTML+'</svg>')}
+  function crestImg(r){var ti=tierIdx(r),lv=TIERS.length-1-ti,svg=GZ_CREST(lv,starsOf(r),140);if(svg.indexOf("xmlns=")<0)svg=svg.replace("<svg",'<svg xmlns="http://www.w3.org/2000/svg"');return svgImg(svg)}
+  function spriteKeys(name,keys){if(keys&&keys.length)return keys;var d=name&&byName(S.decks,name);if(d&&d.s)return d.s;return name?autoSprites(name):[]}
+  function drawSpr(c,sh,k,x,y,s){var i=PKI[k];if(i==null||!sh)return;c.imageSmoothingEnabled=false;c.drawImage(sh,(i%40)*64,Math.floor(i/40)*64,64,64,x,y,s,s);c.imageSmoothingEnabled=true}
+  function fit(c,t,w){t=String(t);if(c.measureText(t).width<=w)return t;while(t.length>1&&c.measureText(t+"…").width>w)t=t.slice(0,-1);return t+"…"}
+  function rr(c,x,y,w,h,r){c.beginPath();c.moveTo(x+r,y);c.arcTo(x+w,y,x+w,y+h,r);c.arcTo(x+w,y+h,x,y+h,r);c.arcTo(x,y+h,x,y,r);c.arcTo(x,y,x+w,y,r);c.closePath()}
+  var SF='"IBM Plex Sans",system-ui,sans-serif',SM='"IBM Plex Mono",ui-monospace,monospace';
+  function storyBase(c,logo,title,sub){
+    c.fillStyle="#F5F6F8";c.fillRect(0,0,1080,1920);
+    c.fillStyle="#101418";c.fillRect(0,0,1080,440);
+    if(logo)c.drawImage(logo,64,80,560,111);else{c.fillStyle="#FFFFFF";c.font="700 92px "+SF;c.fillText("GroundZ",72,170)}
+    c.fillStyle="#E10600";c.fillRect(72,250,96,8);
+    c.fillStyle="#FFFFFF";c.font="700 76px "+SF;c.textBaseline="alphabetic";c.fillText(fit(c,title,936),72,342);
+    c.fillStyle="#AEB4BD";c.font="500 32px "+SM;c.fillText(fit(c,sub,936),72,398);
+    c.fillStyle="#555E69";c.font="600 34px "+SM;c.textAlign="center";c.fillText("groundz.win",540,1856);c.textAlign="left";
+  }
+  function initials(n){return String(n||"?").replace(/[^A-Za-z0-9]/g,"").slice(0,2).toUpperCase()||"?"}
+  function hueOf(n){var h=0;n=n||"?";for(var i=0;i<n.length;i++)h=(h*31+n.charCodeAt(i))%360;return "hsl("+h+" 45% 42%)"}
+  function storyRankings(){
+    var L=sorted(S).slice(0,10);
+    return Promise.all([sheetImg(),logoImg(),document.fonts?document.fonts.load('700 40px "IBM Plex Sans"').then(function(){return document.fonts.load('500 30px "IBM Plex Mono"')}).catch(function(){}):null].concat(L.map(function(p){return crestImg(p.rating)}))).then(function(R){
+      var sh=R[0],logo=R[1],cr=R.slice(3),cv=document.createElement("canvas");cv.width=1080;cv.height=1920;var c=cv.getContext("2d");
+      var sea=S.season||{n:1};storyBase(c,logo,"Power rankings","Season "+sea.n+" · Week "+S.week+" · "+new Date().toLocaleDateString("en-US",{month:"long",day:"numeric",year:"numeric"}));
+      var top=488,rowH=Math.min(124,Math.floor(1280/Math.max(L.length,1)));
+      c.fillStyle="#FFFFFF";rr(c,48,top-24,984,rowH*L.length+48,20);c.fill();c.strokeStyle="#DCDFE4";c.lineWidth=2;c.stroke();
+      L.forEach(function(p,i){
+        var y=top+i*rowH,cy=y+rowH/2;
+        if(i)(c.fillStyle="#E6E8EC",c.fillRect(80,y,920,2));
+        if(i<3){c.fillStyle=["#E9B824","#C5CCD5","#D2925C"][i];rr(c,80,cy-34,68,68,10);c.fill();c.fillStyle="#141414"}else c.fillStyle="#101418";
+        c.font="600 40px "+SM;c.textAlign="center";c.fillText(String(i+1),114,cy+14);c.textAlign="left";
+        c.fillStyle=hueOf(p.name);c.beginPath();c.arc(202,cy,30,0,7);c.fill();c.fillStyle="#FFFFFF";c.font="700 24px "+SF;c.textAlign="center";c.fillText(initials(p.name),202,cy+9);c.textAlign="left";
+        var d=recentDeck(p),ks=d?(d.s||autoSprites(d.name)):[];
+        c.fillStyle="#101418";c.font="600 40px "+SF;c.fillText(fit(c,pname(p),360),252,cy+2);
+        var tt=p.w+p.l;c.fillStyle="#555E69";c.font="500 24px "+SM;c.fillText(p.w+"–"+p.l+(p.t?"–"+p.t:"")+(tt?" · "+Math.round(100*p.w/tt)+"%":""),252,cy+36);
+        ks.slice(0,2).forEach(function(k,j){drawSpr(c,sh,k,626+j*62,cy-40,80)});
+        var im=cr[i];if(im){var h=78,w=h*im.width/im.height;c.drawImage(im,812-w/2,cy-h/2,w,h)}
+        var tr=tierOf(p.rating);c.fillStyle="#101418";c.font="600 44px "+SM;c.textAlign="right";c.fillText(String(p.rating),1000,cy+8);
+        c.fillStyle=tr[2];c.font="700 18px "+SF;c.fillText(tr[1].toUpperCase(),1000,cy+36);c.textAlign="left";
+      });
+      return cv;
+    });
+  }
+  function storyResult(h){
+    var r=mhRec(h),R=h.r||[],pl=myP();
+    return Promise.all([sheetImg(),logoImg(),document.fonts?document.fonts.load('700 40px "IBM Plex Sans"').then(function(){return document.fonts.load('600 30px "IBM Plex Mono"')}).catch(function(){}):null]).then(function(X){
+      var sh=X[0],logo=X[1],cv=document.createElement("canvas");cv.width=1080;cv.height=1920;var c=cv.getContext("2d");
+      storyBase(c,logo,h.ev,[mhDate(h.d)||"",h.cat||""].filter(Boolean).join(" · "));
+      c.fillStyle="#FFFFFF";rr(c,48,480,984,1300,20);c.fill();c.strokeStyle="#DCDFE4";c.lineWidth=2;c.stroke();
+      var ks=spriteKeys(h.dk,h.s);ks.slice(0,2).forEach(function(k,j){drawSpr(c,sh,k,72+j*150,500,180)});
+      c.fillStyle="#101418";c.font="600 40px "+SF;c.fillText(fit(c,h.dk||"Deck not recorded",560),100,724);
+      c.fillStyle="#555E69";c.font="500 28px "+SF;c.fillText(fit(c,pl?pname(pl):"",560),100,766);
+      var fin=h.p?mhOrd(h.p):"–";c.textAlign="right";c.fillStyle=h.p===1?"#8F6200":h.p===2?"#56606B":h.p===3?"#9A5A24":"#101418";c.font="600 150px "+SM;c.fillText(fin,996,660);
+      c.fillStyle="#555E69";c.font="500 30px "+SF;c.fillText(h.p?(h.n?"of "+h.n+" players":"place"):"no placement",996,712);
+      c.fillStyle="#101418";c.font="600 40px "+SM;c.fillText(r.w+"–"+r.l+(r.t?"–"+r.t:"")+" · "+(3*r.w+r.t)+" pts",996,766);c.textAlign="left";
+      c.fillStyle="#101418";c.fillRect(96,810,888,3);
+      var avail=1730-840,rh=R.length?Math.min(110,Math.floor(avail/R.length)):0,sz=Math.min(76,rh-12);
+      if(!R.length){c.fillStyle="#555E69";c.font="500 32px "+SF;c.fillText("Rounds weren't recorded for this event.",100,900)}
+      R.forEach(function(x,i){
+        var y=840+i*rh,cy=y+rh/2;if(i){c.fillStyle="#E6E8EC";c.fillRect(96,y,888,2)}
+        c.fillStyle="#555E69";c.font="500 30px "+SM;c.fillText("R"+(i+1),100,cy+10);
+        if(x.res==="BYE"){c.fillStyle="#555E69";c.font="500 34px "+SF;c.fillText("Bye",190,cy+12)}
+        else{var k2=spriteKeys(x.od,x.os);k2.slice(0,2).forEach(function(k,j){drawSpr(c,sh,k,180+j*(sz-14),cy-sz/2-4,sz)});c.fillStyle="#101418";c.font="500 34px "+SF;c.fillText(fit(c,x.od||"Deck not recorded",500),190+Math.max(1,Math.min(2,k2.length))*(sz-14)+16,cy+12)}
+        var lab=x.res==="BYE"?"BYE":x.res||"–",col=x.res==="W"?["#DDF0E4","#0B6B37"]:x.res==="L"?["#F9E0DD","#A21D14"]:["#E9ECF0","#3F4752"];
+        c.fillStyle=col[0];rr(c,880,cy-28,104,56,10);c.fill();c.fillStyle=col[1];c.font="600 30px "+SM;c.textAlign="center";c.fillText(lab,932,cy+11);c.textAlign="left";
+      });
+      return cv;
+    });
+  }
+  function shareCanvas(cvp,name,title){
+    var ov=el("div",null,"storyov");ov.setAttribute("role","dialog");ov.setAttribute("aria-label","Share image");
+    var card=el("div",null,"storycard");card.appendChild(el("p","Making your story image…","foot"));ov.appendChild(card);document.body.appendChild(ov);
+    function close(){ov.remove();document.removeEventListener("keydown",key,true)}
+    function key(e){if(e.key==="Escape"){e.preventDefault();close()}}
+    document.addEventListener("keydown",key,true);ov.addEventListener("click",function(e){if(e.target===ov)close()});
+    cvp.then(function(cv){return new Promise(function(ok){cv.toBlob(function(b){ok(b)},"image/png")})}).then(function(blob){
+      card.innerHTML="";if(!blob){card.appendChild(el("p","Couldn't make the image on this device.","status"));return}
+      var url=URL.createObjectURL(blob),im=new Image();im.src=url;im.alt=title;card.appendChild(im);
+      var file=null;try{file=new File([blob],name,{type:"image/png"})}catch(e){}
+      var acts=el("div",null,"actions");
+      if(file&&navigator.canShare&&navigator.canShare({files:[file]})){var sb=el("button","Share to Instagram");sb.type="button";sb.onclick=function(){navigator.share({files:[file],title:title}).catch(function(){})};acts.appendChild(sb)}
+      var a=el("a","Save image","btn ghost");a.href=url;a.download=name;acts.appendChild(a);
+      var cb=el("button","Close","ghost");cb.type="button";cb.onclick=close;acts.appendChild(cb);
+      card.appendChild(acts);card.appendChild(el("p","On your phone, tap Share to Instagram and pick Stories. On a computer, save the image and post it from your phone.","foot"));
+      var f=acts.querySelector("button,a");if(f)f.focus();
+    });
+  }
+  (function(){var h=$("board");if(!h||$("rkShare"))return;var w=el("div",null,"rkhead");h.parentNode.insertBefore(w,h);w.appendChild(h);
+    var b=el("button","Share to story","ghost");b.id="rkShare";b.type="button";b.onclick=function(){shareCanvas(storyRankings(),"groundz-power-rankings.png","GroundZ power rankings")};w.appendChild(b)})();
   var _rt=renderTools;renderTools=function(){_rt();renderMH();renderHT()};
 
 
