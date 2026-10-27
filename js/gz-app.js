@@ -1643,7 +1643,7 @@ ${stars == null ? "" : ribbon + starRow}
   $("dkSet").addEventListener("click",function(){view("Acct");window.scrollTo(0,0)});
 
   // ---- updates and notices ----
-  var APP_VER="2026.10.28g";
+  var APP_VER="2026.10.28i";
   var CHANGES=[
     {ts:Date.UTC(2026,9,8,15),ti:"Deck builder upgrade",b:"Search and browse cards while your deck stays on screen, on PC and phone."},
     {ts:Date.UTC(2026,9,8,14),ti:"New logo and TCG Live names",b:"GroundZ has a new look. Add your TCG Live username in profile settings."},
@@ -2520,8 +2520,9 @@ ${stars == null ? "" : ribbon + starRow}
   function mhStats(items,cls){var d=el("div",null,cls);items.forEach(function(x){var i=el("div");var bv=el("b",x[0]);if(x[4]){bv.appendChild(x[4]);bv.className="hasmedal"}i.appendChild(bv);i.appendChild(el("span",x[1]));if(x[2]){var sm=el("small",x[2]);if(x[3])sm.title=x[3];i.appendChild(sm)}d.appendChild(i)});return d}
   function mhFin(h){return h&&h.p?mhOrd(h.p)+(h.n?" of "+h.n:""):"–"}
   function mhUnbeaten(h){var r=mhRec(h);return !!h&&(h.r||[]).length>0&&r.l===0&&(r.w+r.t)>0}
-  function mhMedal(p){if(!(p>=1&&p<=3))return null;var c=["#D4A017","#A8B0B8","#B87333"][p-1],d=["#8F6200","#56606B","#7A4A1F"][p-1],m=el("span",null,"medal m"+p);m.setAttribute("role","img");m.setAttribute("aria-label",["Gold","Silver","Bronze"][p-1]+" medal");
-    m.innerHTML='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 2h4l2 6H9z" fill="#C8102E"/><path d="M13 2h4l-2 6h-4z" fill="#1F4E9C"/><circle cx="12" cy="15" r="7" fill="'+c+'" stroke="'+d+'" stroke-width="1.5"/><text x="12" y="18.6" text-anchor="middle" font-size="9" font-weight="700" fill="'+d+'" font-family="sans-serif">'+p+'</text></svg>';return m}
+  function mhMedal(p){if(!(p>=1&&p<=3))return null;var c=["#E2B33C","#C9D0D6","#CD8A55"][p-1],d=["#8F6200","#56606B","#7A4A1F"][p-1],m=el("span",null,"fmedal");m.setAttribute("role","img");m.setAttribute("aria-label",["Gold","Silver","Bronze"][p-1]+" laurel, place "+p);m.title=mhOrd(p)+" place";
+    var lf=function(x,y,r){return '<ellipse cx="'+x+'" cy="'+y+'" rx="1.1" ry="2" transform="rotate('+r+' '+x+' '+y+')"/>'};
+    m.innerHTML='<svg viewBox="0 0 24 24" aria-hidden="true"><g fill="none" stroke="'+d+'" stroke-width="1.4" stroke-linecap="round"><path d="M7 19c-3-2-4-6-3-10M17 19c3-2 4-6 3-10"/></g><g fill="'+c+'" stroke="'+d+'" stroke-width=".7">'+lf(4.6,10,-20)+lf(4.8,14,-45)+lf(7,17.6,-70)+lf(19.4,10,20)+lf(19.2,14,45)+lf(17,17.6,70)+'</g><text x="12" y="16" text-anchor="middle" font-size="10" font-weight="700" fill="'+d+'" font-family="sans-serif">'+p+'</text></svg>';return m}
   function mhDecks(p){var a=[],seen={};S.decks.map(function(d){return d.name}).concat((p.vault||[]).map(function(v){return v.n})).forEach(function(n){if(n&&!seen[n.toLowerCase()]){seen[n.toLowerCase()]=1;a.push(n)}});return a}
   function renderMH(){
     var b=$("mhBody"),p=me()?myP():null;
@@ -2564,7 +2565,7 @@ ${stars == null ? "" : ribbon + starRow}
       var ic=show?mhIcon(o.n==="Unknown deck"?"":o.n,o.s):null;li.appendChild(ic||el("span"));
       var nm=el("span",null,"mh5n");nm.appendChild(document.createTextNode(o.n));var sub=el("small",o.w+"–"+o.l+(o.t?"–"+o.t:"")+(g?" · G "+o.gw+"–"+o.gl+(o.gt?"–"+o.gt:""):""));sub.appendChild(el("span"," · "+o.ne+"/"+L5.length+" events"+(n<3?" · low sample":""),"mh5x"));nm.appendChild(sub);li.appendChild(nm);
       var fqe=el("span",null,"mh5f"),fqt=el("span",null,"mh5ft"),fqi=el("i");fqi.style.width=fq+"%";fqt.appendChild(fqi);fqe.appendChild(el("b",n+"×"));fqe.appendChild(fqt);fqe.appendChild(el("span",fq+"%"));fqe.title="Faced in "+n+" of your "+rn+" rounds ("+fq+"%)";fqe.setAttribute("aria-label","Matchup rate "+fq+"%, "+n+" rounds");li.appendChild(fqe);
-      var bar=el("span",null,"mh5b"),tr=el("span",null,"mh5t"),fi=el("i",null,pc>=50?"up":"");fi.style.width=pc+"%";tr.appendChild(fi);bar.appendChild(tr);bar.appendChild(el("b",pc+"%",pc>=50?"mhup":"mhdn"));li.appendChild(bar);
+      var bar=el("span",null,"mh5b");bar.appendChild(el("b",pc+"%",pc>=50?"mhup":"mhdn"));li.appendChild(bar);
       li.title=o.n+": won "+o.w+" of "+n+" rounds";
       ul.appendChild(li);
     });
