@@ -1,0 +1,1 @@
+(function(){var r=document.documentElement,b=document.getElementById("themeBtn");function sync(){b.setAttribute("aria-checked",r.getAttribute("data-theme")==="dark"?"true":"false");}sync();b.addEventListener("click",function(){var n=r.getAttribute("data-theme")==="dark"?"light":"dark";r.setAttribute("data-theme",n);try{localStorage.setItem("tg-theme",n);}catch(e){}sync();});})();

@@ -1,0 +1,1 @@
+(function(){var l=document.getElementById("list");if(!l)return;var h=document.createElement("div");h.className="slhead";h.setAttribute("aria-hidden","true");h.innerHTML="<span>#</span><span>Move</span><span>Player</span><span>Record</span><span>Form</span><span>Tier · Elo</span>";l.parentNode.insertBefore(h,l)})();
