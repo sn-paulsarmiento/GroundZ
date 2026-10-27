@@ -1627,7 +1627,7 @@ ${stars == null ? "" : ribbon + starRow}
   $("dkSet").addEventListener("click",function(){view("Acct");window.scrollTo(0,0)});
 
   // ---- updates and notices ----
-  var APP_VER="2026.10.28d";
+  var APP_VER="2026.10.28e";
   var CHANGES=[
     {ts:Date.UTC(2026,9,8,15),ti:"Deck builder upgrade",b:"Search and browse cards while your deck stays on screen, on PC and phone."},
     {ts:Date.UTC(2026,9,8,14),ti:"New logo and TCG Live names",b:"GroundZ has a new look. Add your TCG Live username in profile settings."},
@@ -2418,7 +2418,7 @@ ${stars == null ? "" : ribbon + starRow}
   function renderOdds(n,v){
     var box=$("swOdds");if(!box)return;
     var rc=swRec(),R=swRates(rc.w,rc.l,rc.t),rec=rc.w+"–"+rc.l+(rc.t?"–"+rc.t:"");
-    $("swRate").textContent=R.none?"Enter your wins, losses and ties. Until then your odds use a 50% win rate.":"From "+rec+": "+Math.round(R.pw*100)+"% wins"+(R.pt?", "+Math.round(R.pt*100)+"% ties":"")+", "+Math.round(R.pl*100)+"% losses per match.";
+    $("swRate").textContent=R.none?"Enter your record. Until then: 50% win rate.":Math.round(R.pw*100)+"% wins"+(R.pt?" · "+Math.round(R.pt*100)+"% ties":"")+" · "+Math.round(R.pl*100)+"% losses";
     var M=swSim(n,v),sh=M.sh;box.innerHTML="";
     box.appendChild(el("h3",R.none?"Your chances at a 50% win rate":"Your chances with a "+rec+" record"));
     var T=el("div",null,"tiles"),t=[];
@@ -2431,7 +2431,7 @@ ${stars == null ? "" : ribbon + starRow}
     t.forEach(function(x){T.appendChild(tile(x[0],x[1]))});box.appendChild(T);
     var rows=(CPT[v]||[]).filter(function(c){return c[0]<=n}).map(function(c){var a=c[0],b=Math.min(c[1],n),ok=n>=c[3],pr=swPlace(M,R,b)-(a>1?swPlace(M,R,a-1):0);return[plS(a,b),c[2]+" CP",ok?swPct(Math.max(0,pr)):"No CP (needs "+c[3]+"+)"]});
     if(rows.length)box.appendChild(tbl(["Placement","Championship Points","Your chance"],rows));
-    box.appendChild(el("p","From "+(n<=128?swYouSim(M,n,v,R).sims:M.sims).toLocaleString()+" simulated "+n+"-player events. Each of your matches goes your way at the win, tie and loss rates from your record; every other match is a coin flip. "+(sh.top?"In the Top "+sh.top+" you win each match at your win rate (ties replayed). ":"")+"Players level on points are ordered at random here; real events use Opponents' Win %, so your chances on the bubble depend on who you played.","foot"));
+    box.appendChild(el("p",(n<=128?swYouSim(M,n,v,R).sims:M.sims).toLocaleString()+" simulated events. Other matches are coin flips; ties on points are broken at random, not by OMW%.","foot"));
   }
   function renderCalc(){
     var n=Math.max(1,Math.min(8192,Math.floor(+$("swN").value)||0)),v=$("swF").value,T=$("swT"),B=$("swTab"),N=$("swNote"),row=tomRow(n,v);
@@ -2457,18 +2457,18 @@ ${stars == null ? "" : ribbon + starRow}
     }
     B.appendChild(el("h3",reg&&p2?"Records after Phase One ("+r+" rounds)":"Final Swiss records"));
     B.appendChild(tbl(["Record (W–L)","Match pts","Players (expected)"].concat(reg&&p2?["Outcome"]:[]).concat(cols.map(function(K){return K===top?"Makes Top "+K:"Top "+K+" after Swiss"})),rows));
-    if(cols.length)B.appendChild(el("p","Percentages show how often a player who finishes Swiss with that record ends up "+(top?"in the top cut":"in that placement")+", with tiebreakers decided at random.","foot"));
+    if(cols.length)B.appendChild(el("p","% of players with that record who finish there (random tiebreaks).","foot"));
     if(reg&&p2)B.appendChild(el("p","About "+Math.round(adv)+" of "+n+" players reach "+thr+" match points and play Phase Two, then the Top "+top+" plays single elimination.","foot"));
-    else if(top)B.appendChild(el("p","The Top "+top+" plays "+cutR+" single-elimination rounds after Swiss, seeded by final standings.","foot"));
+    else if(top)B.appendChild(el("p","Top "+top+": "+cutR+" knockout rounds after Swiss.","foot"));
     var ob=el("div",null,"swodds");ob.id="swOdds";ob.appendChild(el("p","Working out your chances…","foot"));B.insertBefore(ob,B.firstChild);
     if(!SWFILL){SWFILL=true;var mh0=swMyHist();if(mh0)swFill(mh0)}
     clearTimeout(SWT);SWT=setTimeout(function(){renderOdds(n,v)},30);
     B.appendChild(el("h3","Championship Points earned"));
     if(CP.length){
       B.appendChild(tbl(["Placement","Championship Points","At "+n+" players"],CP.map(function(t){var ok=n>=t[3];return[plS(t[0],Math.min(t[1],n)),t[2]+" CP",ok?"✓ Earned":"Needs "+t[3]+"+ players"]})));
-      B.appendChild(el("p",v==="reg"?"Regional values shown are 9th to 128th place for the 2026 season. Top 8 points and attendance minimums come from the official Play! Pokémon Championship Points table.":"A placement only earns points when the event reaches its minimum player count (the kicker). Values from the Play! Pokémon Championship Points table; check pokemon.com for mid-season changes.","foot"));
+      B.appendChild(el("p",v==="reg"?"Regionals: 9th–128th values for the 2026 season. Source: Play! Pokémon CP table.":"Points only count once the event reaches its minimum players. Source: Play! Pokémon CP table.","foot"));
     }else B.appendChild(el("p","No Championship Points at this size.","foot"));
-    N.textContent="Structure from the Play! Pokémon Tournament Rules Handbook for the TCG: "+TOMV[v].n+" ("+TOMV[v].d+"). Match points: win 3, tie 1, loss 0, and a bye counts as a win. Ties in the standings are broken by Opponents' Win % (25% minimum), then Opponents' Opponents' Win %, then head-to-head. Expected player counts assume every match is a coin flip with no ties, so real events will differ. League Challenge, League Cup, Regionals and Championship Points are Play! Pokémon programme names, shown here for official events. GroundZ tournaments are unofficial, use the same Swiss round counts and don't award Championship Points.";
+    N.textContent="Round counts from the Play! Pokémon rules: "+TOMV[v].n+". Win 3, tie 1, bye = win; ties broken by OMW%. GroundZ events are unofficial and don't award CP.";
   }
   ["swN","swF"].forEach(function(i){$(i).addEventListener("input",renderCalc);$(i).addEventListener("change",renderCalc)});
   function swOddsNow(){var n=Math.max(1,Math.min(8192,Math.floor(+$("swN").value)||0)),v=$("swF").value;if(tomRow(n,v))renderOdds(n,v)}
@@ -2501,7 +2501,7 @@ ${stars == null ? "" : ribbon + starRow}
   function mhMu(H,keep){var M={};H.forEach(function(h){if(keep&&!keep(h))return;(h.r||[]).forEach(function(x){if(!x.res||x.res==="BYE")return;var k=(x.od||"Unknown deck").trim()||"Unknown deck",o=M[k.toLowerCase()]=M[k.toLowerCase()]||{n:k,s:x.os,w:0,l:0,t:0,gw:0,gl:0,gt:0};if(!o.s||!o.s.length)o.s=x.os;if(o._h!==h){o._h=h;o.ne=(o.ne||0)+1}if(x.res==="W")o.w++;else if(x.res==="L")o.l++;else o.t++;var gc=mhGc(mhG(x));o.gw+=gc.w;o.gl+=gc.l;o.gt+=gc.t})});return Object.keys(M).map(function(k){return M[k]}).sort(function(a,b){return(b.w+b.l+b.t)-(a.w+a.l+a.t)})}
   function mhMuList(A){var ul=el("ul",null,"mhmul");A.forEach(function(o){var n=o.w+o.l+o.t,li=el("li");var ic=mhShow()?mhIcon(o.n==="Unknown deck"?"":o.n,o.s):null;if(ic)li.appendChild(ic);li.appendChild(el("span",o.n,"mhmn"));li.appendChild(el("span",o.w+"–"+o.l+(o.t?"–"+o.t:""),"mhmr"));var pc=Math.round(100*o.w/n);li.appendChild(el("b",pc+"%",pc>=50?"mhup":"mhdn"));ul.appendChild(li)});return ul}
   function mhOrd(n){var s=["th","st","nd","rd"],v=n%100;return n+(s[(v-20)%10]||s[v]||s[0])}
-  function mhStats(items,cls){var d=el("div",null,cls);items.forEach(function(x){var i=el("div");i.appendChild(el("b",x[0]));i.appendChild(el("span",x[1]));d.appendChild(i)});return d}
+  function mhStats(items,cls){var d=el("div",null,cls);items.forEach(function(x){var i=el("div");i.appendChild(el("b",x[0]));i.appendChild(el("span",x[1]));if(x[2]){var sm=el("small",x[2]);if(x[3])sm.title=x[3];i.appendChild(sm)}d.appendChild(i)});return d}
   function mhFin(h){return h&&h.p?mhOrd(h.p)+(h.n?"/"+h.n:""):"–"}
   function mhDecks(p){var a=[],seen={};S.decks.map(function(d){return d.name}).concat((p.vault||[]).map(function(v){return v.n})).forEach(function(n){if(n&&!seen[n.toLowerCase()]){seen[n.toLowerCase()]=1;a.push(n)}});return a}
   function renderMH(){
@@ -2518,7 +2518,7 @@ ${stars == null ? "" : ribbon + starRow}
     [["All","All tournaments"]].concat(MH_CATS).forEach(function(c){var n=c[0]==="All"?H.length:H.filter(function(h){return h.cat===c[0]}).length;if(c[0]!=="All"&&!n&&MHF!==c[0])return;var bt=el("button",c[0]+(n?" · "+n:""));bt.type="button";bt.title=c[1];bt.setAttribute("aria-pressed",String(MHF===c[0]));bt.onclick=function(){MHF=c[0];renderMH()};seg.appendChild(bt)});
     var F=H.filter(function(h){return MHF==="All"||h.cat===MHF}),tw=0,tl=0,tt=0,best=0;
     var bestH=null;F.forEach(function(h){var r=mhRec(h);tw+=r.w;tl+=r.l;tt+=r.t;if(h.p&&(!best||h.p<best||(h.p===best&&(h.n||0)>((bestH&&bestH.n)||0)))){best=h.p;bestH=h}});
-    var g=tw+tl+tt,sum=mhStats([[String(F.length),F.length===1?"Event":"Events"],[tw+"–"+tl+"–"+tt,"Record"],[g?Math.round(100*tw/g)+"%":"–","Win rate"],[best?mhFin(bestH):"–","Best finish"]],"mhstats");
+    var g=tw+tl+tt,sum=mhStats([[String(F.length),F.length===1?"Event":"Events"],[tw+"–"+tl+"–"+tt,"Record"],[g?Math.round(100*tw/g)+"%":"–","Win rate"],[best?mhFin(bestH):"–","Best finish",bestH?bestH.ev+(bestH.d?" · "+mhShort(bestH.d):""):"",bestH?bestH.ev+(bestH.d?", "+mhDate(bestH.d):""):""]],"mhstats");
     T.appendChild(sum);if(H.length)T.appendChild(seg);
     if(F.length)T.appendChild(mhLast5(F));
     // matchup spread across recorded rounds
@@ -2537,20 +2537,20 @@ ${stars == null ? "" : ribbon + starRow}
     var rn=rw+rl+rt,gn=gw+gl+gt;
     box.appendChild(hd);
     if(rn)box.appendChild(mhStats([[String(rn),"Matchups"],[String(A.length),A.length===1?"Deck faced":"Decks faced"],[rw+"–"+rl+(rt?"–"+rt:""),"Record"],[Math.round(100*rw/rn)+"%","Win rate"]].concat(gn?[[gw+"–"+gl+(gt?"–"+gt:""),"Games · "+Math.round(100*gw/gn)+"%"]]:[]),"mhstats mhstats-s"));
-    box.appendChild(el("p","From "+L5.map(function(h){var b=[h.d?mhShort(h.d):"",h.p?mhFin(h):""].filter(Boolean).join(" · ");return h.ev+(b?" ("+b+")":"")}).join(", ")+".","foot mh5ev"));
-    if(!A.length){box.appendChild(el("p","No opponent decks recorded in these tournaments yet. Edit a tournament and add its rounds to see your matchups here.","foot"));return box}
-    var ul=el("ul",null,"mh5l"),show=mhShow(),hh=el("li",null,"mh5hd");["","Deck","Matchups","Win rate"].forEach(function(t){hh.appendChild(el("span",t))});ul.appendChild(hh);
+    box.appendChild(el("p",L5.map(function(h){return h.ev+(h.p?" ("+mhFin(h)+")":"")}).join(" · "),"foot mh5ev"));
+    if(!A.length){box.appendChild(el("p","No opponent decks yet. Add rounds to a tournament to see matchups.","foot"));return box}
+    var ul=el("ul",null,"mh5l"),show=mhShow(),hh=el("li",null,"mh5hd");["","Deck","Matchup rate","Win rate"].forEach(function(t){hh.appendChild(el("span",t))});ul.appendChild(hh);
     A.forEach(function(o){
       var n=o.w+o.l+o.t,pc=Math.round(100*o.w/n),li=el("li"),g=o.gw+o.gl+o.gt,fq=Math.round(100*n/rn);
       var ic=show?mhIcon(o.n==="Unknown deck"?"":o.n,o.s):null;li.appendChild(ic||el("span"));
-      var nm=el("span",null,"mh5n");nm.appendChild(document.createTextNode(o.n));nm.appendChild(el("small",o.w+"–"+o.l+(o.t?"–"+o.t:"")+(g?" · games "+o.gw+"–"+o.gl+(o.gt?"–"+o.gt:""):"")+" · in "+o.ne+" of "+L5.length+" event"+(L5.length===1?"":"s")+(n<3?" · small sample":"")));li.appendChild(nm);
-      var fqe=el("span",null,"mh5f");fqe.appendChild(el("b",String(n)));fqe.appendChild(el("span",fq+"%"));fqe.title=n+" of your "+rn+" matchups ("+fq+"%)";li.appendChild(fqe);
+      var nm=el("span",null,"mh5n");nm.appendChild(document.createTextNode(o.n));nm.appendChild(el("small",o.w+"–"+o.l+(o.t?"–"+o.t:"")+(g?" · G "+o.gw+"–"+o.gl+(o.gt?"–"+o.gt:""):"")+" · "+o.ne+"/"+L5.length+" events"+(n<3?" · low sample":"")));li.appendChild(nm);
+      var fqe=el("span",null,"mh5f"),fqt=el("span",null,"mh5ft"),fqi=el("i");fqi.style.width=fq+"%";fqt.appendChild(fqi);fqe.appendChild(el("b",n+"×"));fqe.appendChild(fqt);fqe.appendChild(el("span",fq+"%"));fqe.title="Faced in "+n+" of your "+rn+" rounds ("+fq+"%)";fqe.setAttribute("aria-label","Matchup rate "+fq+"%, "+n+" rounds");li.appendChild(fqe);
       var bar=el("span",null,"mh5b"),tr=el("span",null,"mh5t"),fi=el("i",null,pc>=50?"up":"");fi.style.width=pc+"%";tr.appendChild(fi);bar.appendChild(tr);bar.appendChild(el("b",pc+"%",pc>=50?"mhup":"mhdn"));li.appendChild(bar);
       li.title=o.n+": won "+o.w+" of "+n+" rounds";
       ul.appendChild(li);
     });
     box.appendChild(ul);
-    box.appendChild(el("p","Matchups is how many rounds you played against that deck and its share of all your rounds. Win rate counts rounds won; ties and intentional draws count as not won; byes are left out.","foot"));
+    box.appendChild(el("p","Matchup rate: how often you faced the deck. Win rate: rounds won (byes left out).","foot"));
     return box;
   }
   function mhBuildForm(b){
@@ -2562,7 +2562,7 @@ ${stars == null ? "" : ribbon + starRow}
       '<div class="grid" style="margin-top:12px"><div><label for="mS1">Deck sprite 1</label><input id="mS1" list="pkl" autocomplete="off" placeholder="Auto from deck name"></div><div><label for="mS2">Deck sprite 2 (optional)</label><input id="mS2" list="pkl" autocomplete="off" placeholder="e.g. Pidgeot"></div></div>'+
       '<div class="mhprev" id="mhPrev" aria-live="polite"></div>'+
       '<div class="mhrh"><h4>Rounds &amp; matchups <span class="foot">(optional)</span></h4><button id="mRAdd" type="button" class="ghost">+ Add round</button></div>'+
-      '<p class="foot mhghint">Tap W, L or T for each game in order (W W L = won 2–1). Best of one is a single tap.</p>'+
+      '<p class="foot mhghint">Tap each game in order: W W L = won 2–1. Best of one = one tap.</p>'+
       '<div id="mhRounds"></div>'+
       '<div id="mhManual"><div class="grid" style="margin-top:12px"><div><label for="mW">Wins</label><input id="mW" type="number" min="0" max="30" value="0" inputmode="numeric"></div><div><label for="mL">Losses</label><input id="mL" type="number" min="0" max="30" value="0" inputmode="numeric"></div></div><div class="grid" style="margin-top:12px"><div><label for="mT">Ties</label><input id="mT" type="number" min="0" max="30" value="0" inputmode="numeric"></div><div></div></div></div>'+
       '<p class="foot" id="mhAuto" hidden></p>'+
@@ -2671,7 +2671,7 @@ ${stars == null ? "" : ribbon + starRow}
     nb.disabled=k<=0;ob.disabled=k>=F.length-1;nb.onclick=function(){MHSEL=F[k-1];mhList(H)};ob.onclick=function(){MHSEL=F[k+1];mhList(H)};
     nav.appendChild(nb);nav.appendChild(ob);top.appendChild(nav);dt.appendChild(top);
     var st=el("div",null,"mhstat"),nb2=mhByes(h);
-    [[mhFin(h),"Finish"+(h.p&&h.n?" · "+h.n+" players":""),h.p===1?"g1":h.p===2?"g2":h.p===3?"g3":""],[r.w+"–"+r.l+(r.t?"–"+r.t:""),"Record"+(nb2?" · "+nb2+" bye"+(nb2===1?"":"s"):""),""],[String(3*r.w+r.t),"Match points",""],[String((h.r||[]).length||"–"),"Rounds",""]].forEach(function(x){var d=el("div");d.appendChild(el("b",x[0],"mono "+x[2]));d.appendChild(el("span",x[1]));st.appendChild(d)});
+    [[mhFin(h),"Finish",h.p===1?"g1":h.p===2?"g2":h.p===3?"g3":""],[r.w+"–"+r.l+(r.t?"–"+r.t:""),"Record"+(nb2?" · "+nb2+" bye"+(nb2===1?"":"s"):""),""],[String(3*r.w+r.t),"Points",""],[String((h.r||[]).length||"–"),"Rounds",""]].forEach(function(x){var d=el("div");d.appendChild(el("b",x[0],"mono "+x[2]));d.appendChild(el("span",x[1]));st.appendChild(d)});
     dt.appendChild(st);
     if(h.r&&h.r.length){
       var tb=el("div",null,"mhrt"),th=el("div",null,"mhrth");["Round","Opponent's deck","Games · Result"].forEach(function(t){th.appendChild(el("span",t))});tb.appendChild(th);
