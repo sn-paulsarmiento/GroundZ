@@ -1627,7 +1627,7 @@ ${stars == null ? "" : ribbon + starRow}
   $("dkSet").addEventListener("click",function(){view("Acct");window.scrollTo(0,0)});
 
   // ---- updates and notices ----
-  var APP_VER="2026.10.28e";
+  var APP_VER="2026.10.28f";
   var CHANGES=[
     {ts:Date.UTC(2026,9,8,15),ti:"Deck builder upgrade",b:"Search and browse cards while your deck stays on screen, on PC and phone."},
     {ts:Date.UTC(2026,9,8,14),ti:"New logo and TCG Live names",b:"GroundZ has a new look. Add your TCG Live username in profile settings."},
@@ -2501,8 +2501,11 @@ ${stars == null ? "" : ribbon + starRow}
   function mhMu(H,keep){var M={};H.forEach(function(h){if(keep&&!keep(h))return;(h.r||[]).forEach(function(x){if(!x.res||x.res==="BYE")return;var k=(x.od||"Unknown deck").trim()||"Unknown deck",o=M[k.toLowerCase()]=M[k.toLowerCase()]||{n:k,s:x.os,w:0,l:0,t:0,gw:0,gl:0,gt:0};if(!o.s||!o.s.length)o.s=x.os;if(o._h!==h){o._h=h;o.ne=(o.ne||0)+1}if(x.res==="W")o.w++;else if(x.res==="L")o.l++;else o.t++;var gc=mhGc(mhG(x));o.gw+=gc.w;o.gl+=gc.l;o.gt+=gc.t})});return Object.keys(M).map(function(k){return M[k]}).sort(function(a,b){return(b.w+b.l+b.t)-(a.w+a.l+a.t)})}
   function mhMuList(A){var ul=el("ul",null,"mhmul");A.forEach(function(o){var n=o.w+o.l+o.t,li=el("li");var ic=mhShow()?mhIcon(o.n==="Unknown deck"?"":o.n,o.s):null;if(ic)li.appendChild(ic);li.appendChild(el("span",o.n,"mhmn"));li.appendChild(el("span",o.w+"–"+o.l+(o.t?"–"+o.t:""),"mhmr"));var pc=Math.round(100*o.w/n);li.appendChild(el("b",pc+"%",pc>=50?"mhup":"mhdn"));ul.appendChild(li)});return ul}
   function mhOrd(n){var s=["th","st","nd","rd"],v=n%100;return n+(s[(v-20)%10]||s[v]||s[0])}
-  function mhStats(items,cls){var d=el("div",null,cls);items.forEach(function(x){var i=el("div");i.appendChild(el("b",x[0]));i.appendChild(el("span",x[1]));if(x[2]){var sm=el("small",x[2]);if(x[3])sm.title=x[3];i.appendChild(sm)}d.appendChild(i)});return d}
-  function mhFin(h){return h&&h.p?mhOrd(h.p)+(h.n?"/"+h.n:""):"–"}
+  function mhStats(items,cls){var d=el("div",null,cls);items.forEach(function(x){var i=el("div");var bv=el("b",x[0]);if(x[4]){bv.appendChild(x[4]);bv.className="hasmedal"}i.appendChild(bv);i.appendChild(el("span",x[1]));if(x[2]){var sm=el("small",x[2]);if(x[3])sm.title=x[3];i.appendChild(sm)}d.appendChild(i)});return d}
+  function mhFin(h){return h&&h.p?mhOrd(h.p)+(h.n?" of "+h.n:""):"–"}
+  function mhUnbeaten(h){var r=mhRec(h);return !!h&&(h.r||[]).length>0&&r.l===0&&(r.w+r.t)>0}
+  function mhMedal(p){if(!(p>=1&&p<=3))return null;var c=["#D4A017","#A8B0B8","#B87333"][p-1],d=["#8F6200","#56606B","#7A4A1F"][p-1],m=el("span",null,"medal m"+p);m.setAttribute("role","img");m.setAttribute("aria-label",["Gold","Silver","Bronze"][p-1]+" medal");
+    m.innerHTML='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 2h4l2 6H9z" fill="#C8102E"/><path d="M13 2h4l-2 6h-4z" fill="#1F4E9C"/><circle cx="12" cy="15" r="7" fill="'+c+'" stroke="'+d+'" stroke-width="1.5"/><text x="12" y="18.6" text-anchor="middle" font-size="9" font-weight="700" fill="'+d+'" font-family="sans-serif">'+p+'</text></svg>';return m}
   function mhDecks(p){var a=[],seen={};S.decks.map(function(d){return d.name}).concat((p.vault||[]).map(function(v){return v.n})).forEach(function(n){if(n&&!seen[n.toLowerCase()]){seen[n.toLowerCase()]=1;a.push(n)}});return a}
   function renderMH(){
     var b=$("mhBody"),p=me()?myP():null;
@@ -2518,7 +2521,7 @@ ${stars == null ? "" : ribbon + starRow}
     [["All","All tournaments"]].concat(MH_CATS).forEach(function(c){var n=c[0]==="All"?H.length:H.filter(function(h){return h.cat===c[0]}).length;if(c[0]!=="All"&&!n&&MHF!==c[0])return;var bt=el("button",c[0]+(n?" · "+n:""));bt.type="button";bt.title=c[1];bt.setAttribute("aria-pressed",String(MHF===c[0]));bt.onclick=function(){MHF=c[0];renderMH()};seg.appendChild(bt)});
     var F=H.filter(function(h){return MHF==="All"||h.cat===MHF}),tw=0,tl=0,tt=0,best=0;
     var bestH=null;F.forEach(function(h){var r=mhRec(h);tw+=r.w;tl+=r.l;tt+=r.t;if(h.p&&(!best||h.p<best||(h.p===best&&(h.n||0)>((bestH&&bestH.n)||0)))){best=h.p;bestH=h}});
-    var g=tw+tl+tt,sum=mhStats([[String(F.length),F.length===1?"Event":"Events"],[tw+"–"+tl+"–"+tt,"Record"],[g?Math.round(100*tw/g)+"%":"–","Win rate"],[best?mhFin(bestH):"–","Best finish",bestH?bestH.ev+(bestH.d?" · "+mhShort(bestH.d):""):"",bestH?bestH.ev+(bestH.d?", "+mhDate(bestH.d):""):""]],"mhstats");
+    var g=tw+tl+tt,sum=mhStats([[String(F.length),F.length===1?"Event":"Events"],[tw+"–"+tl+"–"+tt,"Record"],[g?Math.round(100*tw/g)+"%":"–","Win rate"],[best?"Rank "+best+(bestH.n?" of "+bestH.n:""):"–","Best finish",bestH?bestH.ev+(bestH.d?" · "+mhShort(bestH.d):""):"",bestH?bestH.ev+(bestH.d?", "+mhDate(bestH.d):""):"",best?mhMedal(best):null]],"mhstats mhstats-top");
     T.appendChild(sum);if(H.length)T.appendChild(seg);
     if(F.length)T.appendChild(mhLast5(F));
     // matchup spread across recorded rounds
@@ -2536,21 +2539,20 @@ ${stars == null ? "" : ribbon + starRow}
     var rw=0,rl=0,rt=0,gw=0,gl=0,gt=0;A.forEach(function(o){rw+=o.w;rl+=o.l;rt+=o.t;gw+=o.gw;gl+=o.gl;gt+=o.gt});
     var rn=rw+rl+rt,gn=gw+gl+gt;
     box.appendChild(hd);
-    if(rn)box.appendChild(mhStats([[String(rn),"Matchups"],[String(A.length),A.length===1?"Deck faced":"Decks faced"],[rw+"–"+rl+(rt?"–"+rt:""),"Record"],[Math.round(100*rw/rn)+"%","Win rate"]].concat(gn?[[gw+"–"+gl+(gt?"–"+gt:""),"Games · "+Math.round(100*gw/gn)+"%"]]:[]),"mhstats mhstats-s"));
-    box.appendChild(el("p",L5.map(function(h){return h.ev+(h.p?" ("+mhFin(h)+")":"")}).join(" · "),"foot mh5ev"));
+    if(rn)hd.appendChild(el("span",rn+" rounds · "+A.length+" deck"+(A.length===1?"":"s")+" · "+rw+"–"+rl+(rt?"–"+rt:"")+" ("+Math.round(100*rw/rn)+"%)"+(gn?" · G "+gw+"–"+gl+(gt?"–"+gt:""):""),"mh5sum"));
+    box.appendChild(el("p",L5.map(function(h){return h.ev+(h.p?" ("+mhOrd(h.p)+")":"")}).join(" · "),"foot mh5ev"));
     if(!A.length){box.appendChild(el("p","No opponent decks yet. Add rounds to a tournament to see matchups.","foot"));return box}
-    var ul=el("ul",null,"mh5l"),show=mhShow(),hh=el("li",null,"mh5hd");["","Deck","Matchup rate","Win rate"].forEach(function(t){hh.appendChild(el("span",t))});ul.appendChild(hh);
+    var ul=el("ul",null,"mh5l"),show=mhShow(),hh=el("li",null,"mh5hd");[["",""],["Deck",""],["Matchup rate","How often you faced the deck"],["Win rate","Rounds won; byes left out"]].forEach(function(t){var e=el("span",t[0]);if(t[1])e.title=t[1];hh.appendChild(e)});ul.appendChild(hh);
     A.forEach(function(o){
       var n=o.w+o.l+o.t,pc=Math.round(100*o.w/n),li=el("li"),g=o.gw+o.gl+o.gt,fq=Math.round(100*n/rn);
       var ic=show?mhIcon(o.n==="Unknown deck"?"":o.n,o.s):null;li.appendChild(ic||el("span"));
-      var nm=el("span",null,"mh5n");nm.appendChild(document.createTextNode(o.n));nm.appendChild(el("small",o.w+"–"+o.l+(o.t?"–"+o.t:"")+(g?" · G "+o.gw+"–"+o.gl+(o.gt?"–"+o.gt:""):"")+" · "+o.ne+"/"+L5.length+" events"+(n<3?" · low sample":"")));li.appendChild(nm);
+      var nm=el("span",null,"mh5n");nm.appendChild(document.createTextNode(o.n));var sub=el("small",o.w+"–"+o.l+(o.t?"–"+o.t:"")+(g?" · G "+o.gw+"–"+o.gl+(o.gt?"–"+o.gt:""):""));sub.appendChild(el("span"," · "+o.ne+"/"+L5.length+" events"+(n<3?" · low sample":""),"mh5x"));nm.appendChild(sub);li.appendChild(nm);
       var fqe=el("span",null,"mh5f"),fqt=el("span",null,"mh5ft"),fqi=el("i");fqi.style.width=fq+"%";fqt.appendChild(fqi);fqe.appendChild(el("b",n+"×"));fqe.appendChild(fqt);fqe.appendChild(el("span",fq+"%"));fqe.title="Faced in "+n+" of your "+rn+" rounds ("+fq+"%)";fqe.setAttribute("aria-label","Matchup rate "+fq+"%, "+n+" rounds");li.appendChild(fqe);
       var bar=el("span",null,"mh5b"),tr=el("span",null,"mh5t"),fi=el("i",null,pc>=50?"up":"");fi.style.width=pc+"%";tr.appendChild(fi);bar.appendChild(tr);bar.appendChild(el("b",pc+"%",pc>=50?"mhup":"mhdn"));li.appendChild(bar);
       li.title=o.n+": won "+o.w+" of "+n+" rounds";
       ul.appendChild(li);
     });
     box.appendChild(ul);
-    box.appendChild(el("p","Matchup rate: how often you faced the deck. Win rate: rounds won (byes left out).","foot"));
     return box;
   }
   function mhBuildForm(b){
@@ -2655,7 +2657,7 @@ ${stars == null ? "" : ribbon + starRow}
       var sp=el("span",null,"mhls");var ic=show?mhIcon(h.dk,h.s):null;if(ic)sp.appendChild(ic);b.appendChild(sp);
       b.appendChild(el("span",h.ev,"mhle"));
       b.appendChild(el("span",r.w+"–"+r.l+(r.t?"–"+r.t:""),"mono mhlr"));
-      var fe=el("span",null,"mono mhlf");if(h.p){fe.appendChild(document.createTextNode(mhOrd(h.p)));if(h.n)fe.appendChild(el("small","/"+h.n))}else fe.textContent="–";if(h.p&&h.n)fe.title=mhOrd(h.p)+" of "+h.n+" players";b.appendChild(fe);
+      var fe=el("span",null,"mono mhlf");if(h.p){fe.appendChild(document.createTextNode(mhOrd(h.p)));if(h.n)fe.appendChild(el("small"," of "+h.n))}else fe.textContent="–";if(mhUnbeaten(h)){b.classList.add("mhund");b.title="Unbeaten run: no losses"}if(h.p&&h.n)fe.title=mhOrd(h.p)+" of "+h.n+" players";b.appendChild(fe);
       b.onclick=function(){MHSEL=h;mhList(H);if(window.matchMedia("(max-width:860px)").matches){var d=$("mhDet");if(d)d.scrollIntoView({behavior:"smooth",block:"start"})}};
       lc.appendChild(b);
     });
@@ -2671,7 +2673,8 @@ ${stars == null ? "" : ribbon + starRow}
     nb.disabled=k<=0;ob.disabled=k>=F.length-1;nb.onclick=function(){MHSEL=F[k-1];mhList(H)};ob.onclick=function(){MHSEL=F[k+1];mhList(H)};
     nav.appendChild(nb);nav.appendChild(ob);top.appendChild(nav);dt.appendChild(top);
     var st=el("div",null,"mhstat"),nb2=mhByes(h);
-    [[mhFin(h),"Finish",h.p===1?"g1":h.p===2?"g2":h.p===3?"g3":""],[r.w+"–"+r.l+(r.t?"–"+r.t:""),"Record"+(nb2?" · "+nb2+" bye"+(nb2===1?"":"s"):""),""],[String(3*r.w+r.t),"Points",""],[String((h.r||[]).length||"–"),"Rounds",""]].forEach(function(x){var d=el("div");d.appendChild(el("b",x[0],"mono "+x[2]));d.appendChild(el("span",x[1]));st.appendChild(d)});
+    [[mhFin(h),"Finish","fin"],[r.w+"–"+r.l+(r.t?"–"+r.t:""),"Record"+(nb2?" · "+nb2+" bye"+(nb2===1?"":"s"):""),""],[String(3*r.w+r.t),"Points",""],[String((h.r||[]).length||"–"),"Rounds",""]].forEach(function(x){var d=el("div"),bv=el("b",x[0],"mono "+x[2]);if(/\bfin\b/.test(x[2])){bv.textContent=h.p?mhOrd(h.p):"–";if(h.p&&h.n)bv.appendChild(el("small"," of "+h.n,"mhof"));var md=mhMedal(h.p);if(md)bv.appendChild(md)}d.appendChild(bv);d.appendChild(el("span",x[1]));st.appendChild(d)});
+    if(mhUnbeaten(h)){st.classList.add("mhspecial");st.title="No losses in this tournament"}
     dt.appendChild(st);
     if(h.r&&h.r.length){
       var tb=el("div",null,"mhrt"),th=el("div",null,"mhrth");["Round","Opponent's deck","Games · Result"].forEach(function(t){th.appendChild(el("span",t))});tb.appendChild(th);
