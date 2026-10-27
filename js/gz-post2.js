@@ -9,7 +9,7 @@
     Tools:'<path d="M14.7 6.3a4 4 0 0 0-5.4 5.4L3 18l3 3 6.3-6.3a4 4 0 0 0 5.4-5.4l-2.5 2.5-2.5-.5-.5-2.5z"/>',
     Pro:'<path d="m12 3 2.6 5.6 6.1.7-4.5 4.2 1.2 6L12 16.6 6.6 19.5l1.2-6L3.3 9.3l6.1-.7z"/>'
   };
-  if(location.hash==="#privacy")setTimeout(showPrivacy,300);if(location.hash==="#terms")setTimeout(showTerms,300);if(location.hash==="#report")setTimeout(showReport,300);
+  if(location.hash==="#privacy")setTimeout(showPrivacy,300);if(location.hash==="#terms")setTimeout(showTerms,300);if(location.hash==="#report")setTimeout(function(){showReport()},300);
   ["Rank","Tour","Cards","Tools","Pro"].forEach(function(k){var b=$("t"+k);if(!b)return;var s=document.createElement("span");s.className="ti";s.setAttribute("aria-hidden","true");s.innerHTML='<svg viewBox="0 0 24 24">'+I[k]+'</svg>';b.insertBefore(s,b.firstChild)});
   var tb=document.querySelector(".topbar-in"),th=$("themeBtn"),a=document.createElement("div");a.className="acct";
   ["tDash","tAcct"].forEach(function(i){var b=$(i);if(b)a.appendChild(b)});tb.insertBefore(a,th);
