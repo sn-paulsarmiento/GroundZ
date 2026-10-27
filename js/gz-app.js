@@ -411,6 +411,13 @@
       throw e;
     });
   }
+  // profile pictures are the heaviest data (they don't compress), so load them once and refresh every 10 minutes
+  var AVC=null,AVT=0;
+  function loadAvatars(){
+    if(AVC&&Date.now()-AVT<600000)return Promise.resolve(AVC);
+    return api("/rest/v1/profiles?select=player_id,avatar&avatar=not.is.null").then(function(x){AVC=x;AVT=Date.now();return x},function(){return AVC||null});
+  }
+  var liteSig="";
   function loadRemote(){
     return Promise.all([
       api("/rest/v1/league_state?id=eq.1&select=data,version"),
@@ -418,7 +425,7 @@
       api("/rest/v1/registrations?select=user_id"),
       api("/rest/v1/decklists?select=user_id,list,is_public"),
       SES&&SES.uid?api("/rest/v1/player_data?select=data&user_id=eq."+SES.uid).catch(function(){return []}):Promise.resolve([]),
-      api("/rest/v1/profiles?select=player_id,avatar&avatar=not.is.null").catch(function(){return null}),
+      loadAvatars(),
       api("/rest/v1/profiles?select=player_id,tcg_ign,ign_only&tcg_ign=not.is.null").catch(function(){return null})
     ]);
   }
@@ -469,7 +476,7 @@
     var dl={};(r[3]||[]).forEach(function(x){dl[x.user_id]=x});
     PROFS.forEach(function(f){var p=byId(st,f.player_id),d=dl[f.id];if(!p)return;if(d){p.list=d.list||"";p.pub=!!d.is_public}else{delete p.list;p.pub=false}});
     REMOTE=true; S=st; if(keep)S.pro=keep; ensureSprites(S); ensureV4(S);
-    lastSig=JSON.stringify([r[1],r[2],r[3],r[4],r[5],r[6]]);
+    lastSig=JSON.stringify([r[1],r[2],r[3],r[4],r[5],r[6]]);liteSig=JSON.stringify([r[1],r[2]]);
     var f=SES&&SES.uid?byUid[SES.uid]:null;
     CUR=f?{u:f.display_name,un:f.username,k:f.username.toLowerCase(),role:f.role==="org"?"org":"pl",pid:f.player_id,uid:f.id}:null;
     if(CUR&&CONSENT_CK!==CUR.uid){CONSENT_CK=CUR.uid;setTimeout(checkConsent,400)}
@@ -543,7 +550,16 @@
   function poll(){
     if(!REMOTE||document.hidden||saving||dirty||mineDirty||mineBusy)return;
     var a=document.activeElement; if(a&&/^(INPUT|TEXTAREA|SELECT)$/.test(a.tagName))return;
-    loadRemote().then(function(r){
+    Promise.all([
+      api("/rest/v1/league_state?id=eq.1&select=version"),
+      api("/rest/v1/profiles?select=id,username,display_name,role,player_id"),
+      api("/rest/v1/registrations?select=user_id")
+    ]).then(function(q){
+      var v=q[0]&&q[0][0];
+      if(v&&v.version===remVer&&JSON.stringify([q[1],q[2]])===liteSig&&Date.now()-AVT<600000)return null;
+      return loadRemote();
+    }).then(function(r){
+      if(!r)return;
       var row=r[0]&&r[0][0]; if(!row)return;
       if(row.version===remVer&&JSON.stringify([r[1],r[2],r[3],r[4],r[5],r[6]])===lastSig)return;
       if(saving||dirty||mineDirty||mineBusy)return;
@@ -883,7 +899,7 @@
       function setAv(data){
         var m=$("avMsg");m.textContent=data?"Saving your picture…":"Removing your picture…";
         api("/rest/v1/rpc/set_avatar",{method:"POST",body:{a:data}}).then(function(){
-          if(data)AV[u.pid]=data;else delete AV[u.pid];rerender();var mm=$("avMsg");if(mm)mm.textContent=data?"Profile picture updated.":"Profile picture removed.";
+          if(data)AV[u.pid]=data;else delete AV[u.pid];AVT=0;rerender();var mm=$("avMsg");if(mm)mm.textContent=data?"Profile picture updated.":"Profile picture removed.";
         },function(e){m.textContent=/set_avatar|function|schema cache|404/i.test(e.message+" "+e.status)?"Profile pictures need a one-time database update. The organizer runs the profile-picture SQL in Supabase, then this works.":friendly(e)});
       }
       $("avRm").onclick=function(){setAv(null)};
@@ -1627,7 +1643,7 @@ ${stars == null ? "" : ribbon + starRow}
   $("dkSet").addEventListener("click",function(){view("Acct");window.scrollTo(0,0)});
 
   // ---- updates and notices ----
-  var APP_VER="2026.10.28f";
+  var APP_VER="2026.10.28g";
   var CHANGES=[
     {ts:Date.UTC(2026,9,8,15),ti:"Deck builder upgrade",b:"Search and browse cards while your deck stays on screen, on PC and phone."},
     {ts:Date.UTC(2026,9,8,14),ti:"New logo and TCG Live names",b:"GroundZ has a new look. Add your TCG Live username in profile settings."},
