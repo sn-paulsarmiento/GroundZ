@@ -483,6 +483,7 @@
     var mine=(r[4]&&r[4][0]&&r[4][0].data)||null, has=function(d){return d&&d.cards&&d.cards.length};
     if(CUR){
       var mp=byId(S,CUR.pid);if(mp){mp.vault=(mine&&mine.vault)||[];mp.mh=(mine&&mine.mh)||[]}
+      var gmh=guestRead();if(mp&&gmh.length){var seen={};mp.mh.forEach(function(h){seen[JSON.stringify(h)]=1});var addN=0;gmh.forEach(function(h){if(!seen[JSON.stringify(h)]){mp.mh.push(h);addN++}});if(mp.mh.length>200)mp.mh.splice(0,mp.mh.length-200);try{localStorage.removeItem(GK)}catch(e){}GUEST=null;if(addN)setTimeout(function(){queueMine();banner(addN+" tournament"+(addN===1?"":"s")+" from this browser "+(addN===1?"was":"were")+" added to your match history.")},0)}
       var sd=mine&&mine.draft,ld0=null;try{ld0=JSON.parse(localStorage.getItem("tg-draft"))}catch(e){}
       var loc=has(keepDraft)?keepDraft:(has(ld0)?ld0:null);
       S.draft=loc&&(!has(sd)||(loc.ts||Date.now())>=(sd.ts||0))?loc:(has(sd)?sd:{name:"",cards:[]});
@@ -604,6 +605,12 @@
   }
   function me(){return CUR}
   function myP(){var u=me();return u?(byId(S,u.pid)||null):null}
+  // Tools without an account: match history kept in this browser only
+  var GUEST=null,GK="tg-guest-mh";
+  function guestRead(){var a=[];try{a=JSON.parse(localStorage.getItem(GK))||[]}catch(e){}return Array.isArray(a)?a.filter(function(h){return h&&typeof h==="object"&&!Array.isArray(h)&&typeof h.ev==="string"}).slice(-200):[]}
+  function guestP(){if(!GUEST)GUEST={id:"guest",vault:[],mh:guestRead()};return GUEST}
+  function toolP(){return me()?myP():guestP()}
+  function mhPersist(){if(me()){save();return}try{localStorage.setItem(GK,JSON.stringify(guestP().mh))}catch(e){}}
   function signOut(){
     sbx("/auth/v1/logout",{method:"POST"}).catch(function(){});
     sset(null); CUR=null; mineSig=""; S.draft={name:"",cards:[]}; try{localStorage.removeItem("tg-draft")}catch(e){} chrome(); view("Rank");
@@ -642,7 +649,7 @@
         "Decks and history: decklists (public only if you choose), saved decks, your match history and deck drafts.",
         "Linking requests: the email on your TCG Live account, used only to check a request and erased once the organizer decides.",
         "Your consent choices and when you made them.",
-        "In your browser: your login session and display settings (theme, filters). We don't use advertising trackers or analytics."]);
+        "In your browser: your login session, display settings (theme, filters), and any deck draft or match history you record without an account. That stays on your device until you clear it or sign in, when it moves to your account. We don't use advertising trackers or analytics."]);
     h("Why we use it");
     ul(["To run your account and the league: rankings, tournaments, pairings, results and your profile. You agree to this when you create an account.",
         "To send GroundZ news and announcements by email, only if you separately opt in. You can switch this off any time in Profile settings.",
@@ -1643,7 +1650,7 @@ ${stars == null ? "" : ribbon + starRow}
   $("dkSet").addEventListener("click",function(){view("Acct");window.scrollTo(0,0)});
 
   // ---- updates and notices ----
-  var APP_VER="2026.10.28i";
+  var APP_VER="2026.10.28j";
   var CHANGES=[
     {ts:Date.UTC(2026,9,8,15),ti:"Deck builder upgrade",b:"Search and browse cards while your deck stays on screen, on PC and phone."},
     {ts:Date.UTC(2026,9,8,14),ti:"New logo and TCG Live names",b:"GroundZ has a new look. Add your TCG Live username in profile settings."},
@@ -2428,7 +2435,7 @@ ${stars == null ? "" : ribbon + starRow}
   }
   function swPct(x){var v=x*100;return x>=1?"100%":v>=99.5?">99%":x<=0?"0%":v<.5?"<1%":Math.round(v)+"%"}
   function swRec(){function g(i){return Math.max(0,Math.floor(+$(i).value)||0)}return{w:g("swW"),l:g("swL"),t:g("swTi")}}
-  function swMyHist(){var p=me()?myP():null;if(!p||!(p.mh||[]).length)return null;var o={w:0,l:0,t:0};p.mh.forEach(function(h){var r=mhRec(h);o.w+=r.w-mhByes(h);o.l+=r.l;o.t+=r.t});o.w=Math.max(0,o.w);return o.w+o.l+o.t?o:null}
+  function swMyHist(){var p=toolP();if(!p||!(p.mh||[]).length)return null;var o={w:0,l:0,t:0};p.mh.forEach(function(h){var r=mhRec(h);o.w+=r.w-mhByes(h);o.l+=r.l;o.t+=r.t});o.w=Math.max(0,o.w);return o.w+o.l+o.t?o:null}
   var SWFILL=false,SWT=null;
   function swFill(o){$("swW").value=o.w;$("swL").value=o.l;$("swTi").value=o.t}
   function renderOdds(n,v){
@@ -2489,7 +2496,7 @@ ${stars == null ? "" : ribbon + starRow}
   ["swN","swF"].forEach(function(i){$(i).addEventListener("input",renderCalc);$(i).addEventListener("change",renderCalc)});
   function swOddsNow(){var n=Math.max(1,Math.min(8192,Math.floor(+$("swN").value)||0)),v=$("swF").value;if(tomRow(n,v))renderOdds(n,v)}
   ["swW","swL","swTi"].forEach(function(i){$(i).addEventListener("input",function(){clearTimeout(SWT);SWT=setTimeout(swOddsNow,180)})});
-  $("swMine").addEventListener("click",function(){var o=swMyHist();if(o){swFill(o);swOddsNow()}else $("swRate").textContent=me()?"No rounds in your match history yet. Record a tournament in Tools → Match history first.":"Sign in to use your match history."});
+  $("swMine").addEventListener("click",function(){var o=swMyHist();if(o){swFill(o);swOddsNow()}else $("swRate").textContent="No rounds in your match history yet. Record a tournament in Tools → Match history first."});
   // ---- Match history: categories, deck sprites, rounds & matchups, placement ----
   var MH_CATS=[["Online","Online"],["Locals","Locals"],["Challenges","League Challenge"],["Cup","League Cup"],["Regs","Regionals"],["ICs","International Championships"],["Worlds","World Championships"]];
   var MHF="All",MHE=null,MHR=[],MHpid=null,MHO=false;
@@ -2525,12 +2532,17 @@ ${stars == null ? "" : ribbon + starRow}
     m.innerHTML='<svg viewBox="0 0 24 24" aria-hidden="true"><g fill="none" stroke="'+d+'" stroke-width="1.4" stroke-linecap="round"><path d="M7 19c-3-2-4-6-3-10M17 19c3-2 4-6 3-10"/></g><g fill="'+c+'" stroke="'+d+'" stroke-width=".7">'+lf(4.6,10,-20)+lf(4.8,14,-45)+lf(7,17.6,-70)+lf(19.4,10,20)+lf(19.2,14,45)+lf(17,17.6,70)+'</g><text x="12" y="16" text-anchor="middle" font-size="10" font-weight="700" fill="'+d+'" font-family="sans-serif">'+p+'</text></svg>';return m}
   function mhDecks(p){var a=[],seen={};S.decks.map(function(d){return d.name}).concat((p.vault||[]).map(function(v){return v.n})).forEach(function(n){if(n&&!seen[n.toLowerCase()]){seen[n.toLowerCase()]=1;a.push(n)}});return a}
   function renderMH(){
-    var b=$("mhBody"),p=me()?myP():null;
-    if(!p){b.innerHTML="";MHpid=null;b.appendChild(el("p","Sign in to record the tournaments you play in.","foot"));return}
+    var b=$("mhBody"),p=toolP();
+    if(!p){b.innerHTML="";MHpid=null;b.appendChild(el("p","Your account isn't linked to a player yet, so match history is unavailable.","foot"));return}
     var H=p.mh=p.mh||[];
     if(MHpid!==p.id||!$("mhForm")){MHpid=p.id;MHE=null;MHR=[];MHO=false;b.innerHTML="";b.appendChild(el("div",null,"mhtop")).id="mhTop";var na=el("div",null,"actions mhnew"),nb=el("button","+ New tournament");nb.type="button";nb.id="mNew";nb.style.flex="none";nb.onclick=function(){mhReset();$("mMsg").textContent="";mhOpen(true)};na.appendChild(nb);b.appendChild(na);mhBuildForm(b);var L=el("div");L.id="mhList";b.appendChild(L);mhOpen(false)}
-    mhDeckList(p);mhTop(H);mhList(H);
+    mhDeckList(p);mhTop(H);mhList(H);mhGuestNote(H);
   }
+  // quiet reminder for visitors: one line under the list, never a popup
+  function mhGuestNote(H){var o=$("mhGn");if(o)o.remove();if(me()||!REMOTE)return;var L=$("mhList");if(!L)return;var n=el("p",null,"foot mhgn");n.id="mhGn";
+    n.appendChild(document.createTextNode(H.length?"Saved in this browser only. ":"No account needed: entries are saved in this browser. "));
+    var a=el("button","Create a free account","linkbtn");a.type="button";a.onclick=function(){mode="up";view("Acct");window.scrollTo(0,0)};n.appendChild(a);
+    n.appendChild(document.createTextNode(H.length?" to keep it on every device and use it in deck stats.":" to keep them on every device."));L.appendChild(n)}
   function mhDeckList(p){var dl=$("mhDl");if(!dl)return;dl.innerHTML="";mhDecks(p).forEach(function(n){var o=document.createElement("option");o.value=n;dl.appendChild(o)})}
   function mhTop(H){
     var T=$("mhTop");T.innerHTML="";
@@ -2647,7 +2659,7 @@ ${stars == null ? "" : ribbon + starRow}
     $("mAdd").textContent="Save changes";$("mhFt").textContent="Edit "+h.ev;mhRows();mhPrev();mhOpen(true);
   }
   function mhSave(){
-    var p=myP(),m=$("mMsg");if(!p)return;var H=p.mh=p.mh||[];
+    var p=toolP(),m=$("mMsg");if(!p)return;var H=p.mh=p.mh||[];
     var ev=clean($("mEv").value);if(!ev){m.textContent="Add a tournament name.";$("mEv").focus();return}
     var sk=mhKeys([$("mS1").value,$("mS2").value]);if(sk.bad){m.textContent="I couldn't find a sprite called "+sk.bad+". Pick one from the suggestions.";return}
     var R=[],bad="";MHR.forEach(function(x){var k=mhKeys([x.osIn||""]);var by=x.res==="BYE";if(k.bad&&!by)bad=k.bad;var gg=(by||x.res==="ID")?"":mhG(x);var o={od:by?"":clean(x.od),os:by?[]:k.k,res:gg?mhGRes(gg):(x.res||"")};if(gg)o.g=gg;R.push(o)});
@@ -2656,7 +2668,7 @@ ${stars == null ? "" : ribbon + starRow}
     var rec=R.length?mhRec({r:R}):{w:Math.max(0,+$("mW").value||0),l:Math.max(0,+$("mL").value||0),t:Math.max(0,+$("mT").value||0)};
     var dk=clean($("mD").value),o={ev:ev,cat:$("mCat").value,d:$("mDt").value,w:rec.w,l:rec.l,t:rec.t,p:pl,n:np,dk:dk,s:sk.k,r:R};
     if(MHE&&H.indexOf(MHE)>=0){H[H.indexOf(MHE)]=o;m.textContent=ev+" updated."}else{H.push(o);if(H.length>200)H.shift();m.textContent=ev+" added to your history."}
-    MHE=null;save();mhReset();mhOpen(false);renderMH();var nm=$("mMsg").textContent;var sm=$("mhSaved");if(sm)sm.textContent=nm;
+    MHE=null;mhPersist();mhReset();mhOpen(false);renderMH();var nm=$("mMsg").textContent;var sm=$("mhSaved");if(sm)sm.textContent=nm;
   }
   var MHSEL=null,MSH=["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
   function mhShort(d){var m=String(d||"").match(/^\d{4}-(\d{2})-(\d{2})$/);return m?MSH[+m[1]-1]+" "+(+m[2]):"–"}
@@ -2701,7 +2713,7 @@ ${stars == null ? "" : ribbon + starRow}
       dt.appendChild(tb);
     }else dt.appendChild(el("p","No rounds recorded for this tournament. Edit it to add rounds and matchups.","foot"));
     var act=el("div",null,"mhdact"),e=el("button","Edit","ghost"),x=el("button","Delete","ghost mhdel");e.type=x.type="button";
-    e.onclick=function(){mhEdit(h)};x.onclick=function(){if(x.dataset.ok){H.splice(H.indexOf(h),1);if(MHE===h){mhReset();mhOpen(false)}MHSEL=null;save();renderMH();return}x.dataset.ok="1";x.textContent="Tap again to delete";setTimeout(function(){delete x.dataset.ok;x.textContent="Delete"},3000)};
+    e.onclick=function(){mhEdit(h)};x.onclick=function(){if(x.dataset.ok){H.splice(H.indexOf(h),1);if(MHE===h){mhReset();mhOpen(false)}MHSEL=null;mhPersist();renderMH();return}x.dataset.ok="1";x.textContent="Tap again to delete";setTimeout(function(){delete x.dataset.ok;x.textContent="Delete"},3000)};
     var shb=el("button","Share to story","ghost");shb.type="button";shb.onclick=function(){shareCanvas(storyResult(h),"groundz-"+(h.ev||"result").toLowerCase().replace(/[^a-z0-9]+/g,"-")+".png",h.ev)};
     act.appendChild(e);act.appendChild(x);act.appendChild(shb);dt.appendChild(act);
     wrap.appendChild(dt);L.appendChild(wrap);
