@@ -1650,7 +1650,7 @@ ${stars == null ? "" : ribbon + starRow}
   $("dkSet").addEventListener("click",function(){view("Acct");window.scrollTo(0,0)});
 
   // ---- updates and notices ----
-  var APP_VER="2026.10.28q";
+  var APP_VER="2026.10.28r";
   var CHANGES=[
     {ts:Date.UTC(2026,9,8,15),ti:"Deck builder upgrade",b:"Search and browse cards while your deck stays on screen, on PC and phone."},
     {ts:Date.UTC(2026,9,8,14),ti:"New logo and TCG Live names",b:"GroundZ has a new look. Add your TCG Live username in profile settings."},
@@ -3009,7 +3009,7 @@ ${stars == null ? "" : ribbon + starRow}
       c.textAlign="center";c.fillStyle="#FFFFFF";c.font="600 44px "+SF;c.fillText(fit(c,h.dk||"Deck not recorded",900),540,684);
       // finish
       var top={1:["#FFE38A","#C8961E"],2:["#F1F4F7","#9AA3AD"],3:["#F2B98A","#A0612E"]}[h.p]||["#FFFFFF","#C9CED6"],fg=c.createLinearGradient(0,760,0,940);fg.addColorStop(0,top[0]);fg.addColorStop(1,top[1]);
-      c.fillStyle=fg;c.font="italic 800 210px "+SF;c.fillText(h.p?mhOrd(h.p).toUpperCase():"–",540,930);
+      c.fillStyle=fg;c.font="800 210px "+SF;c.fillText(h.p?mhOrd(h.p).toUpperCase():"–",540,930);
       c.fillStyle="#AEB4BD";c.font="600 30px "+SF;try{c.letterSpacing="8px"}catch(e){}c.fillText(h.p?(h.n?"OF "+h.n+" PLAYERS":"PLACE"):"NO PLACEMENT",540,990);try{c.letterSpacing="0px"}catch(e){}
       c.fillStyle="#FFFFFF";c.font="italic 800 52px "+SF;c.fillText(fit(c,(h.ev||"").toUpperCase(),920),540,1104);
       c.fillStyle="#7D8590";c.font="500 28px "+SM;c.fillText(fit(c,[mhDate(h.d),h.cat,pl?pname(pl):""].filter(Boolean).join("  ·  "),920),540,1150);
@@ -3020,7 +3020,7 @@ ${stars == null ? "" : ribbon + starRow}
       var m=R.length,w=m?Math.min(170,Math.floor(940/m)):0,sx=540-m*w/2,ts=Math.min(64,Math.floor((w-20)/1.55));
       if(!m){c.fillStyle="#7D8590";c.font="500 30px "+SF;c.fillText("Rounds weren't recorded for this event.",540,1420)}
       R.forEach(function(x,i){var cx=sx+i*w+w/2,col=x.res==="W"?"#22C55E":x.res==="L"?"#EF4444":"#9CA3AF";
-        var k0=14,tx=cx-w/2+7,tww=w-14;c.beginPath();c.moveTo(tx+k0,1350);c.lineTo(tx+tww,1350);c.lineTo(tx+tww-k0,1570);c.lineTo(tx,1570);c.closePath();c.fillStyle="rgba(255,255,255,.06)";c.fill();if(x.res==="W"){c.strokeStyle="rgba(245,197,66,.6)";c.lineWidth=2;c.stroke()}
+        var k0=14,tx=cx-w/2+7,tww=w-14;c.beginPath();c.moveTo(tx+k0,1350);c.lineTo(tx+tww,1350);c.lineTo(tx+tww-k0,1570);c.lineTo(tx,1570);c.closePath();c.fillStyle="rgba(255,255,255,.06)";c.fill();
         if(x.res==="BYE"){c.fillStyle="#7D8590";c.font="600 26px "+SF;c.fillText("BYE",cx,1416)}
         else{var k2=spriteKeys(x.od,x.os).slice(0,2),ov=Math.round(ts*0.55),ww=k2.length?ts+(k2.length-1)*ov:0;k2.forEach(function(k,j){drawSpr(c,sh,k,cx-ww/2+j*ov,1372,ts)});if(!k2.length){c.fillStyle="#7D8590";c.font="600 22px "+SF;c.fillText("?",cx,1414)}}
         c.save();c.shadowColor=col;c.shadowBlur=16;c.fillStyle=col;rr(c,cx-32,1462,64,48,10);c.fill();c.restore();
