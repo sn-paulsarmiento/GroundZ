@@ -1650,7 +1650,7 @@ ${stars == null ? "" : ribbon + starRow}
   $("dkSet").addEventListener("click",function(){view("Acct");window.scrollTo(0,0)});
 
   // ---- updates and notices ----
-  var APP_VER="2026.10.28n";
+  var APP_VER="2026.10.28o";
   var CHANGES=[
     {ts:Date.UTC(2026,9,8,15),ti:"Deck builder upgrade",b:"Search and browse cards while your deck stays on screen, on PC and phone."},
     {ts:Date.UTC(2026,9,8,14),ti:"New logo and TCG Live names",b:"GroundZ has a new look. Add your TCG Live username in profile settings."},
@@ -2528,7 +2528,6 @@ ${stars == null ? "" : ribbon + starRow}
   function mhOrd(n){var s=["th","st","nd","rd"],v=n%100;return n+(s[(v-20)%10]||s[v]||s[0])}
   function mhStats(items,cls){var d=el("div",null,cls);items.forEach(function(x){var i=el("div");var bv=el("b",x[0]);if(x[4]){bv.appendChild(x[4]);bv.className="hasmedal"}i.appendChild(bv);i.appendChild(el("span",x[1]));if(x[2]){var sm=el("small",x[2]);if(x[3])sm.title=x[3];i.appendChild(sm)}d.appendChild(i)});return d}
   function mhFin(h){return h&&h.p?mhOrd(h.p)+(h.n?" of "+h.n:""):"–"}
-  function mhUnbeaten(h){var r=mhRec(h);return !!h&&(h.r||[]).length>0&&r.l===0&&(r.w+r.t)>0}
   function mhMedal(p){if(!(p>=1&&p<=3))return null;var c=["#E2B33C","#C9D0D6","#CD8A55"][p-1],d=["#8F6200","#56606B","#7A4A1F"][p-1],m=el("span",null,"fmedal");m.setAttribute("role","img");m.setAttribute("aria-label",["Gold","Silver","Bronze"][p-1]+" laurel, place "+p);m.title=mhOrd(p)+" place";
     var lf=function(x,y,r){return '<ellipse cx="'+x+'" cy="'+y+'" rx="1.1" ry="2" transform="rotate('+r+' '+x+' '+y+')"/>'};
     m.innerHTML='<svg viewBox="0 0 24 24" aria-hidden="true"><g fill="none" stroke="'+d+'" stroke-width="1.4" stroke-linecap="round"><path d="M7 19c-3-2-4-6-3-10M17 19c3-2 4-6 3-10"/></g><g fill="'+c+'" stroke="'+d+'" stroke-width=".7">'+lf(4.6,10,-20)+lf(4.8,14,-45)+lf(7,17.6,-70)+lf(19.4,10,20)+lf(19.2,14,45)+lf(17,17.6,70)+'</g><text x="12" y="16" text-anchor="middle" font-size="10" font-weight="700" fill="'+d+'" font-family="sans-serif">'+p+'</text></svg>';return m}
@@ -2704,7 +2703,7 @@ ${stars == null ? "" : ribbon + starRow}
       var sp=el("span",null,"mhls");var ic=show?mhIcon(h.dk,h.s):null;if(ic)sp.appendChild(ic);b.appendChild(sp);
       b.appendChild(el("span",h.ev,"mhle"));
       b.appendChild(el("span",r.w+"–"+r.l+(r.t?"–"+r.t:""),"mono mhlr"));
-      var fe=el("span",null,"mono mhlf");if(h.p){fe.appendChild(document.createTextNode(mhOrd(h.p)));if(h.n)fe.appendChild(el("small"," of "+h.n))}else fe.textContent="–";if(mhUnbeaten(h)){b.classList.add("mhund");b.title="Unbeaten run: no losses"}if(h.p&&h.n)fe.title=mhOrd(h.p)+" of "+h.n+" players";b.appendChild(fe);
+      var fe=el("span",null,"mono mhlf");if(h.p){fe.appendChild(document.createTextNode(mhOrd(h.p)));if(h.n)fe.appendChild(el("small"," of "+h.n))}else fe.textContent="–";if(h.p>=1&&h.p<=3){b.classList.add("mhpod","mhp"+h.p);b.title=mhOrd(h.p)+" place finish"}if(h.p&&h.n)fe.title=mhOrd(h.p)+" of "+h.n+" players";b.appendChild(fe);
       b.onclick=function(){MHSEL=h;mhList(H);if(window.matchMedia("(max-width:860px)").matches){var d=$("mhDet");if(d)d.scrollIntoView({behavior:"smooth",block:"start"})}};
       lc.appendChild(b);
     });
@@ -2721,7 +2720,7 @@ ${stars == null ? "" : ribbon + starRow}
     nav.appendChild(nb);nav.appendChild(ob);top.appendChild(nav);dt.appendChild(top);
     var st=el("div",null,"mhstat"),nb2=mhByes(h);
     [[mhFin(h),"Finish","fin"],[r.w+"–"+r.l+(r.t?"–"+r.t:""),"Record"+(nb2?" · "+nb2+" bye"+(nb2===1?"":"s"):""),""],[String(3*r.w+r.t),"Points",""],[String((h.r||[]).length||"–"),"Rounds",""]].forEach(function(x){var d=el("div"),bv=el("b",x[0],"mono "+x[2]);if(/\bfin\b/.test(x[2])){bv.textContent=h.p?mhOrd(h.p):"–";if(h.p&&h.n)bv.appendChild(el("small"," of "+h.n,"mhof"));var md=mhMedal(h.p);if(md)bv.appendChild(md)}d.appendChild(bv);d.appendChild(el("span",x[1]));st.appendChild(d)});
-    if(mhUnbeaten(h)){st.classList.add("mhspecial");st.title="No losses in this tournament"}
+    if(h.p>=1&&h.p<=3){st.classList.add("mhspecial","mhp"+h.p);st.title=mhOrd(h.p)+" place finish"}
     dt.appendChild(st);
     if(h.r&&h.r.length){
       var tb=el("div",null,"mhrt"),th=el("div",null,"mhrth");["Round","Opponent's deck","Games · Result"].forEach(function(t){th.appendChild(el("span",t))});tb.appendChild(th);
