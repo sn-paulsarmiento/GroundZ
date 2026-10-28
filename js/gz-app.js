@@ -1650,7 +1650,7 @@ ${stars == null ? "" : ribbon + starRow}
   $("dkSet").addEventListener("click",function(){view("Acct");window.scrollTo(0,0)});
 
   // ---- updates and notices ----
-  var APP_VER="2026.10.28j";
+  var APP_VER="2026.10.28k";
   var CHANGES=[
     {ts:Date.UTC(2026,9,8,15),ti:"Deck builder upgrade",b:"Search and browse cards while your deck stays on screen, on PC and phone."},
     {ts:Date.UTC(2026,9,8,14),ti:"New logo and TCG Live names",b:"GroundZ has a new look. Add your TCG Live username in profile settings."},
@@ -2568,20 +2568,21 @@ ${stars == null ? "" : ribbon + starRow}
     var rw=0,rl=0,rt=0,gw=0,gl=0,gt=0;A.forEach(function(o){rw+=o.w;rl+=o.l;rt+=o.t;gw+=o.gw;gl+=o.gl;gt+=o.gt});
     var rn=rw+rl+rt,gn=gw+gl+gt;
     box.appendChild(hd);
-    if(rn)hd.appendChild(el("span",rn+" rounds · "+A.length+" deck"+(A.length===1?"":"s")+" · "+rw+"–"+rl+(rt?"–"+rt:"")+" ("+Math.round(100*rw/rn)+"%)"+(gn?" · G "+gw+"–"+gl+(gt?"–"+gt:""):""),"mh5sum"));
+    if(rn){var hs=el("span","Won "+rw+" of "+rn+" rounds · "+Math.round(100*rw/rn)+"%","mh5sum");hs.title=rw+" wins, "+rl+" losses"+(rt?", "+rt+" ties":"")+(gn?" · games "+gw+"–"+gl+(gt?"–"+gt:""):"");hd.appendChild(hs)}
     box.appendChild(el("p",L5.map(function(h){return h.ev+(h.p?" ("+mhOrd(h.p)+")":"")}).join(" · "),"foot mh5ev"));
     if(!A.length){box.appendChild(el("p","No opponent decks yet. Add rounds to a tournament to see matchups.","foot"));return box}
-    var ul=el("ul",null,"mh5l"),show=mhShow(),hh=el("li",null,"mh5hd");[["",""],["Deck",""],["Matchup rate","How often you faced the deck"],["Win rate","Rounds won; byes left out"]].forEach(function(t){var e=el("span",t[0]);if(t[1])e.title=t[1];hh.appendChild(e)});ul.appendChild(hh);
+    var ul=el("ul",null,"mh5l"),show=mhShow(),hh=el("li",null,"mh5hd");[["",""],["Opponent deck",""],["Played","Rounds played against this deck"],["How often","Share of your rounds against this deck"],["Won","Share of those rounds you won; byes left out"]].forEach(function(t){var e=el("span",t[0]);if(t[1])e.title=t[1];hh.appendChild(e)});ul.appendChild(hh);
     A.forEach(function(o){
       var n=o.w+o.l+o.t,pc=Math.round(100*o.w/n),li=el("li"),g=o.gw+o.gl+o.gt,fq=Math.round(100*n/rn);
       var ic=show?mhIcon(o.n==="Unknown deck"?"":o.n,o.s):null;li.appendChild(ic||el("span"));
-      var nm=el("span",null,"mh5n");nm.appendChild(document.createTextNode(o.n));var sub=el("small",o.w+"–"+o.l+(o.t?"–"+o.t:"")+(g?" · G "+o.gw+"–"+o.gl+(o.gt?"–"+o.gt:""):""));sub.appendChild(el("span"," · "+o.ne+"/"+L5.length+" events"+(n<3?" · low sample":""),"mh5x"));nm.appendChild(sub);li.appendChild(nm);
-      var fqe=el("span",null,"mh5f"),fqt=el("span",null,"mh5ft"),fqi=el("i");fqi.style.width=fq+"%";fqt.appendChild(fqi);fqe.appendChild(el("b",n+"×"));fqe.appendChild(fqt);fqe.appendChild(el("span",fq+"%"));fqe.title="Faced in "+n+" of your "+rn+" rounds ("+fq+"%)";fqe.setAttribute("aria-label","Matchup rate "+fq+"%, "+n+" rounds");li.appendChild(fqe);
-      var bar=el("span",null,"mh5b");bar.appendChild(el("b",pc+"%",pc>=50?"mhup":"mhdn"));li.appendChild(bar);
-      li.title=o.n+": won "+o.w+" of "+n+" rounds";
+      var nm=el("span",null,"mh5n");nm.appendChild(document.createTextNode(o.n));var sub=el("small",o.w+"W "+o.l+"L"+(o.t?" "+o.t+"T":""));nm.appendChild(sub);li.appendChild(nm);
+      var fqe=el("span",null,"mh5f"),fqt=el("span",null,"mh5ft"),fqi=el("i");fqi.style.width=fq+"%";fqt.appendChild(fqi);li.appendChild(el("b",String(n),"mh5c"));fqe.appendChild(fqt);fqe.appendChild(el("span",fq+"%"));fqe.title="Faced in "+n+" of your "+rn+" rounds ("+fq+"%)";fqe.setAttribute("aria-label","Matchup rate "+fq+"%, "+n+" rounds");li.appendChild(fqe);
+      var bar=el("span",null,"mh5b");bar.appendChild(el("b",pc+"%",n<3?"mh5low":pc>=50?"mhup":"mhdn"));li.appendChild(bar);
+      li.title=o.n+": won "+o.w+" of "+n+" rounds"+(g?" (games "+o.gw+"–"+o.gl+(o.gt?"–"+o.gt:"")+")":"")+" · seen in "+o.ne+" of "+L5.length+" events"+(n<3?" · too few rounds to judge yet":"");
       ul.appendChild(li);
     });
     box.appendChild(ul);
+    if(A.some(function(o){return o.w+o.l+o.t<3}))box.appendChild(el("p","Grey = fewer than 3 rounds, too early to judge.","foot mh5note"));
     return box;
   }
   function mhBuildForm(b){
