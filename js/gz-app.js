@@ -51,7 +51,7 @@
   var PKN=PKL.map(function(k){var m=k.match(/^(.*?)_(\d+)$/),b=m?m[1]:k;b=b.charAt(0)+b.slice(1).toLowerCase();return m?b+" (form "+m[2]+")":b});
   var PKByName={}; PKN.forEach(function(n,i){PKByName[n.toLowerCase()]=PKL[i]});
   (function(){var st=document.createElement("style");st.textContent=".pk{background-image:url('"+SHEET+"')}";document.head.appendChild(st);})();
-  function autoSprites(n){var o=[];String(n).split(/[^A-Za-z]+/).forEach(function(t){var k=t.toUpperCase();if(k.length>2&&PKI[k]!=null&&o.indexOf(k)<0&&o.length<2)o.push(k)});return o}
+  function autoSprites(n){var o=[],w=String(n).split(/[^A-Za-z]+/).filter(Boolean).map(function(t){return t.toUpperCase()}),i=0;while(i<w.length&&o.length<2){var hit=0;for(var L=3;L>=1;L--){if(i+L>w.length)continue;var k=w.slice(i,i+L).join("");if((L>1||k.length>2)&&PKI[k]!=null){if(o.indexOf(k)<0)o.push(k);i+=L;hit=1;break}}if(!hit)i++}return o}
   var DEMO={"Ember Aggro":["CHARIZARD"],"Tidal Control":["BLASTOISE"],"Verdant Ramp":["VENUSAUR"],"Storm Combo":["ZAPDOS"],"Shade Tempo":["GENGAR"]};
   var DL="SAMPLE DECKLIST (demo only)\n\nPokémon: 14\n4 Charmander\n3 Charmeleon\n3 Charizard ex\n2 Pidgey\n2 Pidgeot ex\n\nTrainer: 34\n4 Professor's Research\n4 Boss's Orders\n4 Ultra Ball\n4 Rare Candy\n18 more trainer cards\n\nEnergy: 12\n10 Fire Energy\n2 Jet Energy";
   function ensureSprites(st){st.season=st.season||{n:1,start:Date.now()};st.players.forEach(function(p){if(p.pub===undefined){p.pub=!REMOTE&&p.id>=6&&p.id<=13&&p.id%2===0;if(p.pub&&!p.list)p.list=DL}});st.players.forEach(function(p){if(!p.rc){p.rc=[];st.log.forEach(function(g){if(p.rc.length>=5)return;var W=g.w===p.name,L=g.l===p.name,dn=W?g.wd:L?g.ld:"";if(!dn)return;var d=byName(st.decks,dn);if(d)p.rc.push({d:d.id,r:W?"W":"L",o:W?g.l:g.w});});}});st.decks.forEach(function(d){if(!d.s){var a=DEMO[d.name]||autoSprites(d.name);if(a.length)d.s=a}})}
@@ -1650,7 +1650,7 @@ ${stars == null ? "" : ribbon + starRow}
   $("dkSet").addEventListener("click",function(){view("Acct");window.scrollTo(0,0)});
 
   // ---- updates and notices ----
-  var APP_VER="2026.10.28m";
+  var APP_VER="2026.10.28n";
   var CHANGES=[
     {ts:Date.UTC(2026,9,8,15),ti:"Deck builder upgrade",b:"Search and browse cards while your deck stays on screen, on PC and phone."},
     {ts:Date.UTC(2026,9,8,14),ti:"New logo and TCG Live names",b:"GroundZ has a new look. Add your TCG Live username in profile settings."},
@@ -2572,10 +2572,7 @@ ${stars == null ? "" : ribbon + starRow}
     // matchup spread across recorded rounds
     var A=mhMu(F);
     if(A.length){
-      var d=el("button",null,"mhmubox");d.type="button";d.setAttribute("aria-label","Open matchup breakdown, "+A.length+" decks");
-      var ics=el("span",null,"mhmuics");if(mhShow())A.slice(0,4).forEach(function(o){var ic=mhIcon(o.n==="Unknown deck"?"":o.n,o.s);if(ic)ics.appendChild(ic)});d.appendChild(ics);
-      var tx=el("span",null,"mhmutx");tx.appendChild(el("b","Matchup breakdown"));tx.appendChild(el("small",A.length+" deck"+(A.length===1?"":"s")+" · going 1st / 2nd, games and win rate"));d.appendChild(tx);
-      d.appendChild(el("span","›","mhmugo"));d.onclick=mhMuOpen;T.appendChild(d);
+      var d=el("button",null,"mhmubox");d.type="button";d.appendChild(el("span","Matchup breakdown"));d.appendChild(el("span","›","mhmugo"));d.onclick=mhMuOpen;T.appendChild(d);
     }
   }
   // panel: matchups from the 5 most recent tournaments (follows the category filter)
@@ -2996,29 +2993,40 @@ ${stars == null ? "" : ribbon + starRow}
     });
   }
   function storyResult(h){
-    var r=mhRec(h),R=h.r||[],pl=myP();
-    return Promise.all([sheetImg(),logoImg(),document.fonts?document.fonts.load('700 40px "IBM Plex Sans"').then(function(){return document.fonts.load('600 30px "IBM Plex Mono"')}).catch(function(){}):null]).then(function(X){
+    var r=mhRec(h),R=h.r||[],pl=me()?myP():null;
+    return Promise.all([sheetImg(),logoImg(),document.fonts?document.fonts.load('700 40px "IBM Plex Sans"').then(function(){return document.fonts.load('700 30px "IBM Plex Mono"')}).catch(function(){}):null]).then(function(X){
       var sh=X[0],logo=X[1],cv=document.createElement("canvas");cv.width=1080;cv.height=1920;var c=cv.getContext("2d");
-      storyBase(c,logo,h.ev,[mhDate(h.d)||"",h.cat||""].filter(Boolean).join(" · "));
-      c.fillStyle="#FFFFFF";rr(c,48,480,984,1300,20);c.fill();c.strokeStyle="#DCDFE4";c.lineWidth=2;c.stroke();
-      var ks=spriteKeys(h.dk,h.s);ks.slice(0,2).forEach(function(k,j){drawSpr(c,sh,k,72+j*150,500,180)});
-      c.fillStyle="#101418";c.font="600 40px "+SF;c.fillText(fit(c,h.dk||"Deck not recorded",560),100,724);
-      c.fillStyle="#555E69";c.font="500 28px "+SF;c.fillText(fit(c,pl?pname(pl):"",560),100,766);
-      var fin=h.p?mhOrd(h.p):"–";c.textAlign="right";c.fillStyle=h.p===1?"#8F6200":h.p===2?"#56606B":h.p===3?"#9A5A24":"#101418";c.font="600 150px "+SM;c.fillText(fin,996,660);
-      c.fillStyle="#555E69";c.font="500 30px "+SF;c.fillText(h.p?(h.n?"of "+h.n+" players":"place"):"no placement",996,712);
-      c.fillStyle="#101418";c.font="600 40px "+SM;c.fillText(r.w+"–"+r.l+(r.t?"–"+r.t:"")+" · "+(3*r.w+r.t)+" pts",996,766);c.textAlign="left";
-      c.fillStyle="#101418";c.fillRect(96,810,888,3);
-      var avail=1730-840,rh=R.length?Math.min(110,Math.floor(avail/R.length)):0,sz=Math.min(76,rh-12);
-      if(!R.length){c.fillStyle="#555E69";c.font="500 32px "+SF;c.fillText("Rounds weren't recorded for this event.",100,900)}
-      R.forEach(function(x,i){
-        var y=840+i*rh,cy=y+rh/2;if(i){c.fillStyle="#E6E8EC";c.fillRect(96,y,888,2)}
-        c.fillStyle="#555E69";c.font="500 30px "+SM;c.fillText("R"+(i+1),100,cy+10);
-        if(x.res==="BYE"){c.fillStyle="#555E69";c.font="500 34px "+SF;c.fillText("Bye",190,cy+12)}
-        else{var k2=spriteKeys(x.od,x.os);k2.slice(0,2).forEach(function(k,j){drawSpr(c,sh,k,180+j*(sz-14),cy-sz/2-4,sz)});c.fillStyle="#101418";c.font="500 34px "+SF;c.fillText(fit(c,x.od||"Deck not recorded",mhG(x)?420:500),190+Math.max(1,Math.min(2,k2.length))*(sz-14)+16,cy+12)}
-        var lab=x.res==="BYE"?"BYE":x.res||"–",col=x.res==="W"?["#DDF0E4","#0B6B37"]:x.res==="L"?["#F9E0DD","#A21D14"]:["#E9ECF0","#3F4752"];
-        var sg=mhG(x);if(sg){c.fillStyle="#555E69";c.font="500 28px "+SM;c.textAlign="right";c.fillText(sg.split("").join(" "),864,cy+10);c.textAlign="left"}
-        c.fillStyle=col[0];rr(c,880,cy-28,104,56,10);c.fill();c.fillStyle=col[1];c.font="600 30px "+SM;c.textAlign="center";c.fillText(lab,932,cy+11);c.textAlign="left";
-      });
+      // calm dark background with a soft light behind the deck
+      // dark background with the red GroundZ strike behind the deck
+      c.fillStyle="#08090C";c.fillRect(0,0,1080,1920);
+      var g=c.createRadialGradient(540,560,40,540,560,760);g.addColorStop(0,"#26303D");g.addColorStop(1,"rgba(8,9,12,0)");c.fillStyle=g;c.fillRect(0,0,1080,1920);
+      c.save();c.translate(540,520);c.rotate(-0.28);c.fillStyle="#E10600";c.fillRect(-900,-70,1800,140);c.fillStyle="rgba(225,6,0,.35)";c.fillRect(-900,96,1800,18);c.restore();
+      if(logo)c.drawImage(logo,360,230,360,72);else{c.fillStyle="#FFFFFF";c.font="700 64px "+SF;c.textAlign="center";c.fillText("GroundZ",540,290);c.textAlign="left"}
+      c.fillStyle="#E10600";c.fillRect(508,330,64,6);
+      // the deck: both Pokémon, side by side
+      var ks=spriteKeys(h.dk,h.s).slice(0,2),sz=224,gap=24,tw=ks.length*sz+(ks.length-1)*gap;
+      ks.forEach(function(k,j){drawSpr(c,sh,k,540-tw/2+j*(sz+gap),392,sz)});
+      c.textAlign="center";c.fillStyle="#FFFFFF";c.font="600 44px "+SF;c.fillText(fit(c,h.dk||"Deck not recorded",900),540,684);
+      // finish
+      var top={1:["#FFE38A","#C8961E"],2:["#F1F4F7","#9AA3AD"],3:["#F2B98A","#A0612E"]}[h.p]||["#FFFFFF","#C9CED6"],fg=c.createLinearGradient(0,760,0,940);fg.addColorStop(0,top[0]);fg.addColorStop(1,top[1]);
+      c.fillStyle=fg;c.font="700 220px "+SM;c.fillText(h.p?mhOrd(h.p):"–",540,936);
+      c.fillStyle="#AEB4BD";c.font="600 30px "+SF;try{c.letterSpacing="8px"}catch(e){}c.fillText(h.p?(h.n?"OF "+h.n+" PLAYERS":"PLACE"):"NO PLACEMENT",540,990);try{c.letterSpacing="0px"}catch(e){}
+      c.fillStyle="#FFFFFF";c.font="700 52px "+SF;c.fillText(fit(c,h.ev||"",920),540,1084);
+      c.fillStyle="#7D8590";c.font="500 28px "+SM;c.fillText(fit(c,[mhDate(h.d),h.cat,pl?pname(pl):""].filter(Boolean).join("  ·  "),920),540,1132);
+      // stats
+      var n=r.w+r.l+r.t,wr=n?Math.round(100*r.w/n)+"%":"–";
+      [["RECORD",r.w+"–"+r.l+(r.t?"–"+r.t:"")],["POINTS",String(3*r.w+r.t)],["WIN RATE",wr]].forEach(function(t,i){var x=210+i*330;c.fillStyle="#FFFFFF";c.font="700 62px "+SM;c.fillText(t[1],x,1250);c.fillStyle="#7D8590";c.font="600 22px "+SF;c.fillText(t[0],x,1288)});
+      // rounds: both opponent Pokémon + result
+      var m=R.length,w=m?Math.min(170,Math.floor(940/m)):0,sx=540-m*w/2,ts=Math.min(64,Math.floor((w-20)/1.55));
+      if(!m){c.fillStyle="#7D8590";c.font="500 30px "+SF;c.fillText("Rounds weren't recorded for this event.",540,1420)}
+      R.forEach(function(x,i){var cx=sx+i*w+w/2,col=x.res==="W"?"#22C55E":x.res==="L"?"#EF4444":"#9CA3AF";
+        c.fillStyle="rgba(255,255,255,.06)";rr(c,cx-w/2+7,1350,w-14,220,16);c.fill();
+        if(x.res==="BYE"){c.fillStyle="#7D8590";c.font="600 26px "+SF;c.fillText("BYE",cx,1416)}
+        else{var k2=spriteKeys(x.od,x.os).slice(0,2),ov=Math.round(ts*0.55),ww=k2.length?ts+(k2.length-1)*ov:0;k2.forEach(function(k,j){drawSpr(c,sh,k,cx-ww/2+j*ov,1372,ts)});if(!k2.length){c.fillStyle="#7D8590";c.font="600 22px "+SF;c.fillText("?",cx,1414)}}
+        c.save();c.shadowColor=col;c.shadowBlur=16;c.fillStyle=col;rr(c,cx-32,1462,64,48,10);c.fill();c.restore();
+        c.fillStyle="#0B0D10";c.font="700 28px "+SM;c.fillText(x.res==="BYE"?"–":x.res||"–",cx,1496);
+        c.fillStyle="#7D8590";c.font="600 20px "+SM;c.fillText("R"+(i+1),cx,1546)});
+      c.fillStyle="#555E69";c.font="600 30px "+SM;c.fillText("groundz.win",540,1690);c.textAlign="left";
       return cv;
     });
   }
