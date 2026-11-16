@@ -578,7 +578,7 @@
     return q;
   }
   function linkBack(){return location.origin+location.pathname}
-  (function(){var t=document.querySelector(".toplogo");if(t)t.addEventListener("click",function(e){e.preventDefault();view("Rank");window.scrollTo(0,0)})})();
+  (function(){var t=document.querySelector(".toplogo");if(t)t.addEventListener("click",function(e){e.preventDefault();view(HOME);window.scrollTo(0,0)})})();
   function boot(){
     AUTHLINK=authHash();
     if(AUTHLINK&&AUTHLINK.access_token){sset({access_token:AUTHLINK.access_token,refresh_token:AUTHLINK.refresh_token||"",expires_at:+AUTHLINK.expires_at||Math.floor(Date.now()/1000)+(+AUTHLINK.expires_in||3600),uid:""});RECOVER=AUTHLINK.type==="recovery"}
@@ -613,7 +613,7 @@
   function mhPersist(){if(me()){save();return}try{localStorage.setItem(GK,JSON.stringify(guestP().mh))}catch(e){}}
   function signOut(){
     sbx("/auth/v1/logout",{method:"POST"}).catch(function(){});
-    sset(null); CUR=null; mineSig=""; S.draft={name:"",cards:[]}; try{localStorage.removeItem("tg-draft")}catch(e){} chrome(); view("Rank");
+    sset(null); CUR=null; mineSig=""; S.draft={name:"",cards:[]}; try{localStorage.removeItem("tg-draft")}catch(e){} chrome(); view(HOME);
     loadRemote().then(function(r){applyRemote(r);rerender();}).catch(function(){rerender();});
   }
   // ---- safety: only https links from stored settings; league data numbers stay numbers ----
@@ -852,14 +852,15 @@
   // Pro is hidden from everyone except the organizer until it launches
   var PRO_HIDDEN=true;
   function proVis(){return !PRO_HIDDEN||isOrg()}
-  function chrome(){var u=me();document.body.classList.toggle("nopro",!proVis());if(!proVis()&&!$("vPro").hidden&&!u)view("Rank");$("tAcct").textContent=u?u.u:"Sign in";$("tDash").hidden=!u;$("tDash").textContent=u&&u.role==="org"?"Organizer":"My dashboard";if(!u&&!$("vDash").hidden)view("Rank");renderAds();}
+  var HOME="Tools";
+  function chrome(){var u=me(),org=isOrg();$("tRank").hidden=true;$("tTour").hidden=!org;if(!org&&(!$("vTour").hidden||!$("vRank").hidden))view(HOME);document.body.classList.toggle("nopro",!proVis());if(!proVis()&&!$("vPro").hidden&&!u)view(HOME);$("tAcct").textContent=u?u.u:"Sign in";$("tDash").hidden=!u;$("tDash").textContent=u&&u.role==="org"?"Organizer":"My dashboard";if(!u&&!$("vDash").hidden)view(HOME);renderAds();}
   var TOOL="mh";try{var tq=localStorage.getItem("tg-tool");TOOL=tq==="sw"||tq==="ht"?tq:"mh"}catch(e){}
   function view(v){
     var ownPg=v==="Deck"&&!!CUR&&deckPid===CUR.pid;pvHide();
-    ["Rank","Tour","Dash","Acct","Deck","Pro","Cards","Tools"].forEach(function(k){$("v"+k).hidden=k!==v;var tb=$("t"+k);if(tb)tb.setAttribute("aria-current",(k===v||(v==="Deck"&&k===(ownPg?"Acct":"Rank")))?"page":"false");});
+    ["Rank","Tour","Dash","Acct","Deck","Pro","Cards","Tools"].forEach(function(k){$("v"+k).hidden=k!==v;var tb=$("t"+k);if(tb)tb.setAttribute("aria-current",(k===v||(v==="Rank"&&k==="Tour")||(v==="Deck"&&k===(ownPg?"Acct":isOrg()?"Tour":"Tools")))?"page":"false");});
     if(v==="Tour") renderTour(); if(v==="Dash") renderDash(); if(v==="Acct") renderAcct(); if(v==="Deck") renderDeck(); if(v==="Pro") renderHub(); if(v==="Cards") renderCards(); if(v==="Tools"){$("toolSw").hidden=TOOL!=="sw";$("toolMh").hidden=TOOL!=="mh";$("toolHt").hidden=TOOL!=="ht";$("toolSw").open=$("toolMh").open=$("toolHt").open=true;renderTools();} var ty=$("cTray"); if(ty) ty.hidden=v!=="Cards"||BUILD; document.body.classList.toggle("gzbuild",v==="Cards"&&BUILD); renderAds();
   }
-  $("tRank").addEventListener("click",function(){view("Rank")});
+  $("tRank").addEventListener("click",function(){view("Rank")});var tr0=$("tourRank");if(tr0)tr0.addEventListener("click",function(){view("Rank");window.scrollTo(0,0)});var rb0=$("rankBack");if(rb0)rb0.addEventListener("click",function(){view("Tour");window.scrollTo(0,0)});
   $("tTour").addEventListener("click",function(){view("Tour")});$("tCards").addEventListener("click",function(){view("Cards")});(function(){
     var btn=$("tTools"),m=el("div",null,"tmenu");m.id="tMenu";m.setAttribute("role","menu");m.setAttribute("aria-label","Tools");m.hidden=true;document.body.appendChild(m);
     [["mh","Match history","Your tournaments, rounds and matchups"],["ht","Hand test","Opening hands, prizes and mulligan odds"],["sw","Swiss calculator","Rounds, top cut and Championship Points"]].forEach(function(t){var b=el("button",null,"tmi");b.type="button";b.setAttribute("role","menuitem");b.appendChild(el("b",t[1]));b.appendChild(el("span",t[2]));b.onclick=function(){close();TOOL=t[0];try{localStorage.setItem("tg-tool",TOOL)}catch(e){}view("Tools");window.scrollTo(0,0)};m.appendChild(b)});
@@ -1101,7 +1102,7 @@
   function tile(v,l){var d=el("div",null,"tile");d.appendChild(el("b",v));d.appendChild(el("span",l));return d}
   function logLi(g){var li=document.createElement("li"),b=document.createElement("b");b.textContent=g.w;li.appendChild(b);li.appendChild(document.createTextNode((g.wd?" ("+g.wd+")":"")+(g.t?" tied ":" beat ")+g.l+(g.ld?" ("+g.ld+")":"")+", +"+g.d+" pts"+(g.b?" (incl. +"+g.b+" upset bonus)":"")+", week "+g.wk));return li}
   function renderDash(){
-    var u=me(); if(!u){view("Rank");return;}
+    var u=me(); if(!u){view(HOME);return;}
     var org=u.role==="org"; $("dOrg").hidden=!org; $("dPl").hidden=org;
     var t=S.t=S.t||{day:6,time:"18:00",reg:[]}; t.reg=t.reg.filter(function(id){return byId(S,id)});
     var when=whenS(nextOcc());
@@ -1608,7 +1609,7 @@ ${stars == null ? "" : ribbon + starRow}
   function openDeck(id){deckPid=id;view("Deck");window.scrollTo(0,0)}
   function openMine(){var p=myP();if(p)openDeck(p.id)}
   function renderDeck(){
-    var p=byId(S,deckPid);if(!p){view("Rank");return}
+    var p=byId(S,deckPid);if(!p){view(HOME);return}
     var r=ranks(S)[p.id],tt=p.w+p.l,own=!!CUR&&p.id===CUR.pid,acc=accPid[p.id];
     $("dkName").textContent=pname(p);$("dkAv").innerHTML="";$("dkAv").appendChild(avatar(p));$("dkSet").hidden=!own;
     $("dkSub").textContent=[acc&&acc.username?"@"+acc.username:"",ignOf(p)?(IGN[p.id].only?p.name:"TCG Live: "+ignOf(p)):"",acc&&acc.role==="org"?"Organizer":"Player",r?"#"+r+" of "+rankedP(S).length:"Not ranked"].filter(Boolean).join(" · ");
@@ -1646,11 +1647,11 @@ ${stars == null ? "" : ribbon + starRow}
     }
     else box.appendChild(el("p",p.pub?"This player hasn't shared a decklist yet.":"This player keeps their decks private.","foot"));
   }
-  $("dBack").addEventListener("click",function(){view("Rank")});
+  $("dBack").addEventListener("click",function(){view(isOrg()?"Rank":HOME)});
   $("dkSet").addEventListener("click",function(){view("Acct");window.scrollTo(0,0)});
 
   // ---- updates and notices ----
-  var APP_VER="2026.11.16a";
+  var APP_VER="2026.11.16b";
   var CHANGES=[
     {ts:Date.UTC(2026,9,8,15),ti:"Deck builder upgrade",b:"Search and browse cards while your deck stays on screen, on PC and phone."},
     {ts:Date.UTC(2026,9,8,14),ti:"New logo and TCG Live names",b:"GroundZ has a new look. Add your TCG Live username in profile settings."},
@@ -2740,7 +2741,7 @@ ${stars == null ? "" : ribbon + starRow}
       var tb=el("div",null,"mhrt"),th=el("div",null,"mhrth");["Round","Opponent's deck","Games · Result"].forEach(function(t){th.appendChild(el("span",t))});tb.appendChild(th);
       h.r.forEach(function(x,i){var row=el("div",null,"mhrtr");row.appendChild(el("span","R"+(i+1),"mono mhrn"));
         var dk=el("span",null,"mhrdk");if(x.res==="BYE")dk.appendChild(el("span","Bye, no opponent"));else{var ic3=show&&(x.od||(x.os&&x.os.length))?mhIcon(x.od,x.os):null;if(ic3)dk.appendChild(ic3);dk.appendChild(el("span",x.od||"Deck not recorded",x.od?"mhrnm":"mhrnm mhmuted"))}
-        var xgf=mhGF(x),xg=mhG(x);if(!xg&&(xgf[0]==="1"||xgf[0]==="2")){var ft=el("span",xgf[0]==="1"?"1st":"2nd","mhrf");ft.title=xgf[0]==="1"?"Went first":"Went second";dk.appendChild(ft)}row.appendChild(dk);var res=el("span",null,"mhrres");if(xg){res.appendChild(mhGPips(xg,null,/[12]/.test(xgf)?xgf:""));if(xg.length>1)res.appendChild(el("span",mhGsc(xg),"mhgsc"))}res.appendChild(el("span",x.res==="BYE"?"Bye":x.res||"–","mhpip "+(x.res==="W"?"pw":x.res==="L"?"pl":x.res==="BYE"?"pb":x.res?"pt":"pn")));row.appendChild(res);tb.appendChild(row)});
+        var xgf=mhGF(x),xg=mhG(x);if(!xg&&(xgf[0]==="1"||xgf[0]==="2")){var ft=el("span",xgf[0]==="1"?"1st":"2nd","mhrf");ft.title=xgf[0]==="1"?"Went first":"Went second";dk.appendChild(ft)}row.appendChild(dk);var res=el("span",null,"mhrres");if(xg){res.appendChild(mhGPips(xg));if(xg.length>1)res.appendChild(el("span",mhGsc(xg),"mhgsc"))}res.appendChild(el("span",x.res==="BYE"?"Bye":x.res||"–","mhpip "+(x.res==="W"?"pw":x.res==="L"?"pl":x.res==="BYE"?"pb":x.res?"pt":"pn")));row.appendChild(res);tb.appendChild(row)});
       dt.appendChild(tb);
     }else dt.appendChild(el("p","No rounds recorded for this tournament. Edit it to add rounds and matchups.","foot"));
     if(h.nt){dt.appendChild(el("h4","Notes","mhdh"));dt.appendChild(el("p",h.nt,"mhnote"))}
@@ -3039,8 +3040,9 @@ ${stars == null ? "" : ribbon + starRow}
         var k0=14,tx=cx-w/2+7,tww=w-14;c.beginPath();c.moveTo(tx+k0,1350);c.lineTo(tx+tww,1350);c.lineTo(tx+tww-k0,1570);c.lineTo(tx,1570);c.closePath();c.fillStyle="rgba(255,255,255,.06)";c.fill();
         if(x.res==="BYE"){c.fillStyle="#7D8590";c.font="600 26px "+SF;c.fillText("BYE",cx,1416)}
         else{var k2=spriteKeys(x.od,x.os).slice(0,2),ov=Math.round(ts*0.55),ww=k2.length?ts+(k2.length-1)*ov:0;k2.forEach(function(k,j){drawSpr(c,sh,k,cx-ww/2+j*ov,1372,ts)});if(!k2.length){c.fillStyle="#7D8590";c.font="600 22px "+SF;c.fillText("?",cx,1414)}}
-        c.save();c.shadowColor=col;c.shadowBlur=16;c.fillStyle=col;rr(c,cx-32,1462,64,48,10);c.fill();c.restore();
-        c.fillStyle="#0B0D10";c.font="700 28px "+SM;c.fillText(x.res==="BYE"?"–":x.res||"–",cx,1496);
+        var gs=x.res==="BYE"?[]:(mhG(x)||x.res||"").split("").filter(function(z){return /[WLT]/.test(z)});if(x.res==="ID")gs=["T"];if(!gs.length)gs=["–"];
+        var pw=Math.min(44,Math.floor((w-26)/gs.length)-6),pg=6,pt=gs.length*pw+(gs.length-1)*pg;
+        gs.forEach(function(z,q){var pc=z==="W"?"#22C55E":z==="L"?"#EF4444":"#9CA3AF",px=cx-pt/2+q*(pw+pg);c.save();c.shadowColor=pc;c.shadowBlur=12;c.fillStyle=pc;rr(c,px,1464,pw,44,8);c.fill();c.restore();c.fillStyle="#0B0D10";c.font="700 "+(pw<34?22:26)+"px "+SM;c.fillText(z,px+pw/2,1496)});
         c.fillStyle="#7D8590";c.font="600 20px "+SM;c.fillText("R"+(i+1),cx,1546)});
       c.fillStyle="#555E69";c.font="600 30px "+SM;c.fillText("groundz.win",540,1690);c.textAlign="left";
       return cv;
@@ -3355,5 +3357,5 @@ ${stars == null ? "" : ribbon + starRow}
     });
   }
 
-  render(); buildAdCfg(); renderAds(); trayUpd(); boot();
+  render(); buildAdCfg(); renderAds(); trayUpd(); view(HOME); boot();
 })();
