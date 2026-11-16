@@ -1651,7 +1651,7 @@ ${stars == null ? "" : ribbon + starRow}
   $("dkSet").addEventListener("click",function(){view("Acct");window.scrollTo(0,0)});
 
   // ---- updates and notices ----
-  var APP_VER="2026.11.16b";
+  var APP_VER="2026.11.16c";
   var CHANGES=[
     {ts:Date.UTC(2026,9,8,15),ti:"Deck builder upgrade",b:"Search and browse cards while your deck stays on screen, on PC and phone."},
     {ts:Date.UTC(2026,9,8,14),ti:"New logo and TCG Live names",b:"GroundZ has a new look. Add your TCG Live username in profile settings."},
@@ -2453,8 +2453,8 @@ ${stars == null ? "" : ribbon + starRow}
     if(CP.length){var last=Math.min(n,CP[CP.length-1][1]);t.push([swPct(swPlace(M,R,last)),"Earn CP (top "+last+")"])}
     t.push([swPct(swPlace(M,R,1)),"Win the event"]);
     t.forEach(function(x){T.appendChild(tile(x[0],x[1]))});box.appendChild(T);
-    var rows=(CPT[v]||[]).filter(function(c){return c[0]<=n}).map(function(c){var a=c[0],b=Math.min(c[1],n),ok=n>=c[3],pr=swPlace(M,R,b)-(a>1?swPlace(M,R,a-1):0);return[plS(a,b),c[2]+" CP",ok?swPct(Math.max(0,pr)):"No CP (needs "+c[3]+"+)"]});
-    if(rows.length)box.appendChild(tbl(["Placement","Championship Points","Your chance"],rows));
+    var rows=(CPT[v]||[]).filter(function(c){return c[0]<=n}).map(function(c){var a=c[0],b=Math.min(c[1],n),ok=n>=c[3],pr=swPlace(M,R,b)-(a>1?swPlace(M,R,a-1):0);return[plS(a,b),c[2],ok?swPct(Math.max(0,pr)):"Needs "+c[3]+"+"]});
+    if(rows.length)box.appendChild(tbl(["Finish","CP","Chance"],rows));
     box.appendChild(el("p",(n<=128?swYouSim(M,n,v,R).sims:M.sims).toLocaleString()+" simulated events. Other matches are coin flips; ties on points are broken at random, not by OMW%.","foot"));
   }
   function renderCalc(){
@@ -2472,16 +2472,16 @@ ${stars == null ? "" : ribbon + starRow}
     tiles.forEach(function(x){T.appendChild(tile(String(x[0]),x[1]))});
     // expected records if every match were a coin flip (no ties); with two phases, only Phase One is modelled
     var r=reg&&p2?p1:rounds,rows=[],cum=0,adv=0,M=reg&&p2?null:swSim(n,v),cols=[];
-    if(M){if(top)cols.push(top);if(n>4&&top!==4&&!(top&&4<top))cols.push(4);if(n>8&&top!==8&&!(top&&8<top))cols.push(8)}
+    if(M){if(top)cols.push(top);else if(n>8)cols.push(8);else if(n>4)cols.push(4)}
     for(var w=r;w>=0;w--){
       var cnt=n*C2(r,w)/Math.pow(2,r),before=cum;cum+=cnt;var st="";
       if(reg&&p2){if(3*w>=thr){st="Advances to Phase Two";adv+=cnt}else st="Done after Phase One"}
       var ex=cols.map(function(K){return swPct(swStandP(M,3*w,1,K))});
-      rows.push([w+"–"+(r-w),3*w,cnt>=10?Math.round(cnt):Math.round(cnt*10)/10].concat(st?[st]:[]).concat(ex));
+      rows.push([w+"–"+(r-w),3*w].concat(ex).concat(st?[st==="Advances to Phase Two"?"Phase 2":"Out"]:[]).concat([cnt>=10?Math.round(cnt):Math.round(cnt*10)/10]));
     }
     B.appendChild(el("h3",reg&&p2?"Records after Phase One ("+r+" rounds)":"Final Swiss records"));
-    B.appendChild(tbl(["Record (W–L)","Match pts","Players (expected)"].concat(reg&&p2?["Outcome"]:[]).concat(cols.map(function(K){return K===top?"Makes Top "+K:"Top "+K+" after Swiss"})),rows));
-    if(cols.length)B.appendChild(el("p","% of players with that record who finish there (random tiebreaks).","foot"));
+    B.appendChild(tbl(["Record","Pts"].concat(cols.map(function(K){return K===top?"Top cut %":"Top "+K+" %"})).concat(reg&&p2?["Next"]:[]).concat(["Players"]),rows));
+    B.appendChild(el("p",(cols.length?(cols[0]===top?"Top cut %":"Top "+cols[0]+" %")+" = chance a player with that record makes the "+(cols[0]===top?"Top "+top:"Top "+cols[0])+" (random tiebreaks). ":"")+"Players = how many are expected to finish on that record.","foot"));
     if(reg&&p2)B.appendChild(el("p","About "+Math.round(adv)+" of "+n+" players reach "+thr+" match points and play Phase Two, then the Top "+top+" plays single elimination.","foot"));
     else if(top)B.appendChild(el("p","Top "+top+": "+cutR+" knockout rounds after Swiss.","foot"));
     var ob=el("div",null,"swodds");ob.id="swOdds";ob.appendChild(el("p","Working out your chances…","foot"));B.insertBefore(ob,B.firstChild);
@@ -2489,7 +2489,7 @@ ${stars == null ? "" : ribbon + starRow}
     clearTimeout(SWT);SWT=setTimeout(function(){renderOdds(n,v)},30);
     B.appendChild(el("h3","Championship Points earned"));
     if(CP.length){
-      B.appendChild(tbl(["Placement","Championship Points","At "+n+" players"],CP.map(function(t){var ok=n>=t[3];return[plS(t[0],Math.min(t[1],n)),t[2]+" CP",ok?"✓ Earned":"Needs "+t[3]+"+ players"]})));
+      B.appendChild(tbl(["Finish","CP","At "+n],CP.map(function(t){var ok=n>=t[3];return[plS(t[0],Math.min(t[1],n)),t[2],ok?"✓":"Needs "+t[3]+"+"]})));
       B.appendChild(el("p",v==="reg"?"Regionals: 9th–128th values for the 2026 season. Source: Play! Pokémon CP table.":"Points only count once the event reaches its minimum players. Source: Play! Pokémon CP table.","foot"));
     }else B.appendChild(el("p","No Championship Points at this size.","foot"));
     N.textContent="Round counts from the Play! Pokémon rules: "+TOMV[v].n+". Win 3, tie 1, bye = win; ties broken by OMW%. GroundZ events are unofficial and don't award CP.";
@@ -3037,7 +3037,7 @@ ${stars == null ? "" : ribbon + starRow}
       var m=R.length,w=m?Math.min(170,Math.floor(940/m)):0,sx=540-m*w/2,ts=Math.min(64,Math.floor((w-20)/1.55));
       if(!m){c.fillStyle="#7D8590";c.font="500 30px "+SF;c.fillText("Rounds weren't recorded for this event.",540,1420)}
       R.forEach(function(x,i){var cx=sx+i*w+w/2,col=x.res==="W"?"#22C55E":x.res==="L"?"#EF4444":"#9CA3AF";
-        var k0=14,tx=cx-w/2+7,tww=w-14;c.beginPath();c.moveTo(tx+k0,1350);c.lineTo(tx+tww,1350);c.lineTo(tx+tww-k0,1570);c.lineTo(tx,1570);c.closePath();c.fillStyle="rgba(255,255,255,.06)";c.fill();
+        c.fillStyle="rgba(255,255,255,.06)";rr(c,cx-w/2+7,1350,w-14,220,12);c.fill();
         if(x.res==="BYE"){c.fillStyle="#7D8590";c.font="600 26px "+SF;c.fillText("BYE",cx,1416)}
         else{var k2=spriteKeys(x.od,x.os).slice(0,2),ov=Math.round(ts*0.55),ww=k2.length?ts+(k2.length-1)*ov:0;k2.forEach(function(k,j){drawSpr(c,sh,k,cx-ww/2+j*ov,1372,ts)});if(!k2.length){c.fillStyle="#7D8590";c.font="600 22px "+SF;c.fillText("?",cx,1414)}}
         var gs=x.res==="BYE"?[]:(mhG(x)||x.res||"").split("").filter(function(z){return /[WLT]/.test(z)});if(x.res==="ID")gs=["T"];if(!gs.length)gs=["–"];
