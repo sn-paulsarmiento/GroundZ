@@ -1651,7 +1651,7 @@ ${stars == null ? "" : ribbon + starRow}
   $("dkSet").addEventListener("click",function(){view("Acct");window.scrollTo(0,0)});
 
   // ---- updates and notices ----
-  var APP_VER="2026.11.17a";
+  var APP_VER="2026.11.17d";
   var CHANGES=[
     {ts:Date.UTC(2026,9,8,15),ti:"Deck builder upgrade",b:"Search and browse cards while your deck stays on screen, on PC and phone."},
     {ts:Date.UTC(2026,9,8,14),ti:"New logo and TCG Live names",b:"GroundZ has a new look. Add your TCG Live username in profile settings."},
@@ -2620,7 +2620,7 @@ ${stars == null ? "" : ribbon + starRow}
       '<div class="mhdlh"><label for="mDl" class="mhlab">Decklist used (optional)</label><span class="mhdlb"><select id="mDlV" aria-label="Pick from My Decks"><option value="">Pick from My Decks…</option></select><button id="mDlB" type="button" class="ghost">Build in deck builder</button><button id="mDlU" type="button" class="ghost">Use deck builder list</button></span></div>'+
       '<textarea id="mDl" rows="6" maxlength="4000" placeholder="Paste from TCG Live, e.g.&#10;Pokémon: 16&#10;4 Dreepy TWM 128"></textarea><p class="foot" id="mDlC">Private to you.</p>'+
       '<label class="chk"><input id="mShow" type="checkbox"> Show deck sprites in my history</label>'+
-      '<div class="actions"><button id="mAdd" type="button">Save tournament</button><button id="mCancel" type="button" class="ghost">Cancel</button></div><p class="status" id="mMsg" role="status" aria-live="polite"></p>'+
+      '<div class="actions"><button id="mAdd" type="button">Save tournament</button><button id="mCancel" type="button" class="ghost">Cancel</button></div><div class="mhconf" id="mConf" role="alertdialog" aria-labelledby="mConfT" hidden><p id="mConfT"></p><div class="actions"><button id="mConfY" type="button">Yes, save changes</button><button id="mConfN" type="button" class="ghost">Keep editing</button></div></div><p class="status" id="mMsg" role="status" aria-live="polite"></p>'+
       '<datalist id="mhDl"></datalist>';
     b.appendChild(f);
     $("mCat").value="Locals";$("mShow").checked=mhShow();
@@ -2628,7 +2628,7 @@ ${stars == null ? "" : ribbon + starRow}
     ["mD","mS1","mS2"].forEach(function(i){$(i).addEventListener("input",mhPrev)});
     $("mRAdd").onclick=function(){MHR.push({od:"",os:[],res:""});mhRows();var r=$("mhRounds").querySelectorAll(".mhr");var x=r[r.length-1];if(x)x.querySelector("input").focus()};
     $("mCancel").onclick=function(){mhReset();mhOpen(false);$("mNew").focus()};
-    $("mAdd").onclick=mhSave;
+    $("mAdd").onclick=function(){mhSave(false)};$("mConfY").onclick=function(){mhSave(true)};$("mConfN").onclick=function(){mhConf(false);$("mAdd").focus()};$("mhForm").addEventListener("input",function(){if(!$("mConf").hidden)mhConf(false)});
     $("mDl").addEventListener("input",mhDlCount);
     $("mDlV").onchange=function(){var p=toolP(),L=p&&(p.vault||[])[+this.value];if(L&&L.v&&L.v.length){$("mDl").value=L.v[L.v.length-1].t||"";mhDlCount()}this.value=""};
     $("mDlB").onclick=function(){var t=$("mDl").value.trim();if(t)loadDraft(clean($("mD").value)||"Tournament deck",t);view("Cards");window.scrollTo(0,0);openDraft()};
@@ -2677,8 +2677,9 @@ ${stars == null ? "" : ribbon + starRow}
     var on=MHR.length>0;$("mhManual").hidden=on;var a=$("mhAuto");a.hidden=!on;
     if(on){var c=mhRec({r:MHR}),by=MHR.filter(function(x){return x.res==="BYE"}).length;var miss=MHR.filter(function(x){return !x.res}).length;a.textContent="Record from rounds: "+c.w+"–"+c.l+(c.t?"–"+c.t:"")+" ("+(3*c.w+c.t)+" match pts)"+(by?", including "+by+" bye"+(by===1?"":"s"):"")+(miss?". "+miss+" round"+(miss===1?" has":"s have")+" no result yet.":".")}
   }
+  function mhConf(on,t){var c=$("mConf");if(!c)return;c.hidden=!on;var a=$("mAdd"),x=$("mCancel");if(a)a.hidden=on;if(x)x.hidden=on;if(on){$("mConfT").textContent=t;$("mConfY").focus()}}
   function mhReset(){
-    MHE=null;MHR=[];["mEv","mDt","mD","mS1","mS2","mP","mN"].forEach(function(i){$(i).value=""});["mW","mL","mT"].forEach(function(i){$(i).value="0"});$("mCat").value="Locals";
+    mhConf(false);MHE=null;MHR=[];["mEv","mDt","mD","mS1","mS2","mP","mN"].forEach(function(i){$(i).value=""});["mW","mL","mT"].forEach(function(i){$(i).value="0"});$("mCat").value="Locals";
     $("mNt").value="";$("mDl").value="";mhDlCount();$("mAdd").textContent="Save tournament";$("mhFt").textContent="New tournament";mhRows();mhPrev();mhDlOpts();
   }
   function mhEdit(h){
@@ -2688,7 +2689,7 @@ ${stars == null ? "" : ribbon + starRow}
     MHR=(h.r||[]).map(function(x){return{od:x.od||"",os:x.os||[],res:x.res||"",g:mhG(x),gf:mhGF(x),ns:x.ns?1:0}});$("mNt").value=h.nt||"";$("mDl").value=h.dl||"";mhDlCount();mhDlOpts();
     $("mAdd").textContent="Save changes";$("mhFt").textContent="Edit "+h.ev;mhRows();mhPrev();mhOpen(true);
   }
-  function mhSave(){
+  function mhSave(ok){
     var p=toolP(),m=$("mMsg");if(!p)return;var H=p.mh=p.mh||[];
     var ev=clean($("mEv").value);if(!ev){m.textContent="Add a tournament name.";$("mEv").focus();return}
     var sk=mhKeys([$("mS1").value,$("mS2").value]);if(sk.bad){m.textContent="I couldn't find a sprite called "+sk.bad+". Pick one from the suggestions.";return}
@@ -2697,6 +2698,8 @@ ${stars == null ? "" : ribbon + starRow}
     var pl=+$("mP").value||0,np=+$("mN").value||0;if(pl&&np&&pl>np){m.textContent="Placement can't be lower than the number of players.";return}
     var rec=R.length?mhRec({r:R}):{w:Math.max(0,+$("mW").value||0),l:Math.max(0,+$("mL").value||0),t:Math.max(0,+$("mT").value||0)};
     var dk=clean($("mD").value),o={ev:ev,cat:$("mCat").value,d:$("mDt").value,w:rec.w,l:rec.l,t:rec.t,p:pl,n:np,dk:dk,s:sk.k,r:R};var nt=String($("mNt").value||"").trim().slice(0,1000),dl=String($("mDl").value||"").trim().slice(0,4000);if(nt)o.nt=nt;if(dl)o.dl=dl;
+    if(MHE&&H.indexOf(MHE)>=0&&!ok){m.textContent="";mhConf(true,"Save changes to "+(MHE.ev||"this tournament")+"? This replaces the saved record, including its rounds and results.");return}
+    mhConf(false);
     if(MHE&&H.indexOf(MHE)>=0){H[H.indexOf(MHE)]=o;m.textContent=ev+" updated."}else{H.push(o);if(H.length>200)H.shift();m.textContent=ev+" added to your history."}
     MHE=null;mhPersist();mhReset();mhOpen(false);renderMH();var nm=$("mMsg").textContent;var sm=$("mhSaved");if(sm)sm.textContent=nm;
   }
@@ -2766,7 +2769,9 @@ ${stars == null ? "" : ribbon + starRow}
     var cards=list.filter(function(c){return !c.h});
     if(!cards.length){g.appendChild(el("p","No cards could be read from this list. Switch to List to see it as pasted.","foot"));return g}
     var tiles=[];
-    list.forEach(function(c){if(c.h){g.appendChild(el("div",c.h,"mhgh"));return}
+    var n=cards.length,fitG=function(){var W=g.clientWidth-parseFloat(getComputedStyle(g).paddingLeft)*2;if(!(W>0))return;var Hm=Math.max(260,window.innerHeight*0.6),gp=W<420?4:6,c=3;for(;c<14;c++){var tw=(W-gp*(c-1))/c,r=Math.ceil(n/c);if(r*tw*88/63+gp*(r-1)<=Hm)break}g.style.setProperty("--gc",c);g.style.setProperty("--gg",gp+"px")};
+    try{new ResizeObserver(function(){fitG()}).observe(g)}catch(e){}requestAnimationFrame(fitG);
+    list.forEach(function(c){if(c.h)return;
       var tl=el("div",null,"mhgc");tl.title=c.q+"× "+c.n+(c.s?" ("+c.s+" "+c.no+")":"");
       var nm=el("div",null,"mhgn");nm.appendChild(el("span",c.n));if(c.s)nm.appendChild(el("small",c.s+" "+c.no,"mono"));tl.appendChild(nm);
       tl.appendChild(el("span",String(c.q),"mhgq mono"));g.appendChild(tl);tiles.push([tl,nm,c])});
