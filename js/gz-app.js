@@ -1651,7 +1651,7 @@ ${stars == null ? "" : ribbon + starRow}
   $("dkSet").addEventListener("click",function(){view("Acct");window.scrollTo(0,0)});
 
   // ---- updates and notices ----
-  var APP_VER="2026.11.16c";
+  var APP_VER="2026.11.16d";
   var CHANGES=[
     {ts:Date.UTC(2026,9,8,15),ti:"Deck builder upgrade",b:"Search and browse cards while your deck stays on screen, on PC and phone."},
     {ts:Date.UTC(2026,9,8,14),ti:"New logo and TCG Live names",b:"GroundZ has a new look. Add your TCG Live username in profile settings."},
@@ -2525,7 +2525,7 @@ ${stars == null ? "" : ribbon + starRow}
   function mhGsc(g){var c=mhGc(g);return c.w+"–"+c.l+(c.t?"–"+c.t:"")}
   function mhGPips(g,cls,gf){var w=el("span",null,(cls||"mhgames")+(gf?" mhgpl":""));String(g||"").split("").forEach(function(ch,i){var e=el("span",ch,"mhgp "+(ch==="W"?"gw":ch==="L"?"gl":"gt")),t=gf&&gf[i],tt=t==="1"?"1st":t==="2"?"2nd":"";e.title="Game "+(i+1)+": "+(ch==="W"?"win":ch==="L"?"loss":"tie")+(tt?", went "+tt:"");if(gf){var wr=el("span",null,"mhgpw");wr.appendChild(e);wr.appendChild(el("small",tt||"\u00a0"));w.appendChild(wr)}else w.appendChild(e)});return w}
   // per-deck stats from match history rounds (byes skipped, IDs count as ties)
-  function mhMu(H,keep){var M={};H.forEach(function(h){if(keep&&!keep(h))return;(h.r||[]).forEach(function(x){if(!x.res||x.res==="BYE")return;var k=(x.od||"Unknown deck").trim()||"Unknown deck",o=M[k.toLowerCase()]=M[k.toLowerCase()]||{n:k,s:x.os,w:0,l:0,t:0,gw:0,gl:0,gt:0};if(!o.s||!o.s.length)o.s=x.os;if(o._h!==h){o._h=h;o.ne=(o.ne||0)+1}if(x.res==="W")o.w++;else if(x.res==="L")o.l++;else o.t++;mhTurns(x).forEach(function(tr){var fc=o["f"+tr[0]]=o["f"+tr[0]]||{w:0,l:0,t:0};if(tr[1]==="W")fc.w++;else if(tr[1]==="L")fc.l++;else fc.t++});var gc=mhGc(mhG(x));o.gw+=gc.w;o.gl+=gc.l;o.gt+=gc.t})});return Object.keys(M).map(function(k){return M[k]}).sort(function(a,b){return(b.w+b.l+b.t)-(a.w+a.l+a.t)})}
+  function mhMu(H,keep){var M={};H.forEach(function(h){if(keep&&!keep(h))return;(h.r||[]).forEach(function(x){if(!x.res||x.res==="BYE"||x.ns)return;var k=(x.od||"Unknown deck").trim()||"Unknown deck",o=M[k.toLowerCase()]=M[k.toLowerCase()]||{n:k,s:x.os,w:0,l:0,t:0,gw:0,gl:0,gt:0};if(!o.s||!o.s.length)o.s=x.os;if(o._h!==h){o._h=h;o.ne=(o.ne||0)+1}if(x.res==="W")o.w++;else if(x.res==="L")o.l++;else o.t++;mhTurns(x).forEach(function(tr){var fc=o["f"+tr[0]]=o["f"+tr[0]]||{w:0,l:0,t:0};if(tr[1]==="W")fc.w++;else if(tr[1]==="L")fc.l++;else fc.t++});var gc=mhGc(mhG(x));o.gw+=gc.w;o.gl+=gc.l;o.gt+=gc.t})});return Object.keys(M).map(function(k){return M[k]}).sort(function(a,b){return(b.w+b.l+b.t)-(a.w+a.l+a.t)})}
   function mhMuList(A){var ul=el("ul",null,"mhmul"),show=mhShow(),hd=el("li",null,"mhmuh");["","Deck","Games W-L-T","Going 1st","Going 2nd","Win rate"].forEach(function(t){hd.appendChild(el("span",t))});ul.appendChild(hd);
     function fr(c,lbl){if(!c)return el("span","–","mhmf mhmuted");var n=c.w+c.l+c.t,pc=Math.round(100*c.w/n),e=el("span",null,"mhmf");e.appendChild(el("span",pc+"%"));e.appendChild(el("small",c.w+"-"+c.l+"-"+c.t));e.title=lbl+": won "+c.w+" of "+n+" game"+(n===1?"":"s");return e}
     A.forEach(function(o){var n=o.w+o.l+o.t,li=el("li");var ic=show?mhIcon(o.n==="Unknown deck"?"":o.n,o.s):null;li.appendChild(ic||el("span"));li.appendChild(el("span",o.n,"mhmn"));var gn=o.gw+o.gl+o.gt,rec=gn?o.gw+"-"+o.gl+"-"+o.gt:o.w+"-"+o.l+"-"+o.t,re=el("span",rec,"mhmr");re.title=gn?"Games won-lost-tied across "+n+" round"+(n===1?"":"s"):"Rounds won-lost-tied (games not logged)";li.appendChild(re);li.appendChild(fr(o.f1,"Going 1st"));li.appendChild(fr(o.f2,"Going 2nd"));var pc=Math.round(100*o.w/n);li.appendChild(el("b",pc+"%",pc>=50?"mhup":"mhdn"));ul.appendChild(li)});return ul}
@@ -2660,17 +2660,17 @@ ${stars == null ? "" : ribbon + starRow}
       x.g=mhG(x);
       var seq=el("span",null,"mhgs");seq.setAttribute("aria-live","polite");
       if(x.g){seq.appendChild(mhGPips(x.g,"mhgames"))}
-      else seq.appendChild(el("span",x.res==="BYE"?"Bye":x.res==="ID"?"Intentional draw":x.res?"Result "+x.res+", games not logged":"No games yet","mhge"));
-      var fo=el("span",null,"mhfo"),gfa=String(x.gf||"").split(""),ng=x.res==="BYE"||x.res==="ID"?0:Math.min(3,x.g.length+(x.g.length<3?1:0));
+      else seq.appendChild(el("span",x.ns?(x.res==="W"?"Opponent no-show (win)":"No-show (loss)"):x.res==="BYE"?"Bye":x.res==="ID"?"Intentional draw":x.res?"Result "+x.res+", games not logged":"No games yet","mhge"));
+      var fo=el("span",null,"mhfo"),gfa=String(x.gf||"").split(""),ng=x.res==="BYE"||x.res==="ID"||x.ns?0:Math.min(3,x.g.length+(x.g.length<3?1:0));
       for(var j=0;j<ng;j++)(function(j){var gb=el("span",null,"mhfg");gb.setAttribute("role","group");gb.setAttribute("aria-label","Round "+(i+1)+" game "+(j+1)+": went first or second");gb.appendChild(el("small","G"+(j+1)));
         [["1","1st","Went first"],["2","2nd","Went second"]].forEach(function(r){var bt=el("button",r[1],"ghost");bt.type="button";bt.title="Game "+(j+1)+": "+r[2].toLowerCase();bt.setAttribute("aria-pressed",String(gfa[j]===r[0]));bt.onclick=function(){for(var q=0;q<=j;q++)if(gfa[q]!=="1"&&gfa[q]!=="2")gfa[q]="-";gfa[j]=gfa[j]===r[0]?"-":r[0];x.gf=gfa.join("");mhRows()};gb.appendChild(bt)});fo.appendChild(gb)})(j);
       if(ng){g.appendChild(fo);g.appendChild(el("span",null,"mhgsep"))}
       g.appendChild(seq);
       var full=x.g.length>=3;
-      [["W","Won a game"],["L","Lost a game"],["T","Tied a game"]].forEach(function(r){var bt=el("button",r[0],"ghost");bt.type="button";bt.title=r[1];bt.setAttribute("aria-label","Round "+(i+1)+": "+r[1].toLowerCase());bt.disabled=full;bt.onclick=function(){if(x.res==="BYE"||x.res==="ID")x.res="";x.g=mhG(x)+r[0];x.res=mhGRes(x.g);mhRows()};g.appendChild(bt)});
+      [["W","Won a game"],["L","Lost a game"],["T","Tied a game"]].forEach(function(r){var bt=el("button",r[0],"ghost");bt.type="button";bt.title=r[1];bt.setAttribute("aria-label","Round "+(i+1)+": "+r[1].toLowerCase());bt.disabled=full;bt.onclick=function(){if(x.res==="BYE"||x.res==="ID"||x.ns){x.res="";x.ns=0}x.g=mhG(x)+r[0];x.res=mhGRes(x.g);mhRows()};g.appendChild(bt)});
       var un=el("button","⌫","ghost");un.type="button";un.title="Remove the last game";un.setAttribute("aria-label","Round "+(i+1)+": remove the last game");un.disabled=!x.g;un.onclick=function(){x.g=mhG(x).slice(0,-1);x.res=mhGRes(x.g);mhRows()};g.appendChild(un);
       g.appendChild(el("span",null,"mhgsep"));
-      [["BYE","Bye"],["ID","Intentional draw"]].forEach(function(r){var bt=el("button",r[0]==="BYE"?"Bye":r[0],"ghost");bt.type="button";bt.title=r[1];bt.setAttribute("aria-label","Round "+(i+1)+": "+r[1]);bt.setAttribute("aria-pressed",String(x.res===r[0]));bt.onclick=function(){x.g="";x.res=x.res===r[0]?"":r[0];mhRows()};g.appendChild(bt)});
+      [["BYE","Bye","Bye"],["ID","ID","Intentional draw"],["NSW","No-show W","Opponent didn't show: win"],["NSL","No-show L","You didn't show: loss"]].forEach(function(r){var on=r[0]==="NSW"?(x.ns&&x.res==="W"):r[0]==="NSL"?(x.ns&&x.res==="L"):(!x.ns&&x.res===r[0]),bt=el("button",r[1],"ghost");bt.type="button";bt.title=r[2];bt.setAttribute("aria-label","Round "+(i+1)+": "+r[2]);bt.setAttribute("aria-pressed",String(!!on));bt.onclick=function(){x.g="";x.gf="";if(on){x.res="";x.ns=0}else if(r[0]==="NSW"||r[0]==="NSL"){x.res=r[0]==="NSW"?"W":"L";x.ns=1}else{x.res=r[0];x.ns=0}mhRows()};g.appendChild(bt)});
       if(x.g)g.appendChild(el("span",(x.res==="W"?"Win ":x.res==="L"?"Loss ":"Tie ")+mhGsc(x.g),"mhgout"));
       row.appendChild(g);
       var rm=el("button","✕","ghost mhrx");rm.type="button";rm.setAttribute("aria-label","Remove round "+(i+1));rm.onclick=function(){MHR.splice(i,1);mhRows()};row.appendChild(rm);
@@ -2687,14 +2687,14 @@ ${stars == null ? "" : ribbon + starRow}
     MHE=h;$("mMsg").textContent="";$("mEv").value=h.ev||"";$("mCat").value=h.cat||"Locals";$("mDt").value=h.d||"";$("mD").value=h.dk||"";
     $("mS1").value=h.s&&h.s[0]?mhNm(h.s[0]):"";$("mS2").value=h.s&&h.s[1]?mhNm(h.s[1]):"";
     $("mW").value=h.w||0;$("mL").value=h.l||0;$("mT").value=h.t||0;$("mP").value=h.p||"";$("mN").value=h.n||"";
-    MHR=(h.r||[]).map(function(x){return{od:x.od||"",os:x.os||[],res:x.res||"",g:mhG(x),gf:mhGF(x)}});$("mNt").value=h.nt||"";$("mDl").value=h.dl||"";mhDlCount();mhDlOpts();
+    MHR=(h.r||[]).map(function(x){return{od:x.od||"",os:x.os||[],res:x.res||"",g:mhG(x),gf:mhGF(x),ns:x.ns?1:0}});$("mNt").value=h.nt||"";$("mDl").value=h.dl||"";mhDlCount();mhDlOpts();
     $("mAdd").textContent="Save changes";$("mhFt").textContent="Edit "+h.ev;mhRows();mhPrev();mhOpen(true);
   }
   function mhSave(){
     var p=toolP(),m=$("mMsg");if(!p)return;var H=p.mh=p.mh||[];
     var ev=clean($("mEv").value);if(!ev){m.textContent="Add a tournament name.";$("mEv").focus();return}
     var sk=mhKeys([$("mS1").value,$("mS2").value]);if(sk.bad){m.textContent="I couldn't find a sprite called "+sk.bad+". Pick one from the suggestions.";return}
-    var R=[],bad="";MHR.forEach(function(x){var k=mhKeys([x.osIn||""]);var by=x.res==="BYE";if(k.bad&&!by)bad=k.bad;var gg=(by||x.res==="ID")?"":mhG(x);var o={od:by?"":clean(x.od),os:by?[]:k.k,res:gg?mhGRes(gg):(x.res||"")};if(gg)o.g=gg;var gf=by||x.res==="ID"?"":String(x.gf||"").replace(/[^12-]/g,"-").slice(0,Math.max(1,gg.length));if(/[12]/.test(gf)){o.gf=gf.replace(/-+$/,"");if(gf[0]==="1"||gf[0]==="2")o.f=gf[0]}R.push(o)});
+    var R=[],bad="";MHR.forEach(function(x){var k=mhKeys([x.osIn||""]);var by=x.res==="BYE";if(k.bad&&!by)bad=k.bad;var ns=!!x.ns&&(x.res==="W"||x.res==="L"),gg=(by||x.res==="ID"||ns)?"":mhG(x);var o={od:by?"":clean(x.od),os:by?[]:k.k,res:gg?mhGRes(gg):(x.res||"")};if(gg)o.g=gg;if(ns)o.ns=1;var gf=by||x.res==="ID"||ns?"":String(x.gf||"").replace(/[^12-]/g,"-").slice(0,Math.max(1,gg.length));if(/[12]/.test(gf)){o.gf=gf.replace(/-+$/,"");if(gf[0]==="1"||gf[0]==="2")o.f=gf[0]}R.push(o)});
     if(bad){m.textContent="I couldn't find a sprite called "+bad+" in your rounds. Pick one from the suggestions.";return}
     var pl=+$("mP").value||0,np=+$("mN").value||0;if(pl&&np&&pl>np){m.textContent="Placement can't be lower than the number of players.";return}
     var rec=R.length?mhRec({r:R}):{w:Math.max(0,+$("mW").value||0),l:Math.max(0,+$("mL").value||0),t:Math.max(0,+$("mT").value||0)};
@@ -2740,8 +2740,8 @@ ${stars == null ? "" : ribbon + starRow}
     if(h.r&&h.r.length){
       var tb=el("div",null,"mhrt"),th=el("div",null,"mhrth");["Round","Opponent's deck","Games · Result"].forEach(function(t){th.appendChild(el("span",t))});tb.appendChild(th);
       h.r.forEach(function(x,i){var row=el("div",null,"mhrtr");row.appendChild(el("span","R"+(i+1),"mono mhrn"));
-        var dk=el("span",null,"mhrdk");if(x.res==="BYE")dk.appendChild(el("span","Bye, no opponent"));else{var ic3=show&&(x.od||(x.os&&x.os.length))?mhIcon(x.od,x.os):null;if(ic3)dk.appendChild(ic3);dk.appendChild(el("span",x.od||"Deck not recorded",x.od?"mhrnm":"mhrnm mhmuted"))}
-        var xgf=mhGF(x),xg=mhG(x);if(!xg&&(xgf[0]==="1"||xgf[0]==="2")){var ft=el("span",xgf[0]==="1"?"1st":"2nd","mhrf");ft.title=xgf[0]==="1"?"Went first":"Went second";dk.appendChild(ft)}row.appendChild(dk);var res=el("span",null,"mhrres");if(xg){res.appendChild(mhGPips(xg));if(xg.length>1)res.appendChild(el("span",mhGsc(xg),"mhgsc"))}res.appendChild(el("span",x.res==="BYE"?"Bye":x.res||"–","mhpip "+(x.res==="W"?"pw":x.res==="L"?"pl":x.res==="BYE"?"pb":x.res?"pt":"pn")));row.appendChild(res);tb.appendChild(row)});
+        var dk=el("span",null,"mhrdk");if(x.res==="BYE")dk.appendChild(el("span","Bye, no opponent"));else{var ic3=show&&(x.od||(x.os&&x.os.length))?mhIcon(x.od,x.os):null;if(ic3)dk.appendChild(ic3);dk.appendChild(el("span",x.od||(x.ns?(x.res==="W"?"Opponent didn't show":"You didn't show"):"Deck not recorded"),x.od?"mhrnm":"mhrnm mhmuted"))}
+        var xgf=mhGF(x),xg=mhG(x);if(!xg&&(xgf[0]==="1"||xgf[0]==="2")){var ft=el("span",xgf[0]==="1"?"1st":"2nd","mhrf");ft.title=xgf[0]==="1"?"Went first":"Went second";dk.appendChild(ft)}row.appendChild(dk);var res=el("span",null,"mhrres");if(xg){res.appendChild(mhGPips(xg));if(xg.length>1)res.appendChild(el("span",mhGsc(xg),"mhgsc"))}if(x.ns)res.appendChild(el("span","No-show","mhgsc"));res.appendChild(el("span",x.res==="BYE"?"Bye":x.res||"–","mhpip "+(x.res==="W"?"pw":x.res==="L"?"pl":x.res==="BYE"?"pb":x.res?"pt":"pn")));row.appendChild(res);tb.appendChild(row)});
       dt.appendChild(tb);
     }else dt.appendChild(el("p","No rounds recorded for this tournament. Edit it to add rounds and matchups.","foot"));
     if(h.nt){dt.appendChild(el("h4","Notes","mhdh"));dt.appendChild(el("p",h.nt,"mhnote"))}
