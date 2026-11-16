@@ -1651,7 +1651,7 @@ ${stars == null ? "" : ribbon + starRow}
   $("dkSet").addEventListener("click",function(){view("Acct");window.scrollTo(0,0)});
 
   // ---- updates and notices ----
-  var APP_VER="2026.11.16h";
+  var APP_VER="2026.11.17a";
   var CHANGES=[
     {ts:Date.UTC(2026,9,8,15),ti:"Deck builder upgrade",b:"Search and browse cards while your deck stays on screen, on PC and phone."},
     {ts:Date.UTC(2026,9,8,14),ti:"New logo and TCG Live names",b:"GroundZ has a new look. Add your TCG Live username in profile settings."},
@@ -2748,12 +2748,31 @@ ${stars == null ? "" : ribbon + starRow}
       var x1=el("button","Copy list for TCG Live","ghost"),x2=el("button","Save as image","ghost");x1.type=x2.type="button";
       x1.onclick=function(){var ok=function(){x1.textContent="Copied ✓";setTimeout(function(){x1.textContent="Copy list for TCG Live";xm.hidden=true;xb.setAttribute("aria-expanded","false")},1500)};try{navigator.clipboard.writeText(h.dl).then(ok,function(){x1.textContent="Copy failed"})}catch(e){x1.textContent="Copy failed"}};
       x2.onclick=function(){xm.hidden=true;xb.setAttribute("aria-expanded","false");shareCanvas(deckImage(h),"groundz-deck-"+(h.dk||h.ev||"list").toLowerCase().replace(/[^a-z0-9]+/g,"-")+".png",(h.dk||"Decklist")+" · "+(h.ev||""))};
-      xm.appendChild(x1);xm.appendChild(x2);xw.appendChild(xb);xw.appendChild(xm);dh.appendChild(xw);dt.appendChild(dh);dt.appendChild(el("pre",h.dl,"mhdl"))}
+      xm.appendChild(x1);xm.appendChild(x2);xw.appendChild(xb);xw.appendChild(xm);var vw=el("span",null,"mhvw");vw.setAttribute("role","group");vw.setAttribute("aria-label","Decklist view");var vL=el("button","List","ghost"),vG=el("button","Grid","ghost");vL.type=vG.type="button";vw.appendChild(vL);vw.appendChild(vG);var tools=el("span",null,"mhdlt");tools.appendChild(vw);tools.appendChild(xw);dh.appendChild(tools);dt.appendChild(dh);
+      var box=el("div");dt.appendChild(box);
+      var setV=function(v){MHDLV=v;try{localStorage.setItem("gz-dlview",v)}catch(e){}vL.setAttribute("aria-pressed",String(v!=="grid"));vG.setAttribute("aria-pressed",String(v==="grid"));box.innerHTML="";box.appendChild(v==="grid"?mhDlGrid(h.dl):el("pre",h.dl,"mhdl"))};
+      vL.onclick=function(){setV("list")};vG.onclick=function(){setV("grid")};setV(MHDLV)}
     var act=el("div",null,"mhdact"),e=el("button","Edit","ghost"),x=el("button","Delete","ghost mhdel");e.type=x.type="button";
     e.onclick=function(){mhEdit(h)};x.onclick=function(){if(x.dataset.ok){H.splice(H.indexOf(h),1);if(MHE===h){mhReset();mhOpen(false)}MHSEL=null;mhPersist();renderMH();return}x.dataset.ok="1";x.textContent="Tap again to delete";setTimeout(function(){delete x.dataset.ok;x.textContent="Delete"},3000)};
     var shb=el("button","Share to story","ghost");shb.type="button";shb.onclick=function(){shareCanvas(storyResult(h),"groundz-"+(h.ev||"result").toLowerCase().replace(/[^a-z0-9]+/g,"-")+".png",h.ev)};
     act.appendChild(e);act.appendChild(x);act.appendChild(shb);dt.appendChild(act);
     wrap.appendChild(dt);L.appendChild(wrap);
+  }
+  // decklist grid view (match history): card pictures with copies badge, name tile when no picture
+  var MHDLV="list",MHPIC={};try{if(localStorage.getItem("gz-dlview")==="grid")MHDLV="grid"}catch(e){}
+  function mhDlGrid(t){
+    var g=el("div",null,"mhgrid"),list=[];
+    String(t||"").split(/\r?\n/).forEach(function(l){var ln=l.trim(),hd=ln.match(/^(Pok[eé]mon|Trainer|Energy)\s*:\s*(\d+)/i);if(hd){list.push({h:hd[1]+" · "+hd[2]});return}var m=ln.match(/^(\d+)\s+(.+?)(?:\s+([A-Za-z0-9-]{2,6})\s+(\d+[a-z]?))?$/);if(m&&+m[1]<=60)list.push({q:+m[1],n:m[2].trim(),s:m[3]||"",no:m[4]||""})});
+    var cards=list.filter(function(c){return !c.h});
+    if(!cards.length){g.appendChild(el("p","No cards could be read from this list. Switch to List to see it as pasted.","foot"));return g}
+    var tiles=[];
+    list.forEach(function(c){if(c.h){g.appendChild(el("div",c.h,"mhgh"));return}
+      var tl=el("div",null,"mhgc");tl.title=c.q+"× "+c.n+(c.s?" ("+c.s+" "+c.no+")":"");
+      var nm=el("div",null,"mhgn");nm.appendChild(el("span",c.n));if(c.s)nm.appendChild(el("small",c.s+" "+c.no,"mono"));tl.appendChild(nm);
+      tl.appendChild(el("span",String(c.q),"mhgq mono"));g.appendChild(tl);tiles.push([tl,nm,c])});
+    var put=function(P){tiles.forEach(function(x){var u=P.s[(x[2].s||"").toUpperCase()+"|"+x[2].no]||P.n[normN(x[2].n)];if(!u)return;var im=document.createElement("img");im.alt=x[2].n;im.loading="lazy";im.decoding="async";im.onload=function(){x[1].hidden=true};im.onerror=function(){im.remove()};im.src=u;x[0].insertBefore(im,x[0].firstChild)})};
+    if(MHPIC[t])put(MHPIC[t]);else deckPics(cards).then(function(P){MHPIC[t]=P;put(P)},function(){});
+    return g;
   }
   // ---- My Decks: deck win rate, matchups, hand test ----
   var BMAP=null,BREM={};
