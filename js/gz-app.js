@@ -1651,7 +1651,7 @@ ${stars == null ? "" : ribbon + starRow}
   $("dkSet").addEventListener("click",function(){view("Acct");window.scrollTo(0,0)});
 
   // ---- updates and notices ----
-  var APP_VER="2026.11.16e";
+  var APP_VER="2026.11.16g";
   var CHANGES=[
     {ts:Date.UTC(2026,9,8,15),ti:"Deck builder upgrade",b:"Search and browse cards while your deck stays on screen, on PC and phone."},
     {ts:Date.UTC(2026,9,8,14),ti:"New logo and TCG Live names",b:"GroundZ has a new look. Add your TCG Live username in profile settings."},
@@ -2743,7 +2743,12 @@ ${stars == null ? "" : ribbon + starRow}
       dt.appendChild(tb);
     }else dt.appendChild(el("p","No rounds recorded for this tournament. Edit it to add rounds and matchups.","foot"));
     if(h.nt){dt.appendChild(el("h4","Notes","mhdh"));dt.appendChild(el("p",h.nt,"mhnote"))}
-    if(h.dl){var dh=el("div",null,"mhdlhd"),dn=mhDlN(h.dl);dh.appendChild(el("h4","Decklist"+(dn?" · "+dn+" cards":""),"mhdh"));var cp=el("button","Copy for TCG Live","ghost");cp.type="button";cp.onclick=function(){var ok=function(){cp.textContent="Copied";setTimeout(function(){cp.textContent="Copy for TCG Live"},2000)};try{navigator.clipboard.writeText(h.dl).then(ok,function(){cp.textContent="Copy failed"})}catch(e){cp.textContent="Copy failed"}};dh.appendChild(cp);dt.appendChild(dh);dt.appendChild(el("pre",h.dl,"mhdl"))}
+    if(h.dl){var dh=el("div",null,"mhdlhd"),dn=mhDlN(h.dl);dh.appendChild(el("h4","Decklist"+(dn?" · "+dn+" cards":""),"mhdh"));var xw=el("span",null,"mhexp"),xb=el("button","Export ▾","ghost"),xm=el("span",null,"mhexm");xb.type="button";xb.setAttribute("aria-haspopup","true");xb.setAttribute("aria-expanded","false");xm.hidden=true;
+      xb.onclick=function(){xm.hidden=!xm.hidden;xb.setAttribute("aria-expanded",String(!xm.hidden))};
+      var x1=el("button","Copy list for TCG Live","ghost"),x2=el("button","Save as image","ghost");x1.type=x2.type="button";
+      x1.onclick=function(){var ok=function(){x1.textContent="Copied ✓";setTimeout(function(){x1.textContent="Copy list for TCG Live";xm.hidden=true;xb.setAttribute("aria-expanded","false")},1500)};try{navigator.clipboard.writeText(h.dl).then(ok,function(){x1.textContent="Copy failed"})}catch(e){x1.textContent="Copy failed"}};
+      x2.onclick=function(){xm.hidden=true;xb.setAttribute("aria-expanded","false");shareCanvas(deckImage(h),"groundz-deck-"+(h.dk||h.ev||"list").toLowerCase().replace(/[^a-z0-9]+/g,"-")+".png",(h.dk||"Decklist")+" · "+(h.ev||""))};
+      xm.appendChild(x1);xm.appendChild(x2);xw.appendChild(xb);xw.appendChild(xm);dh.appendChild(xw);dt.appendChild(dh);dt.appendChild(el("pre",h.dl,"mhdl"))}
     var act=el("div",null,"mhdact"),e=el("button","Edit","ghost"),x=el("button","Delete","ghost mhdel");e.type=x.type="button";
     e.onclick=function(){mhEdit(h)};x.onclick=function(){if(x.dataset.ok){H.splice(H.indexOf(h),1);if(MHE===h){mhReset();mhOpen(false)}MHSEL=null;mhPersist();renderMH();return}x.dataset.ok="1";x.textContent="Tap again to delete";setTimeout(function(){delete x.dataset.ok;x.textContent="Delete"},3000)};
     var shb=el("button","Share to story","ghost");shb.type="button";shb.onclick=function(){shareCanvas(storyResult(h),"groundz-"+(h.ev||"result").toLowerCase().replace(/[^a-z0-9]+/g,"-")+".png",h.ev)};
@@ -3004,6 +3009,41 @@ ${stars == null ? "" : ribbon + starRow}
         c.fillStyle=tr[2];c.font="700 18px "+SF;c.fillText(tr[1].toUpperCase(),1000,cy+36);c.textAlign="left";
       });
       return cv;
+    });
+  }
+  // decklist as a shareable image (GroundZ dark style)
+  function loadPic(u){return new Promise(function(ok){if(!u){ok(null);return}var i=new Image(),t=setTimeout(function(){ok(null)},9000);i.crossOrigin="anonymous";i.onload=function(){clearTimeout(t);ok(i)};i.onerror=function(){clearTimeout(t);ok(null)};i.src=u})}
+  // look up card pictures for a pasted list: by set code + number, then by name
+  function deckPics(list){
+    var bySet={},byName={},need=list.filter(function(c){return c.s&&c.no}),names=list.map(function(c){return c.n});
+    CARDS_DB.concat(S.cards||[]).forEach(function(c){if(c.img){if(c.s&&c.no)bySet[c.s.toUpperCase()+"|"+c.no]=c.img;var k=normN(c.n);if(!byName[k])byName[k]=c.img}});
+    if(!REMOTE)return Promise.resolve({s:bySet,n:byName});
+    var sets=need.map(function(c){return c.s.toUpperCase()}).filter(function(v,i,a){return a.indexOf(v)===i}).slice(0,40);
+    var q1=sets.length?api("/rest/v1/cards?select=name,ptcgo,number,img_s&ptcgo=in.("+sets.map(encodeURIComponent).join(",")+")&number=in.("+need.map(function(c){return encodeURIComponent(c.no)}).filter(function(v,i,a){return a.indexOf(v)===i}).join(",")+")&limit=1000").catch(function(){return[]}):Promise.resolve([]);
+    var q2=api("/rest/v1/cards?select=name,img_s&name=in.("+names.slice(0,60).map(function(n){return encodeURIComponent('"'+n.replace(/"/g,"")+'"')}).join(",")+")&img_s=not.is.null&limit=1000").catch(function(){return[]});
+    return Promise.all([q1,q2]).then(function(R){(R[0]||[]).forEach(function(r){if(r.img_s&&r.ptcgo)bySet[String(r.ptcgo).toUpperCase()+"|"+r.number]=r.img_s});(R[1]||[]).forEach(function(r){var k=normN(r.name);if(r.img_s&&!byName[k])byName[k]=r.img_s});return{s:bySet,n:byName}});
+  }
+  function deckImage(h){
+    var list=[];String(h.dl||"").split(/\r?\n/).forEach(function(l){var m=l.trim().match(/^(\d+)\s+(.+?)(?:\s+([A-Za-z0-9-]{2,6})\s+(\d+[a-z]?))?$/);if(m&&+m[1]<=60)list.push({q:+m[1],n:m[2].trim(),s:m[3]||"",no:m[4]||""})});
+    return Promise.all([sheetImg(),logoImg(),deckPics(list),document.fonts?document.fonts.load('700 40px "IBM Plex Sans"').then(function(){return document.fonts.load('600 30px "IBM Plex Mono"')}).catch(function(){}):null]).then(function(X){
+      var P=X[2];return Promise.all(list.map(function(c){return loadPic(P.s[(c.s||"").toUpperCase()+"|"+c.no]||P.n[normN(c.n)])})).then(function(pics){
+      var sh=X[0],logo=X[1],cols=list.length>36?7:6,gap=12,cw=Math.floor((1080-80-(cols-1)*gap)/cols),ch=Math.round(cw*1.396),top=420,rows=Math.ceil(list.length/cols),H=Math.max(1350,top+rows*(ch+gap)+120);
+      var cv=document.createElement("canvas");cv.width=1080;cv.height=H;var c=cv.getContext("2d");
+      c.fillStyle="#08090C";c.fillRect(0,0,1080,H);
+      var g=c.createRadialGradient(540,200,30,540,200,700);g.addColorStop(0,"#26303D");g.addColorStop(1,"rgba(8,9,12,0)");c.fillStyle=g;c.fillRect(0,0,1080,H);
+      c.save();c.translate(540,200);c.rotate(-0.28);c.fillStyle="#E10600";c.fillRect(-900,-44,1800,88);c.fillStyle="rgba(225,6,0,.35)";c.fillRect(-900,60,1800,12);c.restore();
+      if(logo)c.drawImage(logo,430,48,220,44);
+      var ks=spriteKeys(h.dk,h.s).slice(0,2),sz=128,tw=ks.length*sz+(ks.length>1?16:0);ks.forEach(function(k,j){drawSpr(c,sh,k,540-tw/2+j*(sz+16),120,sz)});
+      c.textAlign="center";c.fillStyle="#FFFFFF";c.font="800 48px "+SF;c.fillText(fit(c,(h.dk||"Decklist").toUpperCase(),960),540,318);
+      c.fillStyle="#AEB4BD";c.font="500 26px "+SM;c.fillText(fit(c,[h.ev,mhDate(h.d),h.p?mhOrd(h.p)+(h.n?" of "+h.n:""):""].filter(Boolean).join("  ·  "),960),540,362);
+      list.forEach(function(cd,i){var x=40+(i%cols)*(cw+gap),y=top+Math.floor(i/cols)*(ch+gap),im=pics[i];
+        c.save();rr(c,x,y,cw,ch,8);c.clip();if(im){c.drawImage(im,x,y,cw,ch)}else{c.fillStyle="#1A1F27";c.fillRect(x,y,cw,ch);c.fillStyle="#E6E8EB";c.font="600 20px "+SF;c.textAlign="center";
+          var wds=cd.n.split(" "),ln=[],cur="";wds.forEach(function(w){var t=cur?cur+" "+w:w;if(c.measureText(t).width>cw-16){if(cur)ln.push(cur);cur=w}else cur=t});if(cur)ln.push(cur);ln.slice(0,4).forEach(function(t,k){c.fillText(t,x+cw/2,y+ch/2-((Math.min(4,ln.length)-1)*13)+k*26)});
+          if(cd.s){c.fillStyle="#7D8590";c.font="500 16px "+SM;c.textAlign="left";c.fillText(cd.s+" "+cd.no,x+10,y+ch-20)}}c.restore();
+        c.strokeStyle="rgba(255,255,255,.12)";c.lineWidth=2;rr(c,x,y,cw,ch,8);c.stroke();
+        var bx=x+cw-30,by=y+ch-30;c.fillStyle="#E10600";c.beginPath();c.arc(bx,by,22,0,7);c.fill();c.strokeStyle="#08090C";c.lineWidth=3;c.stroke();c.fillStyle="#FFFFFF";c.font="800 24px "+SM;c.textAlign="center";c.fillText(String(cd.q),bx,by+8)});
+      var tot=list.reduce(function(a,x){return a+x.q},0);c.textAlign="center";c.fillStyle="#555E69";c.font="600 26px "+SM;c.fillText(tot+" cards  ·  groundz.win",540,H-50);c.textAlign="left";
+      return cv;})
     });
   }
   function storyResult(h){
