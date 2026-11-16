@@ -853,14 +853,14 @@
   var PRO_HIDDEN=true;
   function proVis(){return !PRO_HIDDEN||isOrg()}
   var HOME="Tools";
-  function chrome(){var u=me(),org=isOrg();$("tRank").hidden=true;$("tTour").hidden=!org;if(!org&&(!$("vTour").hidden||!$("vRank").hidden))view(HOME);document.body.classList.toggle("nopro",!proVis());if(!proVis()&&!$("vPro").hidden&&!u)view(HOME);$("tAcct").textContent=u?u.u:"Sign in";$("tDash").hidden=!u;$("tDash").textContent=u&&u.role==="org"?"Organizer":"My dashboard";if(!u&&!$("vDash").hidden)view(HOME);renderAds();}
+  function chrome(){var u=me(),org=isOrg();$("tRank").hidden=true;$("tTour").hidden=!org;$("tStore").hidden=!org;if(!org&&(!$("vTour").hidden||!$("vRank").hidden||!$("vStore").hidden))view(HOME);document.body.classList.toggle("nopro",!proVis());if(!proVis()&&!$("vPro").hidden&&!u)view(HOME);$("tAcct").textContent=u?u.u:"Sign in";$("tDash").hidden=!u;$("tDash").textContent=u&&u.role==="org"?"Organizer":"My dashboard";if(!u&&!$("vDash").hidden)view(HOME);renderAds();}
   var TOOL="mh";try{var tq=localStorage.getItem("tg-tool");TOOL=tq==="sw"||tq==="ht"?tq:"mh"}catch(e){}
   function view(v){
     var ownPg=v==="Deck"&&!!CUR&&deckPid===CUR.pid;pvHide();
-    ["Rank","Tour","Dash","Acct","Deck","Pro","Cards","Tools"].forEach(function(k){$("v"+k).hidden=k!==v;var tb=$("t"+k);if(tb)tb.setAttribute("aria-current",(k===v||(v==="Rank"&&k==="Tour")||(v==="Deck"&&k===(ownPg?"Acct":isOrg()?"Tour":"Tools")))?"page":"false");});
+    ["Rank","Tour","Dash","Acct","Deck","Pro","Cards","Tools","Store"].forEach(function(k){$("v"+k).hidden=k!==v;var tb=$("t"+k);if(tb)tb.setAttribute("aria-current",(k===v||(v==="Rank"&&k==="Tour")||(v==="Deck"&&k===(ownPg?"Acct":isOrg()?"Tour":"Tools")))?"page":"false");});
     if(v==="Tour") renderTour(); if(v==="Dash") renderDash(); if(v==="Acct") renderAcct(); if(v==="Deck") renderDeck(); if(v==="Pro") renderHub(); if(v==="Cards") renderCards(); if(v==="Tools"){$("toolSw").hidden=TOOL!=="sw";$("toolMh").hidden=TOOL!=="mh";$("toolHt").hidden=TOOL!=="ht";$("toolSw").open=$("toolMh").open=$("toolHt").open=true;renderTools();} var ty=$("cTray"); if(ty) ty.hidden=v!=="Cards"||BUILD; document.body.classList.toggle("gzbuild",v==="Cards"&&BUILD); renderAds();
   }
-  $("tRank").addEventListener("click",function(){view("Rank")});var tr0=$("tourRank");if(tr0)tr0.addEventListener("click",function(){view("Rank");window.scrollTo(0,0)});var rb0=$("rankBack");if(rb0)rb0.addEventListener("click",function(){view("Tour");window.scrollTo(0,0)});
+  $("tRank").addEventListener("click",function(){view("Rank")});$("tStore").addEventListener("click",function(){view("Store");window.scrollTo(0,0)});var tr0=$("tourRank");if(tr0)tr0.addEventListener("click",function(){view("Rank");window.scrollTo(0,0)});var rb0=$("rankBack");if(rb0)rb0.addEventListener("click",function(){view("Tour");window.scrollTo(0,0)});
   $("tTour").addEventListener("click",function(){view("Rank")});$("tCards").addEventListener("click",function(){view("Cards")});(function(){
     var btn=$("tTools"),m=el("div",null,"tmenu");m.id="tMenu";m.setAttribute("role","menu");m.setAttribute("aria-label","Tools");m.hidden=true;document.body.appendChild(m);
     [["mh","Match history","Your tournaments, rounds and matchups"],["ht","Hand test","Opening hands, prizes and mulligan odds"],["sw","Swiss calculator","Rounds, top cut and Championship Points"]].forEach(function(t){var b=el("button",null,"tmi");b.type="button";b.setAttribute("role","menuitem");b.appendChild(el("b",t[1]));b.appendChild(el("span",t[2]));b.onclick=function(){close();TOOL=t[0];try{localStorage.setItem("tg-tool",TOOL)}catch(e){}view("Tools");window.scrollTo(0,0)};m.appendChild(b)});
@@ -1651,7 +1651,7 @@ ${stars == null ? "" : ribbon + starRow}
   $("dkSet").addEventListener("click",function(){view("Acct");window.scrollTo(0,0)});
 
   // ---- updates and notices ----
-  var APP_VER="2026.11.16g";
+  var APP_VER="2026.11.16h";
   var CHANGES=[
     {ts:Date.UTC(2026,9,8,15),ti:"Deck builder upgrade",b:"Search and browse cards while your deck stays on screen, on PC and phone."},
     {ts:Date.UTC(2026,9,8,14),ti:"New logo and TCG Live names",b:"GroundZ has a new look. Add your TCG Live username in profile settings."},
