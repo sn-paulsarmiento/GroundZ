@@ -3027,22 +3027,23 @@ ${stars == null ? "" : ribbon + starRow}
     var list=[];String(h.dl||"").split(/\r?\n/).forEach(function(l){var m=l.trim().match(/^(\d+)\s+(.+?)(?:\s+([A-Za-z0-9-]{2,6})\s+(\d+[a-z]?))?$/);if(m&&+m[1]<=60)list.push({q:+m[1],n:m[2].trim(),s:m[3]||"",no:m[4]||""})});
     return Promise.all([sheetImg(),logoImg(),deckPics(list),document.fonts?document.fonts.load('700 40px "IBM Plex Sans"').then(function(){return document.fonts.load('600 30px "IBM Plex Mono"')}).catch(function(){}):null]).then(function(X){
       var P=X[2];return Promise.all(list.map(function(c){return loadPic(P.s[(c.s||"").toUpperCase()+"|"+c.no]||P.n[normN(c.n)])})).then(function(pics){
-      var sh=X[0],logo=X[1],cols=list.length>36?7:6,gap=12,cw=Math.floor((1080-80-(cols-1)*gap)/cols),ch=Math.round(cw*1.396),top=420,rows=Math.ceil(list.length/cols),H=Math.max(1350,top+rows*(ch+gap)+120);
+      var sh=X[0],logo=X[1],cols=list.length>36?7:6,gap=12,cw=Math.floor((1080-80-(cols-1)*gap)/cols),ch=Math.round(cw*1.396),top=380,rows=Math.ceil(list.length/cols),H=Math.max(1350,top+rows*(ch+gap)+110);
       var cv=document.createElement("canvas");cv.width=1080;cv.height=H;var c=cv.getContext("2d");
       c.fillStyle="#08090C";c.fillRect(0,0,1080,H);
       var g=c.createRadialGradient(540,200,30,540,200,700);g.addColorStop(0,"#26303D");g.addColorStop(1,"rgba(8,9,12,0)");c.fillStyle=g;c.fillRect(0,0,1080,H);
-      c.save();c.translate(540,200);c.rotate(-0.28);c.fillStyle="#E10600";c.fillRect(-900,-44,1800,88);c.fillStyle="rgba(225,6,0,.35)";c.fillRect(-900,60,1800,12);c.restore();
-      if(logo)c.drawImage(logo,430,48,220,44);
-      var ks=spriteKeys(h.dk,h.s).slice(0,2),sz=128,tw=ks.length*sz+(ks.length>1?16:0);ks.forEach(function(k,j){drawSpr(c,sh,k,540-tw/2+j*(sz+16),120,sz)});
-      c.textAlign="center";c.fillStyle="#FFFFFF";c.font="800 48px "+SF;c.fillText(fit(c,(h.dk||"Decklist").toUpperCase(),960),540,318);
-      c.fillStyle="#AEB4BD";c.font="500 26px "+SM;c.fillText(fit(c,[h.ev,mhDate(h.d),h.p?mhOrd(h.p)+(h.n?" of "+h.n:""):""].filter(Boolean).join("  ·  "),960),540,362);
+      c.save();c.translate(540,170);c.rotate(-0.28);c.fillStyle="#E10600";c.fillRect(-900,-44,1800,88);c.fillStyle="rgba(225,6,0,.35)";c.fillRect(-900,60,1800,12);c.restore();
+      
+      var ks=spriteKeys(h.dk,h.s).slice(0,2),sz=128,tw=ks.length*sz+(ks.length>1?16:0);ks.forEach(function(k,j){drawSpr(c,sh,k,540-tw/2+j*(sz+16),70,sz)});
+      c.textAlign="center";c.fillStyle="#FFFFFF";c.font="800 48px "+SF;c.fillText(fit(c,(h.dk||"Decklist").toUpperCase(),960),540,272);
+      c.fillStyle="#AEB4BD";c.font="500 26px "+SM;c.fillText(fit(c,[h.ev,mhDate(h.d),h.p?mhOrd(h.p)+(h.n?" of "+h.n:""):""].filter(Boolean).join("  ·  "),960),540,316);
       list.forEach(function(cd,i){var x=40+(i%cols)*(cw+gap),y=top+Math.floor(i/cols)*(ch+gap),im=pics[i];
         c.save();rr(c,x,y,cw,ch,8);c.clip();if(im){c.drawImage(im,x,y,cw,ch)}else{c.fillStyle="#1A1F27";c.fillRect(x,y,cw,ch);c.fillStyle="#E6E8EB";c.font="600 20px "+SF;c.textAlign="center";
           var wds=cd.n.split(" "),ln=[],cur="";wds.forEach(function(w){var t=cur?cur+" "+w:w;if(c.measureText(t).width>cw-16){if(cur)ln.push(cur);cur=w}else cur=t});if(cur)ln.push(cur);ln.slice(0,4).forEach(function(t,k){c.fillText(t,x+cw/2,y+ch/2-((Math.min(4,ln.length)-1)*13)+k*26)});
           if(cd.s){c.fillStyle="#7D8590";c.font="500 16px "+SM;c.textAlign="left";c.fillText(cd.s+" "+cd.no,x+10,y+ch-20)}}c.restore();
         c.strokeStyle="rgba(255,255,255,.12)";c.lineWidth=2;rr(c,x,y,cw,ch,8);c.stroke();
         var bx=x+cw-30,by=y+ch-30;c.fillStyle="#E10600";c.beginPath();c.arc(bx,by,22,0,7);c.fill();c.strokeStyle="#08090C";c.lineWidth=3;c.stroke();c.fillStyle="#FFFFFF";c.font="800 24px "+SM;c.textAlign="center";c.fillText(String(cd.q),bx,by+8)});
-      var tot=list.reduce(function(a,x){return a+x.q},0);c.textAlign="center";c.fillStyle="#555E69";c.font="600 26px "+SM;c.fillText(tot+" cards  ·  groundz.win",540,H-50);c.textAlign="left";
+      var tot=list.reduce(function(a,x){return a+x.q},0);c.textAlign="left";c.fillStyle="#7D8590";c.font="600 24px "+SM;c.fillText(tot+" cards",40,H-46);
+      c.textAlign="right";c.fillStyle="#555E69";c.font="600 22px "+SM;c.fillText("groundz.win",1040,H-46);if(logo){c.save();c.globalAlpha=.45;c.drawImage(logo,1040-150-c.measureText("groundz.win").width-16,H-72,150,30);c.restore()}c.textAlign="left";
       return cv;})
     });
   }
