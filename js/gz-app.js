@@ -3043,7 +3043,7 @@ ${stars == null ? "" : ribbon + starRow}
         c.strokeStyle="rgba(255,255,255,.12)";c.lineWidth=2;rr(c,x,y,cw,ch,8);c.stroke();
         var bx=x+cw-30,by=y+ch-30;c.fillStyle="#E10600";c.beginPath();c.arc(bx,by,22,0,7);c.fill();c.strokeStyle="#08090C";c.lineWidth=3;c.stroke();c.fillStyle="#FFFFFF";c.font="800 24px "+SM;c.textAlign="center";c.fillText(String(cd.q),bx,by+8)});
       var tot=list.reduce(function(a,x){return a+x.q},0);c.textAlign="left";c.fillStyle="#7D8590";c.font="600 24px "+SM;c.fillText(tot+" cards",40,H-46);
-      c.textAlign="right";c.fillStyle="#555E69";c.font="600 22px "+SM;c.fillText("groundz.win",1040,H-46);if(logo){c.save();c.globalAlpha=.45;c.drawImage(logo,1040-150-c.measureText("groundz.win").width-16,H-72,150,30);c.restore()}c.textAlign="left";
+      if(logo){c.save();c.globalAlpha=.45;c.drawImage(logo,1040-170,H-76,170,34);c.restore()}
       return cv;})
     });
   }
