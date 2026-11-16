@@ -861,7 +861,7 @@
     if(v==="Tour") renderTour(); if(v==="Dash") renderDash(); if(v==="Acct") renderAcct(); if(v==="Deck") renderDeck(); if(v==="Pro") renderHub(); if(v==="Cards") renderCards(); if(v==="Tools"){$("toolSw").hidden=TOOL!=="sw";$("toolMh").hidden=TOOL!=="mh";$("toolHt").hidden=TOOL!=="ht";$("toolSw").open=$("toolMh").open=$("toolHt").open=true;renderTools();} var ty=$("cTray"); if(ty) ty.hidden=v!=="Cards"||BUILD; document.body.classList.toggle("gzbuild",v==="Cards"&&BUILD); renderAds();
   }
   $("tRank").addEventListener("click",function(){view("Rank")});var tr0=$("tourRank");if(tr0)tr0.addEventListener("click",function(){view("Rank");window.scrollTo(0,0)});var rb0=$("rankBack");if(rb0)rb0.addEventListener("click",function(){view("Tour");window.scrollTo(0,0)});
-  $("tTour").addEventListener("click",function(){view("Tour")});$("tCards").addEventListener("click",function(){view("Cards")});(function(){
+  $("tTour").addEventListener("click",function(){view("Rank")});$("tCards").addEventListener("click",function(){view("Cards")});(function(){
     var btn=$("tTools"),m=el("div",null,"tmenu");m.id="tMenu";m.setAttribute("role","menu");m.setAttribute("aria-label","Tools");m.hidden=true;document.body.appendChild(m);
     [["mh","Match history","Your tournaments, rounds and matchups"],["ht","Hand test","Opening hands, prizes and mulligan odds"],["sw","Swiss calculator","Rounds, top cut and Championship Points"]].forEach(function(t){var b=el("button",null,"tmi");b.type="button";b.setAttribute("role","menuitem");b.appendChild(el("b",t[1]));b.appendChild(el("span",t[2]));b.onclick=function(){close();TOOL=t[0];try{localStorage.setItem("tg-tool",TOOL)}catch(e){}view("Tools");window.scrollTo(0,0)};m.appendChild(b)});
     function place(){var r=btn.getBoundingClientRect(),w=260;if(r.top>window.innerHeight/2){m.style.top="auto";m.style.bottom=(window.innerHeight-r.top+8)+"px"}else{m.style.bottom="auto";m.style.top=(r.bottom+8)+"px"}m.style.left=Math.max(12,Math.min(window.innerWidth-w-12,r.left+r.width/2-w/2))+"px"}
@@ -1651,7 +1651,7 @@ ${stars == null ? "" : ribbon + starRow}
   $("dkSet").addEventListener("click",function(){view("Acct");window.scrollTo(0,0)});
 
   // ---- updates and notices ----
-  var APP_VER="2026.11.16d";
+  var APP_VER="2026.11.16e";
   var CHANGES=[
     {ts:Date.UTC(2026,9,8,15),ti:"Deck builder upgrade",b:"Search and browse cards while your deck stays on screen, on PC and phone."},
     {ts:Date.UTC(2026,9,8,14),ti:"New logo and TCG Live names",b:"GroundZ has a new look. Add your TCG Live username in profile settings."},
@@ -2611,7 +2611,7 @@ ${stars == null ? "" : ribbon + starRow}
       '<div class="grid" style="margin-top:12px"><div><label for="mS1">Deck sprite 1</label><input id="mS1" list="pkl" autocomplete="off" placeholder="Auto from deck name"></div><div><label for="mS2">Deck sprite 2 (optional)</label><input id="mS2" list="pkl" autocomplete="off" placeholder="e.g. Pidgeot"></div></div>'+
       '<div class="mhprev" id="mhPrev" aria-live="polite"></div>'+
       '<div class="mhrh"><h4>Rounds &amp; matchups <span class="foot">(optional)</span></h4><button id="mRAdd" type="button" class="ghost">+ Add round</button></div>'+
-      '<p class="foot mhghint">Tap each game in order: W W L = won 2–1. Best of one = one tap.</p>'+
+      '<p class="foot mhghint">For each game, pick 1st or 2nd and the result. Best of one: just fill G1.</p>'+
       '<div id="mhRounds"></div>'+
       '<div id="mhManual"><div class="grid" style="margin-top:12px"><div><label for="mW">Wins</label><input id="mW" type="number" min="0" max="30" value="0" inputmode="numeric"></div><div><label for="mL">Losses</label><input id="mL" type="number" min="0" max="30" value="0" inputmode="numeric"></div></div><div class="grid" style="margin-top:12px"><div><label for="mT">Ties</label><input id="mT" type="number" min="0" max="30" value="0" inputmode="numeric"></div><div></div></div></div>'+
       '<p class="foot" id="mhAuto" hidden></p>'+
@@ -2656,22 +2656,20 @@ ${stars == null ? "" : ribbon + starRow}
       x.osIn=x.osIn!=null?x.osIn:(x.os&&x.os[0]?mhNm(x.os[0]):"");
       row.appendChild(inp("Sprite (auto)",x.osIn,"opponent deck sprite","pkl",function(v){x.osIn=v}));
       row.appendChild(sw);ic();
-      var g=el("div",null,"rbtns mhres");g.setAttribute("role","group");g.setAttribute("aria-label","Round "+(i+1)+" games");
-      x.g=mhG(x);
-      var seq=el("span",null,"mhgs");seq.setAttribute("aria-live","polite");
-      if(x.g){seq.appendChild(mhGPips(x.g,"mhgames"))}
-      else seq.appendChild(el("span",x.ns?(x.res==="W"?"Opponent no-show (win)":"No-show (loss)"):x.res==="BYE"?"Bye":x.res==="ID"?"Intentional draw":x.res?"Result "+x.res+", games not logged":"No games yet","mhge"));
-      var fo=el("span",null,"mhfo"),gfa=String(x.gf||"").split(""),ng=x.res==="BYE"||x.res==="ID"||x.ns?0:Math.min(3,x.g.length+(x.g.length<3?1:0));
-      for(var j=0;j<ng;j++)(function(j){var gb=el("span",null,"mhfg");gb.setAttribute("role","group");gb.setAttribute("aria-label","Round "+(i+1)+" game "+(j+1)+": went first or second");gb.appendChild(el("small","G"+(j+1)));
-        [["1","1st","Went first"],["2","2nd","Went second"]].forEach(function(r){var bt=el("button",r[1],"ghost");bt.type="button";bt.title="Game "+(j+1)+": "+r[2].toLowerCase();bt.setAttribute("aria-pressed",String(gfa[j]===r[0]));bt.onclick=function(){for(var q=0;q<=j;q++)if(gfa[q]!=="1"&&gfa[q]!=="2")gfa[q]="-";gfa[j]=gfa[j]===r[0]?"-":r[0];x.gf=gfa.join("");mhRows()};gb.appendChild(bt)});fo.appendChild(gb)})(j);
-      if(ng){g.appendChild(fo);g.appendChild(el("span",null,"mhgsep"))}
-      g.appendChild(seq);
-      var full=x.g.length>=3;
-      [["W","Won a game"],["L","Lost a game"],["T","Tied a game"]].forEach(function(r){var bt=el("button",r[0],"ghost");bt.type="button";bt.title=r[1];bt.setAttribute("aria-label","Round "+(i+1)+": "+r[1].toLowerCase());bt.disabled=full;bt.onclick=function(){if(x.res==="BYE"||x.res==="ID"||x.ns){x.res="";x.ns=0}x.g=mhG(x)+r[0];x.res=mhGRes(x.g);mhRows()};g.appendChild(bt)});
-      var un=el("button","⌫","ghost");un.type="button";un.title="Remove the last game";un.setAttribute("aria-label","Round "+(i+1)+": remove the last game");un.disabled=!x.g;un.onclick=function(){x.g=mhG(x).slice(0,-1);x.res=mhGRes(x.g);mhRows()};g.appendChild(un);
-      g.appendChild(el("span",null,"mhgsep"));
-      [["BYE","Bye","Bye"],["ID","ID","Intentional draw"],["NSW","No-show W","Opponent didn't show: win"],["NSL","No-show L","You didn't show: loss"]].forEach(function(r){var on=r[0]==="NSW"?(x.ns&&x.res==="W"):r[0]==="NSL"?(x.ns&&x.res==="L"):(!x.ns&&x.res===r[0]),bt=el("button",r[1],"ghost");bt.type="button";bt.title=r[2];bt.setAttribute("aria-label","Round "+(i+1)+": "+r[2]);bt.setAttribute("aria-pressed",String(!!on));bt.onclick=function(){x.g="";x.gf="";if(on){x.res="";x.ns=0}else if(r[0]==="NSW"||r[0]==="NSL"){x.res=r[0]==="NSW"?"W":"L";x.ns=1}else{x.res=r[0];x.ns=0}mhRows()};g.appendChild(bt)});
-      if(x.g)g.appendChild(el("span",(x.res==="W"?"Win ":x.res==="L"?"Loss ":"Tie ")+mhGsc(x.g),"mhgout"));
+      // games: one box per game with turn + result; next box appears until the match is decided
+      var g=el("div",null,"mhgrow");g.setAttribute("role","group");g.setAttribute("aria-label","Round "+(i+1)+" games");
+      x.g=mhG(x);var other=x.res==="BYE"||x.res==="ID"||x.ns,gfa=String(x.gf||"").split(""),gc=mhGc(x.g),done=gc.w>=2||gc.l>=2||x.g.length>=3,ns2=other?0:x.g.length+(done?0:1);
+      for(var j=0;j<ns2;j++)(function(j){var box=el("span",null,"mhgsl"+(j<x.g.length?" on":""));box.appendChild(el("b","G"+(j+1)));
+        var tq=el("span",null,"mhseg");[["1","1st"],["2","2nd"]].forEach(function(r){var bt=el("button",r[1],"ghost");bt.type="button";bt.title="Game "+(j+1)+": went "+r[1];bt.setAttribute("aria-pressed",String(gfa[j]===r[0]));bt.onclick=function(){for(var q=0;q<=j;q++)if(gfa[q]!=="1"&&gfa[q]!=="2")gfa[q]="-";gfa[j]=gfa[j]===r[0]?"-":r[0];x.gf=gfa.join("");mhRows()};tq.appendChild(bt)});box.appendChild(tq);
+        var rq=el("span",null,"mhseg mhsegr");[["W","won"],["L","lost"],["T","tied"]].forEach(function(r){var bt=el("button",r[0],"ghost r"+r[0]);bt.type="button";bt.title="Game "+(j+1)+": "+r[1];bt.setAttribute("aria-pressed",String(x.g[j]===r[0]));bt.onclick=function(){var a2=x.g.split("");if(a2[j]===r[0]&&j===a2.length-1)a2.pop();else a2[j]=r[0];x.g=a2.join("");x.res=mhGRes(x.g);x.ns=0;mhRows()};rq.appendChild(bt)});box.appendChild(rq);
+        g.appendChild(box)})(j);
+      var oth=document.createElement("select");oth.className="mhoth";oth.setAttribute("aria-label","Round "+(i+1)+": other result");
+      [["","Other result…"],["BYE","Bye"],["ID","Intentional draw"],["NSW","No-show win"],["NSL","No-show loss"]].forEach(function(o){var op=document.createElement("option");op.value=o[0];op.textContent=o[1];oth.appendChild(op)});
+      oth.value=x.ns?(x.res==="W"?"NSW":"NSL"):(x.res==="BYE"||x.res==="ID")?x.res:"";
+      oth.onchange=function(){var v=oth.value;x.g="";x.gf="";x.ns=0;x.res="";if(v==="NSW"||v==="NSL"){x.res=v==="NSW"?"W":"L";x.ns=1}else if(v)x.res=v;mhRows()};
+      g.appendChild(oth);
+      var out=x.ns?(x.res==="W"?"Opponent no-show · Win":"No-show · Loss"):x.res==="BYE"?"Bye · Win":x.res==="ID"?"Intentional draw":x.g?(x.res==="W"?"Win ":x.res==="L"?"Loss ":"Tie ")+mhGsc(x.g):"";
+      if(out)g.appendChild(el("span",out,"mhgout"));
       row.appendChild(g);
       var rm=el("button","✕","ghost mhrx");rm.type="button";rm.setAttribute("aria-label","Remove round "+(i+1));rm.onclick=function(){MHR.splice(i,1);mhRows()};row.appendChild(rm);
       R.appendChild(row);
